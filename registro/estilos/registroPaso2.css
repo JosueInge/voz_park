@@ -4,6 +4,13 @@
     --light-green: #d4f0c0;
     --text-gray: #666;
     --border-color: #c4d4bc;
+    --dark-green: #1a2a16;
+    --primary-green: #3d7a1f;
+    --light-green: #eef5e9;
+    --text-white: #ffffff;
+    --text-muted: #a0b0a0;
+    --text-dark: #333333;
+    --border-color: #c0d0c0;
 }
 
 * {
@@ -18,73 +25,81 @@ body {
     min-height: 100vh;
 }
 
+/* SECCIÓN IZQUIERDA */
+.seccionInformacion {
+    background-color: var(--dark-green);
+    color: var(--text-white);
+    width: 65%;
+    padding: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.seccionIzquierda h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+
+.seccionIzquierda .subTitulo {
+    color: var(--text-muted);
+    margin-bottom: 80px;
+}
+
+.beneficios h3 {
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    color: #8db37a;
+    margin-bottom: 30px;
+}
+
+.item-beneficio {
+    display: flex;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.tamañoIconos {
+    width: 15px;
+    height: 15px;
+}
+
+.cuadroBeneficio {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    font-size: 1.2rem;
+}
+
+/* Colores de iconos */
+.reportar { background-color: #3d7a1f; }
+.participar { background-color: #4a8a5e; }
+.consultar { background-color: #559c7a; }
+.verImpacto { background-color: #6fb08a; }
+
+.textoBeneficio strong {
+    display: block;
+    font-size: 1rem;
+}
+
+.textoBeneficio p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
 .container {
     display: flex;
     min-height: 100vh;
 }
 
-/* PANEL IZQUIERDO */
-.info-panel {
-    background-color: var(--dark-green);
-    color: white;
-    width: 45%;
-    padding: 60px;
-    display: flex;
-    flex-direction: column;
-}
-
-.brand h1 {
-    font-size: 2rem;
-    font-weight: 800;
-    letter-spacing: -1px;
-}
-
-.brand p {
-    color: #9ab48a;
-    font-size: 0.9rem;
-    margin-bottom: 80px;
-}
-
-.benefits h2 {
-    font-size: 0.8rem;
-    color: #9ab48a;
-    letter-spacing: 1px;
-    margin-bottom: 30px;
-}
-
-.benefit-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 15px;
-    margin-bottom: 30px;
-}
-
-.icon {
-    width: 32px;
-    height: 32px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-}
-
-.text strong {
-    display: block;
-    font-size: 1rem;
-    margin-bottom: 4px;
-}
-
-.text span {
-    font-size: 0.85rem;
-    color: #9ab48a;
-}
-
 /* PANEL DERECHO */
 .form-panel {
     width: 55%;
-    padding: 60px 100px;
+    padding: 40px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -94,7 +109,7 @@ body {
     text-decoration: none;
     color: var(--text-gray);
     font-size: 0.9rem;
-    margin-bottom: 25px;
+    margin-bottom: 10px;
     display: inline-block;
 }
 
@@ -137,7 +152,7 @@ body {
 
 /* FORMULARIO */
 .input-group {
-    margin-bottom: 20px;
+    margin-bottom: 5px;
 }
 
 .input-group label {
@@ -150,7 +165,7 @@ body {
 
 input, select {
     width: 100%;
-    padding: 12px 15px;
+    padding: 5px 15px;
     border: 1.5px solid var(--border-color);
     border-radius: 8px;
     font-size: 1rem;
@@ -170,18 +185,37 @@ input:focus {
     background-color: var(--primary-green);
     color: white;
     border: none;
-    padding: 15px;
+    padding: 10px;
     width: 100%;
     border-radius: 8px;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    margin-top: 20px;
+    margin-top: 5px;
     transition: background 0.3s;
 }
 
 .btn-continue:hover {
     background-color: var(--dark-green);
+}
+
+.btn-atras {
+    background-color: transparent;
+    color: var(--primary-green);
+    border: 2px solid var(--primary-green);
+    padding: 10px;
+    width: 100%;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: background 0.3s, color 0.3s;
+}
+
+.btn-atras:hover {
+    background-color: var(--primary-green);
+    color: white;
 }
 
 /* RESPONSIVO */

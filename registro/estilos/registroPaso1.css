@@ -29,7 +29,7 @@ body {
 .seccionInformacion {
     background-color: var(--dark-green);
     color: var(--text-white);
-    width: 45%;
+    width: 65%;
     padding: 60px;
     display: flex;
     flex-direction: column;
@@ -75,7 +75,7 @@ body {
     font-size: 1.2rem;
 }
 
-/* Colores de iconos basados en la imagen */
+/* Colores de iconos */
 .reportar { background-color: #3d7a1f; }
 .participar { background-color: #4a8a5e; }
 .consultar { background-color: #559c7a; }
@@ -99,7 +99,7 @@ body {
 /* PANEL DERECHO */
 .form-panel {
     width: 55%;
-    padding: 60px 100px;
+    padding: 40px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -152,7 +152,7 @@ body {
 
 /* FORMULARIO */
 .input-group {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .input-group label {
@@ -165,7 +165,7 @@ body {
 
 input, select {
     width: 100%;
-    padding: 12px 15px;
+    padding: 5px 15px;
     border: 1.5px solid var(--border-color);
     border-radius: 8px;
     font-size: 1rem;
@@ -185,13 +185,13 @@ input:focus {
     background-color: var(--primary-green);
     color: white;
     border: none;
-    padding: 15px;
+    padding: 10px;
     width: 100%;
     border-radius: 8px;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    margin-top: 20px;
+    margin-top: 10px;
     transition: background 0.3s;
 }
 

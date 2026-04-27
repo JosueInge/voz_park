@@ -4,52 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crear cuenta - VozPark</title>
-    <link rel="stylesheet" href="estilos/registroPaso1.css">
+    <link rel="stylesheet" href="estilos/registroPaso2.css">
 </head>
 <body>
     <main class="container">
-        <section class="info-panel">
-            <header class="brand">
-                <h1>VozPark</h1>
-                <p>Parques urbanos - El Salvador</p>
-            </header>
-
-            <div class="benefits">
-                <h2>CON VOZPARK PODES</h2>
-                
-                <div class="benefit-item">
-                    <div class="icon red">📍</div>
-                    <div class="text">
-                        <strong>Reportar incidencias en tus parques</strong>
-                        <span>Tiempo promedio de respuesta: 4.2 horas</span>
-                    </div>
-                </div>
-
-                <div class="benefit-item">
-                    <div class="icon blue">🗳️</div>
-                    <div class="text">
-                        <strong>Participar en decisiones comunitarias</strong>
-                        <span>Votaciones, propuestas y encuestas activas</span>
-                    </div>
-                </div>
-
-                <div class="benefit-item">
-                    <div class="icon robot">🤖</div>
-                    <div class="text">
-                        <strong>Consultar VozBot, tu asistente IA</strong>
-                        <span>Respuestas en tiempo real sobre tus parques</span>
-                    </div>
-                </div>
-
-                <div class="benefit-item">
-                    <div class="icon stats">📊</div>
-                    <div class="text">
-                        <strong>Ver el impacto de tu participación</strong>
-                        <span>Estadísticas y KPIs alineados a ODS</span>
-                    </div>
-                </div>
-            </div>
-        </section>
+        <?php include 'seccionBeneficios.php'; ?>
 
         <section class="form-panel">
             <div class="form-header">
@@ -60,38 +19,43 @@
 
             <div class="stepper">
                 <div class="step active"></div>
-                <div class="step"></div>
+                <div class="step active"></div>
                 <div class="step"></div>
             </div>
 
             <form class="register-form">
-                <p class="step-label">Paso 1 de 3 · Información personal</p>
+                <p class="step-label">Paso 2 de 3 · Información personal</p>
 
                 <div class="input-group">
-                    <label for="name">Nombre completo *</label>
-                    <input type="text" id="name" placeholder="Ana García" required>
+                    <label for="password">Contraseña *</label>
+                    <input type="password" id="password" placeholder="Contraseña">
                 </div>
 
                 <div class="input-group">
-                    <label for="email">Correo electrónico *</label>
-                    <input type="email" id="email" placeholder="tu@correo.com" required>
+                    <label for="password">Confirmar contraseña *</label>
+                    <input type="password" id="password" placeholder="Confirmar contraseña">
                 </div>
 
                 <div class="input-group">
-                    <label for="phone">Número de teléfono *</label>
-                    <input type="tel" id="phone" placeholder="+503 7700-0000" required>
+                    <p>Tu contraseña debe tener:</p>
+                    <ul>
+                        <li class="check">Al menos 8 caracteres</li>
+                        <li class="check">Una letra mayúscula</li>
+                        <li class="check">Un número</li>
+                    </ul>
                 </div>
 
                 <div class="input-group">
                     <label for="location">Zona de residencia *</label>
-                    <select id="location" required>
+                    <select id="location">
                         <option value="" disabled selected>Seleccioná tu zona</option>
                         <option value="san-salvador">San Salvador</option>
                         <option value="la-libertad">La Libertad</option>
                         </select>
                 </div>
 
-                <button type="submit" class="btn-continue">Continuar →</button>
+                <button type="button" class="btn-continue">Continuar →</button>
+                <button onclick="history.back()" type="button" class="btn-atras"> ← Atrás</button>
             </form>
         </section>
     </main>
