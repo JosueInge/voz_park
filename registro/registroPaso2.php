@@ -45,15 +45,6 @@
                     </ul>
                 </div>
 
-                <div class="input-group">
-                    <label for="location">Zona de residencia *</label>
-                    <select id="location">
-                        <option value="" disabled selected>Seleccioná tu zona</option>
-                        <option value="san-salvador">San Salvador</option>
-                        <option value="la-libertad">La Libertad</option>
-                        </select>
-                </div>
-
                 <button type="button" class="btn-continue">Continuar →</button>
                 <button onclick="history.back()" type="button" class="btn-atras"> ← Atrás</button>
             </form>
