@@ -8,29 +8,29 @@
     <link rel="stylesheet" href="estilos/registroPaso3.css">
 </head>
 <body>
-    <main class="container">
+    <main class="contenedor">
         <?php include 'seccionBeneficios.php'; ?>
 
-        <section class="form-panel">
-            <div class="form-header">
-                <a href="../login/login.php" class="back-link">‹ Ya tengo cuenta</a>
+        <section class="panelFormulario">
+            <div class="encabezadoFormulario">
+                <a href="../login/login.php" class="linkVolver">‹ Ya tengo cuenta</a>
                 <h1>Crear cuenta en VozPark</h1>
                 <p>Es gratuito y toma menos de 2 minutos</p>
             </div>
 
-            <div class="stepper">
-                <div class="step active"></div>
-                <div class="step active"></div>
-                <div class="step active"></div>
+            <div class="pasos">
+                <div class="paso active"></div>
+                <div class="paso active"></div>
+                <div class="paso active"></div>
             </div>
 
-            <form class="register-form">
-                <p class="step-label">Paso 3 de 3 · Información personal</p>
+            <form class="formularioRegistro">
+                <p class="paso-label">Paso 3 de 3 · Información personal</p>
 
-                <div class="input-group">
-                    <div class="input-info-box">
-                        <p>Revisá tus datos</p>
-                        <ul>
+                <div class="grupoInput">
+                    <div class="custom-box">
+                        <p class="custom-box-title">Revisá tus datos</p>
+                        <ul class="custom-box-list">
                             <li class="check">Nombre</li>
                             <li class="check">Correo</li>
                             <li class="check">Lugar de residencia</li>
@@ -38,13 +38,12 @@
                     </div>
                 </div>
 
-                <div class="input-group">
-                    <div class="input-info-box">
-                        <input type="checkbox" id="confirm">
-                        </input>
-                    </div>
-                </div>
-
+                <div class="grupoInput">
+                    <div class="custom-box custom-box-row">
+                        <input type="checkbox" id="confirm" class="checkbox-input">
+                        <label for="confirm" class="custom-checkbox-label">
+                            Acepto los Términos y Condiciones y la Política de Privacidad de Voz Park
+                        </label>
                     </div>
                 </div>
 

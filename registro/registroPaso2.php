@@ -8,37 +8,37 @@
     <link rel="stylesheet" href="estilos/registroPaso2.css">
 </head>
 <body>
-    <main class="container">
+    <main class="contenedor">
         <?php include 'seccionBeneficios.php'; ?>
 
-        <section class="form-panel">
-            <div class="form-header">
-                <a href="../login/login.php" class="back-link">‹ Ya tengo cuenta</a>
+        <section class="panelFormulario">
+            <div class="encabezadoFormulario">
+                <a href="../login/login.php" class="linkVolver">‹ Ya tengo cuenta</a>
                 <h1>Crear cuenta en VozPark</h1>
                 <p>Es gratuito y toma menos de 2 minutos</p>
             </div>
 
-            <div class="stepper">
-                <div class="step active"></div>
-                <div class="step active"></div>
-                <div class="step"></div>
+            <div class="pasos">
+                <div class="paso active"></div>
+                <div class="paso active"></div>
+                <div class="paso"></div>
             </div>
 
-            <form class="register-form">
-                <p class="step-label">Paso 2 de 3 · Información personal</p>
+            <form class="formuarioRegistro">
+                <p class="pasoLabel">Paso 2 de 3 · Información personal</p>
 
-                <div class="input-group">
+                <div class="grupoInput">
                     <label for="password">Contraseña *</label>
                     <input type="password" id="password" placeholder="Contraseña">
                 </div>
 
-                <div class="input-group">
+                <div class="grupoInput">
                     <label for="password">Confirmar contraseña *</label>
                     <input type="password" id="password" placeholder="Confirmar contraseña">
                 </div>
 
-                <div class="input-group">
-                    <div class="input-info-box">
+                <div class="grupoInput">
+                    <div class="inputInforContraseña">
                         <p>Tu contraseña debe tener:</p>
                         <ul>
                             <li class="check">Al menos 8 caracteres</li>

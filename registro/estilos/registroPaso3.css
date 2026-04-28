@@ -1,3 +1,51 @@
+.custom-box {
+    border: 1.5px solid var(--border-color);
+    border-radius: 8px;
+    padding: 16px 20px;
+    background: #f8fdf4;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 3px rgba(60, 120, 60, 0.04);
+}
+
+.custom-box-title {
+    font-size: 1rem;
+    color: var(--primary-green);
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.custom-box-list {
+    list-style: none;
+    padding-left: 0;
+    color: #222;
+    font-size: 0.98rem;
+}
+
+.custom-box-list .check::before {
+    content: '✔';
+    color: var(--primary-green);
+    margin-right: 8px;
+    font-size: 1rem;
+}
+
+.custom-box-row {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    background: #f8fdf4;
+}
+
+.checkbox-input {
+    width: 30px;
+    height: 30px;
+}
+
+.custom-checkbox-label {
+    font-size: 0.97rem;
+    color: var(--text-gray);
+    cursor: pointer;
+    user-select: none;
+}
 :root {
     --dark-green: #1a2e12;
     --primary-green: #3d7a1a;
@@ -18,13 +66,13 @@ body {
     min-height: 100vh;
 }
 
-.container {
+.contenedor {
     display: flex;
     min-height: 100vh;
 }
 
 /* PANEL DERECHO */
-.form-panel {
+.panelFormulario {
     width: 55%;
     padding: 40px;
     display: flex;
@@ -32,7 +80,7 @@ body {
     justify-content: center;
 }
 
-.back-link {
+.linkVolver {
     text-decoration: none;
     color: var(--text-gray);
     font-size: 0.9rem;
@@ -40,37 +88,37 @@ body {
     display: inline-block;
 }
 
-.form-header h1 {
+.encabezadoFormulario h1 {
     font-size: 1.8rem;
     color: #000;
     margin-bottom: 8px;
 }
 
-.form-header p {
+.encabezadoFormulario p {
     color: var(--text-gray);
     font-size: 0.95rem;
     margin-bottom: 30px;
 }
 
-/* STEPPER */
-.stepper {
+/* Pasos */
+.pasos {
     display: flex;
     gap: 8px;
     margin-bottom: 20px;
 }
 
-.step {
+.paso {
     height: 4px;
     flex: 1;
     background-color: var(--light-green);
     border-radius: 2px;
 }
 
-.step.active {
+.paso.active {
     background-color: var(--dark-green);
 }
 
-.step-label {
+.paso-label {
     font-size: 0.85rem;
     color: var(--primary-green);
     margin-bottom: 25px;
@@ -78,11 +126,11 @@ body {
 }
 
 /* FORMULARIO */
-.input-group {
+.grupoInput {
     margin-bottom: 15px;
 }
 
-.input-group label {
+.grupoInput label {
     display: block;
     font-size: 0.85rem;
     color: var(--primary-green);
@@ -124,6 +172,25 @@ input:focus {
 
 .btn-continue:hover {
     background-color: var(--dark-green);
+}
+
+.btn-atras {
+    background-color: transparent;
+    color: var(--text-gray);
+    border: 1.5px solid var(--border-color);
+    padding: 10px;
+    width: 100%;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.3s, border-color 0.3s;
+}
+
+.btn-atras:hover {
+    background-color: var(--light-green);
+    border-color: var(--primary-green);
 }
 
 /* RESPONSIVO */
