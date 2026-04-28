@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crear cuenta - VozPark</title>
+    <link rel="stylesheet" href="estilos/seccionBeneficios.css">
     <link rel="stylesheet" href="estilos/registroPaso1.css">
 </head>
 <body>

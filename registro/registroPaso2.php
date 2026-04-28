@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crear cuenta - VozPark</title>
+    <link rel="stylesheet" href="estilos/seccionBeneficios.css">
     <link rel="stylesheet" href="estilos/registroPaso2.css">
 </head>
 <body>
@@ -37,15 +38,17 @@
                 </div>
 
                 <div class="input-group">
-                    <p>Tu contraseña debe tener:</p>
-                    <ul>
-                        <li class="check">Al menos 8 caracteres</li>
-                        <li class="check">Una letra mayúscula</li>
-                        <li class="check">Un número</li>
-                    </ul>
+                    <div class="input-info-box">
+                        <p>Tu contraseña debe tener:</p>
+                        <ul>
+                            <li class="check">Al menos 8 caracteres</li>
+                            <li class="check">Una letra mayúscula</li>
+                            <li class="check">Un número</li>
+                        </ul>
+                    </div>
                 </div>
 
-                <button type="button" class="btn-continue">Continuar →</button>
+                <button onclick="window.location.href='registroPaso3.php'" type="button" class="btn-continue">Continuar →</button>
                 <button onclick="history.back()" type="button" class="btn-atras"> ← Atrás</button>
             </form>
         </section>

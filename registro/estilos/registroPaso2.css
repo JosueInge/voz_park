@@ -4,13 +4,6 @@
     --light-green: #d4f0c0;
     --text-gray: #666;
     --border-color: #c4d4bc;
-    --dark-green: #1a2a16;
-    --primary-green: #3d7a1f;
-    --light-green: #eef5e9;
-    --text-white: #ffffff;
-    --text-muted: #a0b0a0;
-    --text-dark: #333333;
-    --border-color: #c0d0c0;
 }
 
 * {
@@ -23,72 +16,6 @@
 body {
     background-color: #fff;
     min-height: 100vh;
-}
-
-/* SECCIÓN IZQUIERDA */
-.seccionInformacion {
-    background-color: var(--dark-green);
-    color: var(--text-white);
-    width: 65%;
-    padding: 60px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.seccionIzquierda h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
-}
-
-.seccionIzquierda .subTitulo {
-    color: var(--text-muted);
-    margin-bottom: 80px;
-}
-
-.beneficios h3 {
-    font-size: 0.9rem;
-    letter-spacing: 1px;
-    color: #8db37a;
-    margin-bottom: 30px;
-}
-
-.item-beneficio {
-    display: flex;
-    align-items: center;
-    margin-bottom: 25px;
-}
-
-.tamañoIconos {
-    width: 15px;
-    height: 15px;
-}
-
-.cuadroBeneficio {
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 15px;
-    font-size: 1.2rem;
-}
-
-/* Colores de iconos */
-.reportar { background-color: #3d7a1f; }
-.participar { background-color: #4a8a5e; }
-.consultar { background-color: #559c7a; }
-.verImpacto { background-color: #6fb08a; }
-
-.textoBeneficio strong {
-    display: block;
-    font-size: 1rem;
-}
-
-.textoBeneficio p {
-    font-size: 0.85rem;
-    color: var(--text-muted);
 }
 
 .container {
@@ -161,6 +88,31 @@ body {
     color: var(--primary-green);
     margin-bottom: 8px;
     font-weight: 500;
+}
+
+.input-info-box {
+    background: #f7faf6;
+    border: 1.5px solid var(--border-color);
+    border-radius: 8px;
+    padding: 12px 18px;
+    margin-bottom: 10px;
+    color: var(--text-gray);
+    font-size: 0.97rem;
+}
+.input-info-box p {
+    margin-bottom: 7px;
+    color: var(--primary-green);
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+.input-info-box ul {
+    margin-left: 18px;
+    margin-bottom: 0;
+}
+.input-info-box li {
+    font-size: 0.92rem;
+    margin-bottom: 3px;
+    color: var(--text-gray);
 }
 
 input {

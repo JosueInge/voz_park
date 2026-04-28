@@ -23,68 +23,10 @@ body {
     min-height: 100vh;
 }
 
-/* PANEL IZQUIERDO */
-.info-panel {
-    background-color: var(--dark-green);
-    color: white;
-    width: 45%;
-    padding: 60px;
-    display: flex;
-    flex-direction: column;
-}
-
-.brand h1 {
-    font-size: 2rem;
-    font-weight: 800;
-    letter-spacing: -1px;
-}
-
-.brand p {
-    color: #9ab48a;
-    font-size: 0.9rem;
-    margin-bottom: 80px;
-}
-
-.benefits h2 {
-    font-size: 0.8rem;
-    color: #9ab48a;
-    letter-spacing: 1px;
-    margin-bottom: 30px;
-}
-
-.benefit-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 15px;
-    margin-bottom: 30px;
-}
-
-.icon {
-    width: 32px;
-    height: 32px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-}
-
-.text strong {
-    display: block;
-    font-size: 1rem;
-    margin-bottom: 4px;
-}
-
-.text span {
-    font-size: 0.85rem;
-    color: #9ab48a;
-}
-
 /* PANEL DERECHO */
 .form-panel {
     width: 55%;
-    padding: 60px 100px;
+    padding: 40px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -137,7 +79,7 @@ body {
 
 /* FORMULARIO */
 .input-group {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .input-group label {
@@ -148,9 +90,9 @@ body {
     font-weight: 500;
 }
 
-input, select {
+input {
     width: 100%;
-    padding: 12px 15px;
+    padding: 5px 15px;
     border: 1.5px solid var(--border-color);
     border-radius: 8px;
     font-size: 1rem;
@@ -170,13 +112,13 @@ input:focus {
     background-color: var(--primary-green);
     color: white;
     border: none;
-    padding: 15px;
+    padding: 10px;
     width: 100%;
     border-radius: 8px;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    margin-top: 20px;
+    margin-top: 10px;
     transition: background 0.3s;
 }
 
