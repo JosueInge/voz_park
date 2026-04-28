@@ -47,7 +47,7 @@
                     </div>
                 </div>
 
-                <button onclick="window.location.href='registroPaso3.php'" type="button" class="btn-continue">Continuar →</button>
+                <button onclick="window.location.href='#'" type="button" class="btn-continue">Continuar →</button>
                 <button onclick="history.back()" type="button" class="btn-atras"> ← Atrás</button>
             </form>
         </section>
