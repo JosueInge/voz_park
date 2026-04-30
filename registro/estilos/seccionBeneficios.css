@@ -22,6 +22,7 @@
 .seccionIzquierda h1 {
     font-size: 2.5rem;
     font-weight: 700;
+    color: #DFFFAA;
 }
 
 .seccionIzquierda .subTitulo {
@@ -32,7 +33,7 @@
 .beneficios h3 {
     font-size: 0.9rem;
     letter-spacing: 1px;
-    color: #8db37a;
+    color: #97C459;
     margin-bottom: 30px;
 }
 
@@ -67,9 +68,10 @@
 .textoBeneficio strong {
     display: block;
     font-size: 1rem;
+    color: #DFFFAA;
 }
 
 .textoBeneficio p {
     font-size: 0.85rem;
-    color: var(--text-muted);
+    color: #DFFFAA;
 }

@@ -34,7 +34,7 @@ body {
 
 .linkVolver {
     text-decoration: none;
-    color: var(--text-gray);
+    color: #3B6D11;
     font-size: 0.9rem;
     margin-bottom: 10px;
     display: inline-block;
@@ -47,7 +47,7 @@ body {
 }
 
 .encabezadoFormulario p {
-    color: var(--text-gray);
+    color: #3B6D11;
     font-size: 0.95rem;
     margin-bottom: 30px;
 }
@@ -62,12 +62,12 @@ body {
 .paso {
     height: 4px;
     flex: 1;
-    background-color: var(--light-green);
+    background-color: #CBFF84;
     border-radius: 2px;
 }
 
 .paso.active {
-    background-color: var(--dark-green);
+    background-color: #1A2E0F;
 }
 
 .pasoLabel {
@@ -92,7 +92,7 @@ body {
 
 .inputInforContraseña {
     background: #f7faf6;
-    border: 1.5px solid var(--border-color);
+    border: 1.5px solid #97C459;
     border-radius: 8px;
     padding: 12px 18px;
     margin-bottom: 10px;
@@ -101,9 +101,9 @@ body {
 }
 .inputInforContraseña p {
     margin-bottom: 7px;
-    color: var(--primary-green);
-    font-weight: 500;
-    font-size: 0.95rem;
+    color: #3B6D11;
+    font-weight: 600;
+    font-size: 1.0rem;
 }
 .inputInforContraseña ul {
     margin-left: 18px;
@@ -112,13 +112,13 @@ body {
 .inputInforContraseña li {
     font-size: 0.92rem;
     margin-bottom: 3px;
-    color: var(--text-gray);
+    color: #3B6D11;
 }
 
 input {
     width: 100%;
     padding: 5px 15px;
-    border: 1.5px solid var(--border-color);
+    border: 1.5px solid #97C459;
     border-radius: 8px;
     font-size: 1rem;
     outline: none;
@@ -134,8 +134,8 @@ input:focus {
 }
 
 .btn-continue {
-    background-color: var(--primary-green);
-    color: white;
+    background-color: #3B6D11;
+    color: #DFFFAAC7;
     border: none;
     padding: 10px;
     width: 100%;
@@ -153,8 +153,8 @@ input:focus {
 
 .btn-atras {
     background-color: transparent;
-    color: var(--primary-green);
-    border: 2px solid var(--primary-green);
+    color: #3B6D11;
+    border: 1px solid #97C459;
     padding: 10px;
     width: 100%;
     border-radius: 8px;

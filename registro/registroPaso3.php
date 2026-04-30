@@ -31,9 +31,9 @@
                     <div class="custom-box">
                         <p class="custom-box-title">Revisá tus datos</p>
                         <ul class="custom-box-list">
-                            <li class="check">Nombre</li>
-                            <li class="check">Correo</li>
-                            <li class="check">Lugar de residencia</li>
+                            <li> 👤 Nombre</li>
+                            <li> 📧 Correo</li>
+                            <li> 📍 Lugar de residencia</li>
                         </ul>
                     </div>
                 </div>
@@ -42,7 +42,7 @@
                     <div class="custom-box custom-box-row">
                         <input type="checkbox" id="confirm" class="checkbox-input">
                         <label for="confirm" class="custom-checkbox-label">
-                            Acepto los Términos y Condiciones y la Política de Privacidad de Voz Park
+                            Acepto los <a class="terminosYcondiciones" href="#">Términos y Condiciones</a> y la <a class="politicaPrivacidad" href="#">Política de Privacidad</a> de Voz Park
                         </label>
                     </div>
                 </div>

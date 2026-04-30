@@ -6,7 +6,7 @@
     --text-white: #ffffff;
     --text-muted: #a0b0a0;
     --text-dark: #333333;
-    --border-color: #c0d0c0;
+    --border-color: #c0d0c0; 
 }
 
 * {
@@ -38,6 +38,7 @@ body {
 }
 
 .seccionIzquierda h1 {
+    color: #DFFFAA;
     font-size: 2.5rem;
     font-weight: 700;
 }
@@ -50,7 +51,7 @@ body {
 .beneficios h3 {
     font-size: 0.9rem;
     letter-spacing: 1px;
-    color: #8db37a;
+    color: #97C459;
     margin-bottom: 30px;
 }
 
@@ -85,9 +86,11 @@ body {
 .textoBeneficio strong {
     display: block;
     font-size: 1rem;
+    color: #DFFFAA;
 }
 
 .textoBeneficio p {
+    color: #DFFFAA;
     font-size: 0.85rem;
     color: var(--text-muted);
 }
@@ -108,7 +111,7 @@ body {
 
 .linkVolver {
     text-decoration: none;
-    color: #888;
+    color: #3B6D11;
     font-size: 0.9rem;
     display: block;
     margin-bottom: 30px;
@@ -121,7 +124,7 @@ h2 {
 }
 
 .subTituloLogin {
-    color: #666;
+    color: #3B6D11;
     margin-bottom: 40px;
 }
 
@@ -133,14 +136,14 @@ h2 {
 
 label {
     font-size: 0.9rem;
-    color: var(--primary-green);
+    color: #3B6D11;
     margin-bottom: 8px;
     font-weight: 600;
 }
 
 input {
     padding: 10px;
-    border: 1px solid var(--border-color);
+    border: 1px solid #97C459;
     border-radius: 6px;
     font-size: 1rem;
     outline: none;
@@ -149,14 +152,14 @@ input {
 .olvidasteContraseña {
     text-align: right;
     font-size: 0.85rem;
-    color: #888;
+    color: #3B6D11;
     text-decoration: none;
     margin-top: 8px;
 }
 
 .btnIniciarSesion {
     background-color: var(--primary-green);
-    color: white;
+    color: #DFFFAAC7;
     border: none;
     padding: 12px;
     width: 100%;
@@ -176,7 +179,7 @@ input {
     text-align: center;
     margin-top: 30px;
     font-size: 0.9rem;
-    color: #666;
+    color: #3B6D11;
 }
 
 .noTienesCuenta a {
@@ -218,11 +221,12 @@ input {
 .textoAdmin strong {
     font-size: 0.9rem;
     display: block;
+    color: #000000;
 }
 
 .textoAdmin p {
     font-size: 0.75rem;
-    color: #666;
+    color: #3B6D11;
 }
 
 /* Responsivo para móviles */

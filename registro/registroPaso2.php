@@ -29,12 +29,12 @@
 
                 <div class="grupoInput">
                     <label for="password">Contraseña *</label>
-                    <input type="password" id="password" placeholder="Contraseña">
+                    <input type="password" id="password" placeholder="Minimo 8 caracteres">
                 </div>
 
                 <div class="grupoInput">
                     <label for="password">Confirmar contraseña *</label>
-                    <input type="password" id="password" placeholder="Confirmar contraseña">
+                    <input type="password" id="password" placeholder="Repite tu contraseña">
                 </div>
 
                 <div class="grupoInput">

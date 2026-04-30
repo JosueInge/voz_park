@@ -9,7 +9,7 @@
 
 .custom-box-title {
     font-size: 1rem;
-    color: var(--primary-green);
+    color: #3B6D11;
     font-weight: 600;
     margin-bottom: 5px;
 }
@@ -17,15 +17,8 @@
 .custom-box-list {
     list-style: none;
     padding-left: 0;
-    color: #222;
+    color: #3B6D11;
     font-size: 0.98rem;
-}
-
-.custom-box-list .check::before {
-    content: '✔';
-    color: var(--primary-green);
-    margin-right: 8px;
-    font-size: 1rem;
 }
 
 .custom-box-row {
@@ -82,7 +75,7 @@ body {
 
 .linkVolver {
     text-decoration: none;
-    color: var(--text-gray);
+    color: #3B6D11;
     font-size: 0.9rem;
     margin-bottom: 25px;
     display: inline-block;
@@ -95,7 +88,7 @@ body {
 }
 
 .encabezadoFormulario p {
-    color: var(--text-gray);
+    color: #3B6D11;
     font-size: 0.95rem;
     margin-bottom: 30px;
 }
@@ -120,7 +113,7 @@ body {
 
 .paso-label {
     font-size: 0.85rem;
-    color: var(--primary-green);
+    color: #3B6D11;
     margin-bottom: 25px;
     font-weight: 500;
 }
@@ -136,6 +129,12 @@ body {
     color: var(--primary-green);
     margin-bottom: 8px;
     font-weight: 500;
+}
+
+.terminosYcondiciones, .politicaPrivacidad {
+    color: #325600;
+    text-decoration: none;
+    font-weight: 600;
 }
 
 input {
@@ -158,7 +157,7 @@ input:focus {
 
 .btn-continue {
     background-color: var(--primary-green);
-    color: white;
+    color: #DFFFAAC7;
     border: none;
     padding: 10px;
     width: 100%;
@@ -176,8 +175,8 @@ input:focus {
 
 .btn-atras {
     background-color: transparent;
-    color: var(--text-gray);
-    border: 1.5px solid var(--border-color);
+    color: #3B6D11;
+    border: 1.5px solid #97C459;
     padding: 10px;
     width: 100%;
     border-radius: 8px;
