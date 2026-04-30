@@ -1,5 +1,5 @@
 :root {
-    --dark-green: #1a2a16;
+    --dark-green: #1A2E0F;
     --primary-green: #3d7a1f;
     --light-green: #eef5e9;
     --text-white: #ffffff;
@@ -60,9 +60,9 @@
 
 /* Colores de iconos basados en la imagen */
 .reportar { background-color: #3d7a1f; }
-.participar { background-color: #4a8a5e; }
-.consultar { background-color: #559c7a; }
-.verImpacto { background-color: #6fb08a; }
+.participar { background-color: #3d7a1f; }
+.consultar { background-color: #3d7a1f; }
+.verImpacto { background-color: #3d7a1f; }
 
 .textoBeneficio strong {
     display: block;

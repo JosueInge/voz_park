@@ -54,12 +54,12 @@ body {
 .paso {
     height: 4px;
     flex: 1;
-    background-color: #d4f0c0;
+    background-color: #CBFF84;
     border-radius: 2px;
 }
 
-.paso.active {
-    background-color: #1a2e12;
+.paso.active {  
+    background-color: #1A2E0F;
 }
 
 .pasoLabel {
@@ -101,7 +101,7 @@ input:focus {
 }
 
 .btn-continuar {
-    background-color: #3d7a1a;
+    background-color: #3B6D11;
     color: white;
     border: none;
     padding: 10px;
