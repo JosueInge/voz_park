@@ -56,6 +56,10 @@ btnContinuar.addEventListener('click', function() {
         showToast('Error: La zona de residencia debe tener como minimo 10 letras y como máximo 25, puede ingresar: letras, números, espacios y caracteres especiales como ., -');
         return;
     }
+    // Guardar datos en localStorage
+    localStorage.setItem('vozpark_nombre', nameInput.value.trim());
+    localStorage.setItem('vozpark_email', emailInput.value.trim());
+    localStorage.setItem('vozpark_location', locationInput.value.trim());
     // Si todo es válido, continuar
     window.location.href = 'registroPaso2.php';
 });

@@ -6,6 +6,7 @@
     <title>Crear cuenta - VozPark</title>
     <link rel="stylesheet" href="estilos/seccionBeneficios.css">
     <link rel="stylesheet" href="estilos/registroPaso3.css">
+    <script src="js/registroPaso3.js" defer></script>
 </head>
 <body>
     <main class="contenedor">
@@ -31,9 +32,9 @@
                     <div class="custom-box">
                         <p class="custom-box-title">Revisá tus datos</p>
                         <ul class="custom-box-list">
-                            <li> 👤 Nombre</li>
-                            <li> 📧 Correo</li>
-                            <li> 📍 Lugar de residencia</li>
+                            <li id="dato-nombre"> 👤 Nombre</li>
+                            <li id="dato-email"> 📧 Correo</li>
+                            <li id="dato-location"> 📍 Lugar de residencia</li>
                         </ul>
                     </div>
                 </div>
@@ -47,7 +48,7 @@
                     </div>
                 </div>
 
-                <button onclick="window.location.href='#'" type="button" class="btn-continue">Continuar →</button>
+                <button onclick="window.location.href='#'" type="button" class="btn-continue" disabled>Continuar →</button>
                 <button onclick="history.back()" type="button" class="btn-atras"> ← Atrás</button>
             </form>
         </section>
