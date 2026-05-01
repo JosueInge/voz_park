@@ -147,7 +147,7 @@ body {
     color: #b2b2b2;
     position: absolute;
     left: 0;
-    top: 2px;
+    top: -2px;
     font-size: 1.1em;
     transition: color 0.2s;
 }
@@ -156,6 +156,7 @@ body {
     content: "\2714"; /* check */
     color: #3B6D11;
     font-weight: bold;
+    top: -3px;
 }
 
 input {
