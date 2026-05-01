@@ -67,7 +67,7 @@ body {
 /* PANEL DERECHO */
 .panelFormulario {
     width: 55%;
-    padding: 40px;
+    padding: 35px;
     display: flex;
     flex-direction: column;
     justify-content: center;

@@ -18,7 +18,7 @@ body {
 /* PANEL DERECHO */
 .panelFormulario {
     width: 55%;
-    padding: 40px;
+    padding: 35px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -35,13 +35,13 @@ body {
 .encabezadoFormulario h1 {
     font-size: 1.8rem;
     color: #000;
-    margin-bottom: 8px;
+    margin-bottom: 5px;
 }
 
 .encabezadoFormulario p {
     color: #3B6D11;
     font-size: 0.95rem;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 /* Pasos */
@@ -82,7 +82,7 @@ body {
     font-weight: 500;
 }
 
-input, select {
+input {
     width: 100%;
     padding: 5px 15px;
     border: 1.5px solid #97C459;
@@ -110,12 +110,38 @@ input:focus {
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    margin-top: 10px;
-    transition: background 0.3s;
+    margin-top: 15px;
+    opacity: 1;
+    transition: background 0.3s, opacity 0.2s;
 }
 
 .btn-continuar:hover {
     background-color: #1a2e12;
+}
+
+/* Toast styles */
+.toast {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #bb2124;
+    color: #fff;
+    padding: 18px 32px;
+    border-radius: 10px;
+    font-size: 1rem;
+    z-index: 9999;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+    text-align: center;
+    min-width: 220px;
+    max-width: 90vw;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.toast.show {
+    display: block;
+    opacity: 1;
 }
 
 /* RESPONSIVO */

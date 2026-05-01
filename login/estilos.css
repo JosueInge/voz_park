@@ -75,13 +75,12 @@ body {
 .textoBeneficio strong {
     display: block;
     font-size: 1rem;
-    color: #DFFFAA;
+    color: #DFFFAA; 
 }
 
 .textoBeneficio p {
-    color: #DFFFAA;
+    color: #DFFFAAC7;
     font-size: 0.85rem;
-    color: #a0b0a0;
 }
 
 /* SECCIÓN DERECHA */
@@ -138,13 +137,13 @@ input {
     outline: none;
 }
 
-.inputPasswordWrapper {
+.contenedorContraseña {
     position: relative;
     display: flex;
     align-items: center;
 }
 
-.inputPasswordWrapper input {
+.contenedorContraseña input {
     width: 100%;
     padding-right: 38px;
 }

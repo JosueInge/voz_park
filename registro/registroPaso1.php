@@ -44,17 +44,14 @@
 
                 <div class="grupoInput">
                     <label for="location">Zona de residencia *</label>
-                    <select id="location">
-                        <option value="" disabled selected>Seleccioná tu zona</option>
-                        <option value="san-salvador">San Salvador</option>
-                        <option value="la-libertad">La Libertad</option>
-                        </select>
+                    <input type="text" id="location" placeholder="Seleccioná tu zona">
                 </div>
 
                 <button type="button" class="btn-continuar">Continuar →</button>
             </form>
         </section>
     </main>
+    <div id="toast" class="toast"></div>
     <script src="js/registroPaso1.js"></script>
 </body>
 </html>

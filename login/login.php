@@ -65,9 +65,9 @@
 
                     <div class="gruposFormulario">
                         <label for="password">Contraseña</label>
-                        <div class="inputPasswordWrapper">
+                        <div class="contenedorContraseña">
                             <input type="password" id="password" name="password">
-                            <img id="togglePassword" class="iconoOjo" src="imagenes/ojoCerrado.webp" alt="Mostrar contraseña" tabindex="0">
+                            <img id="togglePassword" class="iconoOjo" src="imagenes/ojoAbierto.webp" alt="Mostrar contraseña" tabindex="0">
                         </div>
                         <a href="#" class="olvidasteContraseña">¿Olvidaste tu contraseña?</a>
                     </div>
