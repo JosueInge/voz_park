@@ -33,8 +33,8 @@
                 </div>
 
                 <div class="grupoInput">
-                    <label for="password">Confirmar contraseña *</label>
-                    <input type="password" id="password" placeholder="Repite tu contraseña">
+                    <label for="confirmarPassword">Confirmar contraseña *</label>
+                    <input type="password" id="confirmarPassword" placeholder="Repite tu contraseña">
                 </div>
 
                 <div class="grupoInput">
