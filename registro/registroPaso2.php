@@ -6,6 +6,7 @@
     <title>Crear cuenta - VozPark</title>
     <link rel="stylesheet" href="estilos/seccionBeneficios.css">
     <link rel="stylesheet" href="estilos/registroPaso2.css">
+    <script src="js/registroPaso2.js" defer></script>
 </head>
 <body>
     <main class="contenedor">
@@ -41,14 +42,14 @@
                     <div class="inputInforContraseña">
                         <p>Tu contraseña debe tener:</p>
                         <ul>
-                            <li class="check">Al menos 8 caracteres</li>
-                            <li class="check">Una letra mayúscula</li>
-                            <li class="check">Un número</li>
+                            <li class="val-8caracteres">Al menos 8 caracteres</li>
+                            <li class="val-mayuscula">Una letra mayúscula</li>
+                            <li class="val-numero">Un número</li>
                         </ul>
                     </div>
                 </div>
 
-                <button onclick="window.location.href='registroPaso3.php'" type="button" class="btn-continue">Continuar →</button>
+                <button type="button" class="btn-continue">Continuar →</button>
                 <button onclick="history.back()" type="button" class="btn-atras"> ← Atrás</button>
             </form>
         </section>
