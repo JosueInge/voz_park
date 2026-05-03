@@ -52,7 +52,7 @@
         </section>
         <main class="seccionLogin">
             <div class="contenedorLogin">
-                <a href="#" class="linkVolver">‹ Volver al inicio</a>
+                <a href="../home/home.php" class="linkVolver">‹ Volver al inicio</a>
                 
                 <h2>Bienvenido de nuevo</h2>
                 <p class="subTituloLogin">Ingresá a tu cuenta de VozPark</p>

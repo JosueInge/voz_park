@@ -13,8 +13,8 @@
     <img src="imagenes/logo.jpeg" alt="Logo" class="logo">
 
     <div class="nav">
-        <a href="#">INICIAR SESION</a>
-        <a href="#">REGISTRATE</a>
+        <a href="../login/login.php">INICIAR SESION</a>
+        <a href="../registro/registroPaso1.php">REGISTRATE</a>
     </div>
 </div>
 

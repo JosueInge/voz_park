@@ -8,6 +8,18 @@ function showToast(message) {
     if (toast.hideTimeout) clearTimeout(toast.hideTimeout);
     toast.hideTimeout = setTimeout(() => {
         toast.classList.remove('show');
+    }, 6000); // tiempo que se muestra el mensaje
+}
+
+// Mensaje toast para la zona de residencia
+function showToastResidencia(message) {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.classList.add('show');
+    // Limpiar cualquier timeout anterior
+    if (toast.hideTimeout) clearTimeout(toast.hideTimeout);
+    toast.hideTimeout = setTimeout(() => {
+        toast.classList.remove('show');
     }, 10000); // tiempo que se muestra el mensaje
 }
 
@@ -53,7 +65,7 @@ btnContinuar.addEventListener('click', function() {
         return;
     }
     if (!validarZona(locationInput.value)) {
-        showToast('Error: La zona de residencia debe tener como minimo 10 letras y como máximo 25, puede ingresar: letras, números, espacios y caracteres especiales como ., -');
+        showToastResidencia('Error: La zona de residencia debe tener como minimo 10 letras y como máximo 25, puede ingresar: letras, números, espacios y caracteres especiales como ., -');
         return;
     }
     // Guardar datos en localStorage
