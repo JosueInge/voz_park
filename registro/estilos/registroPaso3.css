@@ -1,3 +1,28 @@
+/* Toast para verificación */
+.toast-vozpark {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.95);
+    background: #1a2e12;
+    color: #fff;
+    padding: 18px 32px;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+    opacity: 0;
+    z-index: 9999;
+    transition: opacity 0.3s, transform 0.3s;
+    text-align: center;
+    pointer-events: none;
+    display: none;
+}
+.toast-vozpark.show {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    display: block;
+}
 .custom-box {
     border: 1.5px solid var(--border-color);
     border-radius: 8px;

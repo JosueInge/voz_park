@@ -48,7 +48,8 @@
                     </div>
                 </div>
 
-                <button onclick="window.location.href='#'" type="button" class="btn-continue" disabled>Continuar →</button>
+                <button type="button" class="btn-continue" disabled>Continuar →</button>
+                <div id="toast-verificacion" class="toast-vozpark" style="display:none;"></div>
                 <button onclick="history.back()" type="button" class="btn-atras"> ← Atrás</button>
             </form>
         </section>
