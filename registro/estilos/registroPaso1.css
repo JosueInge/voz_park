@@ -1,0 +1,159 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: #fff;
+    min-height: 100vh;
+}
+
+.contenedor {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* PANEL DERECHO */
+.panelFormulario {
+    width: 55%;
+    padding: 35px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.linkVolver {
+    text-decoration: none;
+    color: #000000;
+    font-size: 13px;
+    margin-bottom: 25px;
+    display: inline-block;
+}
+
+.encabezadoFormulario h1 {
+    font-size: 20px;
+    color: #000;
+    margin-bottom: 5px;
+}
+
+.encabezadoFormulario p {
+    color: #3B6D11;
+    font-size: 12px;
+    margin-bottom: 20px;
+}
+
+/* Pasos */
+.pasos {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.paso {
+    height: 4px;
+    flex: 1;
+    background-color: #CBFF84;
+    border-radius: 2px;
+}
+
+.paso.active {  
+    background-color: #1A2E0F;
+}
+
+.pasoLabel {
+    font-size: 0.85rem;
+    color: #3d7a1a;
+    margin-bottom: 25px;
+    font-weight: 500;
+}
+
+/* FORMULARIO */
+.grupoInput {
+    margin-bottom: 15px;
+}
+
+.grupoInput label {
+    display: block;
+    font-size: 0.85rem;
+    color: #3B6D11;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+input {
+    width: 100%;
+    padding: 5px 15px;
+    border: 1.5px solid #97C459;
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+input::placeholder {
+    color: #ccc;
+}
+
+input:focus {
+    border-color: #3d7a1a;
+}
+
+.btn-continuar {
+    background-color: #3B6D11;
+    color: #DFFFAAC7;
+    border: none;
+    padding: 10px;
+    width: 100%;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 15px;
+    opacity: 1;
+    transition: background 0.3s, opacity 0.2s;
+}
+
+.btn-continuar:hover {
+    background-color: #1a2e12;
+}
+
+/* Toast styles */
+.toast {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #bb2124;
+    color: #fff;
+    padding: 18px 32px;
+    border-radius: 10px;
+    font-size: 1rem;
+    z-index: 9999;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+    text-align: center;
+    min-width: 220px;
+    max-width: 90vw;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.toast.show {
+    display: block;
+    opacity: 1;
+}
+
+/* RESPONSIVO */
+@media (max-width: 900px) {
+    .container {
+        flex-direction: column;
+    }
+    .info-panel, .form-panel {
+        width: 100%;
+        padding: 40px 20px;
+    }
+    .info-panel {
+        min-height: auto;
+    }
+}

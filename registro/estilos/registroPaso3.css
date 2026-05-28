@@ -1,0 +1,240 @@
+/* Toast para verificación */
+.toast-vozpark {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.95);
+    background: #1a2e12;
+    color: #fff;
+    padding: 18px 32px;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+    opacity: 0;
+    z-index: 9999;
+    transition: opacity 0.3s, transform 0.3s;
+    text-align: center;
+    pointer-events: none;
+    display: none;
+}
+.toast-vozpark.show {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    display: block;
+}
+.custom-box {
+    border: 1.5px solid var(--border-color);
+    border-radius: 8px;
+    padding: 16px 20px;
+    background: #f8fdf4;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 3px rgba(60, 120, 60, 0.04);
+}
+
+.custom-box-title {
+    font-size: 1rem;
+    color: #3B6D11;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.custom-box-list {
+    list-style: none;
+    padding-left: 0;
+    color: #3B6D11;
+    font-size: 0.98rem;
+}
+
+.custom-box-row {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    background: #f8fdf4;
+}
+
+.checkbox-input {
+    width: 30px;
+    height: 30px;
+}
+
+.custom-checkbox-label {
+    font-size: 0.97rem;
+    color: var(--text-gray);
+    cursor: pointer;
+    user-select: none;
+}
+:root {
+    --dark-green: #1a2e12;
+    --primary-green: #3B6D11;
+    --light-green: #d4f0c0;
+    --text-gray: #666;
+    --border-color: #c4d4bc;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: #fff;
+    min-height: 100vh;
+}
+
+.contenedor {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* PANEL DERECHO */
+.panelFormulario {
+    width: 55%;
+    padding: 35px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.linkVolver {
+    text-decoration: none;
+    color: #3B6D11;
+    font-size: 0.9rem;
+    margin-bottom: 25px;
+    display: inline-block;
+}
+
+.encabezadoFormulario h1 {
+    font-size: 1.8rem;
+    color: #000;
+    margin-bottom: 8px;
+}
+
+.encabezadoFormulario p {
+    color: #3B6D11;
+    font-size: 0.95rem;
+    margin-bottom: 30px;
+}
+
+/* Pasos */
+.pasos {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.paso {
+    height: 4px;
+    flex: 1;
+    background-color: var(--light-green);
+    border-radius: 2px;
+}
+
+.paso.active {
+    background-color: var(--dark-green);
+}
+
+.paso-label {
+    font-size: 0.85rem;
+    color: #3B6D11;
+    margin-bottom: 25px;
+    font-weight: 500;
+}
+
+/* FORMULARIO */
+.grupoInput {
+    margin-bottom: 15px;
+}
+
+.grupoInput label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--primary-green);
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.terminosYcondiciones, .politicaPrivacidad {
+    color: #325600;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+input {
+    width: 100%;
+    padding: 5px 15px;
+    border: 1.5px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+input::placeholder {
+    color: #ccc;
+}
+
+input:focus {
+    border-color: var(--primary-green);
+}
+
+.btn-continue {
+    background-color: var(--primary-green);
+    color: #DFFFAAC7;
+    border: none;
+    padding: 10px;
+    width: 100%;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.3s;
+    opacity: 1;
+}
+
+.btn-continue:disabled {
+    background-color: var(--primary-green);
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: auto;
+}
+
+.btn-continue:hover, .btn-continue:disabled:hover {
+    background-color: var(--dark-green);
+}
+
+.btn-atras {
+    background-color: transparent;
+    color: #3B6D11;
+    border: 1.5px solid #97C459;
+    padding: 10px;
+    width: 100%;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.3s, border-color 0.3s;
+}
+
+.btn-atras:hover {
+    background-color: var(--light-green);
+    border-color: var(--primary-green);
+}
+
+/* RESPONSIVO */
+@media (max-width: 900px) {
+    .container {
+        flex-direction: column;
+    }
+    .info-panel, .form-panel {
+        width: 100%;
+        padding: 40px 20px;
+    }
+    .info-panel {
+        min-height: auto;
+    }
+}

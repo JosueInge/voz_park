@@ -1,0 +1,77 @@
+:root {
+    --dark-green: #1A2E0F;
+    --primary-green: #3d7a1f;
+    --light-green: #eef5e9;
+    --text-white: #ffffff;
+    --text-muted: #a0b0a0;
+    --text-dark: #333333;
+    --border-color: #c0d0c0;
+}
+
+/* SECCIÓN IZQUIERDA */
+.seccionInformacion {
+    background-color: var(--dark-green);
+    color: var(--text-white);
+    width: 65%;
+    padding: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.seccionIzquierda h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #DFFFAA;
+}
+
+.seccionIzquierda .subTitulo {
+    color: var(--text-muted);
+    margin-bottom: 80px;
+}
+
+.beneficios h3 {
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    color: #97C459;
+    margin-bottom: 30px;
+}
+
+.item-beneficio {
+    display: flex;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.tamañoIconos {
+    width: 15px;
+    height: 15px;
+}
+
+.cuadroBeneficio {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    font-size: 1.2rem;
+}
+
+/* Colores de iconos basados en la imagen */
+.reportar { background-color: #3d7a1f; }
+.participar { background-color: #3d7a1f; }
+.consultar { background-color: #3d7a1f; }
+.verImpacto { background-color: #3d7a1f; }
+
+.textoBeneficio strong {
+    display: block;
+    font-size: 1rem;
+    color: #DFFFAA;
+}
+
+.textoBeneficio p {
+    font-size: 0.85rem;
+    color: #DFFFAA;
+}
