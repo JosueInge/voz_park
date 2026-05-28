@@ -26,21 +26,21 @@ body {
 
 .linkVolver {
     text-decoration: none;
-    color: #3B6D11;
-    font-size: 0.9rem;
+    color: #000000;
+    font-size: 13px;
     margin-bottom: 25px;
     display: inline-block;
 }
 
 .encabezadoFormulario h1 {
-    font-size: 1.8rem;
+    font-size: 20px;
     color: #000;
     margin-bottom: 5px;
 }
 
 .encabezadoFormulario p {
     color: #3B6D11;
-    font-size: 0.95rem;
+    font-size: 12px;
     margin-bottom: 20px;
 }
 

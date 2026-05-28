@@ -57,6 +57,11 @@
                 <h2>Bienvenido de nuevo</h2>
                 <p class="subTituloLogin">Ingresá a tu cuenta de VozPark</p>
 
+                    <button type="button" class="btnGoogle">
+                        <img src="imagenes/imagenGoogle.png" alt="Google" >
+                        <span >Continuar con Google</span>
+                    </button> 
+
                 <form>
                     <div class="gruposFormulario">
                         <label for="email">Correo electrónico</label>

@@ -17,9 +17,9 @@ body {
 
 /* SECCIÓN IZQUIERDA */
 .seccionInformacion {
-    background-color: #1A2E0F;
+    background-color: #3B6D11;
     color: #ffffff;
-    width: 65%;
+    width: 700px;
     padding: 60px;
     display: flex;
     flex-direction: column;
@@ -28,20 +28,24 @@ body {
 
 .seccionIzquierda h1 {
     color: #DFFFAA;
-    font-size: 2.5rem;
+    font-size: 24px;
     font-weight: 700;
+    font-family: 'Inter', sans-serif;
 }
 
 .seccionIzquierda .subTitulo {
-    color: #a0b0a0;
+    color: #B5FFF8;
     margin-bottom: 80px;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
 }
 
 .beneficios h3 {
-    font-size: 0.9rem;
+    font-size: 16px;
     letter-spacing: 1px;
     color: #97C459;
     margin-bottom: 30px;
+    font-family: 'Inter', sans-serif;
 }
 
 .item-beneficio {
@@ -51,8 +55,10 @@ body {
 }
 
 .tamañoIconos {
-    width: 15px;
-    height: 15px;
+    width: 28px;
+    height: 28px;
+    background-color: #3B6D11;
+    border-radius: 4px;
 }
 
 .cuadroBeneficio {
@@ -67,15 +73,16 @@ body {
 }
 
 /* Colores de iconos basados en la imagen */
-.reportar { background-color: #3d7a1f; }
-.participar { background-color: #3d7a1f; }
-.consultar { background-color: #3d7a1f; }
-.verImpacto { background-color: #3d7a1f; }
+.reportar { background-color: #3B6D11; }
+.participar { background-color: #3B6D11; }
+.consultar { background-color: #3B6D11; }
+.verImpacto { background-color: #3B6D11; }
 
 .textoBeneficio strong {
     display: block;
-    font-size: 1rem;
-    color: #DFFFAA; 
+    font-size: 16px;
+    color: #DFFFAA;
+    font-family: 'Inter', sans-serif; 
 }
 
 .textoBeneficio p {
@@ -94,26 +101,44 @@ body {
 
 .contenedorLogin {
     width: 100%;
-    max-width: 450px;
+    max-width: 400px;
 }
 
 .linkVolver {
     text-decoration: none;
     color: #3B6D11;
-    font-size: 0.9rem;
+    font-size: 13px;
     display: block;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
 }
 
 h2 {
-    font-size: 2rem;
+    font-size: 20px;
     color: #000000;
-    margin-bottom: 5px;
+    margin-bottom: 15px;
 }
 
 .subTituloLogin {
     color: #3B6D11;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
+    font-size: 12px;
+}
+
+.btnGoogle {
+    background-color: #3B6D11;
+    color: #FFFFFF;
+    border: 1px solid #ddd;
+    padding: 3px;
+    width: 100%;
+    height: 36px;
+    border-radius: 6px;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 25px;
+    cursor: pointer;
+    transition: background 0.3s, border-color 0.3s;
 }
 
 .gruposFormulario {
@@ -123,7 +148,7 @@ h2 {
 }
 
 label {
-    font-size: 0.9rem;
+    font-size: 13px;
     color: #3B6D11;
     margin-bottom: 8px;
     font-weight: 600;
@@ -135,6 +160,7 @@ input {
     border-radius: 6px;
     font-size: 1rem;
     outline: none;
+    height: 29px;
 }
 
 .contenedorContraseña {
@@ -153,8 +179,8 @@ input {
     right: 12px;
     top: 50%;
     transform: translateY(-50%);
-    width: 22px;
-    height: 22px;
+    width: 23px;
+    height: 20px;
     cursor: pointer;
     opacity: 0.7;
     transition: opacity 0.2s;
@@ -165,7 +191,7 @@ input {
 
 .olvidasteContraseña {
     text-align: right;
-    font-size: 0.85rem;
+    font-size: 12px;
     color: #3B6D11;
     text-decoration: none;
     margin-top: 8px;
@@ -177,6 +203,11 @@ input {
     border: none;
     padding: 12px;
     width: 100%;
+    height: 30px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border-radius: 6px;
     font-size: 1rem;
     font-weight: 600;
@@ -191,26 +222,28 @@ input {
 
 .noTienesCuenta {
     text-align: center;
-    margin-top: 30px;
-    font-size: 0.9rem;
+    margin-top: 50px;
+    font-size: 13px;
     color: #3B6D11;
 }
 
 .noTienesCuenta a {
-    color: #3d7a1f;
+    color: #000000;
     text-decoration: none;
     font-weight: 700;
 }
 
 /* apartadoAdmin */
 .apartadoAdmin {
-    margin-top: 40px;
+    margin-top: 20px;
+    height: 47px;
 }
 
 .contenedorAdmin {
-    background-color: #eef5e9;
+    background-color: #5990C44D;
     display: flex;
-    padding: 15px;
+    padding: 10px;
+    border: 1px solid #0C447C;
     border-radius: 10px;
     align-items: center;
 }
@@ -218,8 +251,8 @@ input {
 .iconoAdmin {
     background-color: #1a4a9e;
     color: white;
-    width: 35px;
-    height: 35px;
+    width: 23px;
+    height: 21px;
     border-radius: 6px;
     display: flex;
     align-items: center;
@@ -233,14 +266,14 @@ input {
 }
 
 .textoAdmin strong {
-    font-size: 0.9rem;
+    font-size: 13px;
     display: block;
     color: #000000;
 }
 
 .textoAdmin p {
-    font-size: 0.75rem;
-    color: #3B6D11;
+    font-size: 13px;
+    color: #0C447C;
 }
 
 /* Responsivo para móviles */

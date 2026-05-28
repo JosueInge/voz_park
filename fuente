@@ -1,0 +1,23 @@
+<a href="../login/login.php" class="btn-login">
+    Iniciar sesión
+</a>
+
+.btn-login {
+    text-decoration: none;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 120px;
+    height: 24px;
+
+    border: 1px solid #97C459;
+    border-radius: 5px;
+
+    color: #DFFFAA;
+    font-size: 12px;
+    font-family: 'Inter', sans-serif;
+
+    background: transparent;
+}
