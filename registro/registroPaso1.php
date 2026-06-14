@@ -12,24 +12,24 @@
         <?php include 'seccionBeneficios.php'; ?>
 
         <section class="panelFormulario">
+          <div class="contenidoFormulario">
             <div class="encabezadoFormulario">
-                <a href="../login/login.php" class="linkVolver">‹ Ya tengo cuenta</a>
+                <a href="../login/login.php" class="linkVolver">Ya tengo cuenta</a>
                 <h1>Crear cuenta en VozPark</h1>
-                <p>Es gratuito y toma menos de 2 minutos</p>
             </div>
 
             <div class="pasos">
                 <div class="paso active"></div>
-                <div class="paso"></div>
-                <div class="paso"></div>
+                <div class="paso2"></div>
+                <div class="paso3"></div>
             </div>
 
             <form class="formularioRegistro">
-                <p class="pasoLabel">Paso 1 de 3 · Información personal</p>
+                <p class="pasoLabel">Paso 1 de 3 - Información personal</p>
 
                 <div class="grupoInput">
                     <label for="name">Nombre completo *</label>
-                    <input type="text" id="name" placeholder="Ana García">
+                    <input type="text" id="name" placeholder="Escribe tu nombre">
                 </div>
 
                 <div class="grupoInput">
@@ -39,19 +39,19 @@
 
                 <div class="grupoInput">
                     <label for="phone">Número de teléfono *</label>
-                    <input type="tel" id="phone" placeholder="+503 7700-0000">
+                    <input type="tel" id="phone" placeholder="+503 0000-0000">
                 </div>
 
                 <div class="grupoInput">
                     <label for="location">Zona de residencia *</label>
-                    <input type="text" id="location" placeholder="Seleccioná tu zona">
+                    <input type="text" id="location" placeholder="Escribe tu zona de residencia">
                 </div>
 
                 <button type="button" class="btn-continuar">Continuar →</button>
             </form>
+          </div>
         </section>
     </main>
-    <div id="toast" class="toast"></div>
     <script src="js/registroPaso1.js"></script>
 </body>
 </html>

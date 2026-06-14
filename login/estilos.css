@@ -72,7 +72,7 @@ body {
     font-size: 1.2rem;
 }
 
-/* Colores de iconos basados en la imagen */
+/* Colores de iconos */
 .reportar { background-color: #3B6D11; }
 .participar { background-color: #3B6D11; }
 .consultar { background-color: #3B6D11; }
@@ -83,11 +83,6 @@ body {
     font-size: 16px;
     color: #DFFFAA;
     font-family: 'Inter', sans-serif; 
-}
-
-.textoBeneficio p {
-    color: #DFFFAA;
-    font-size: 0.85rem;
 }
 
 /* SECCIÓN DERECHA */
@@ -104,63 +99,190 @@ body {
     max-width: 400px;
 }
 
+/*Enlace volver*/
 .linkVolver {
     text-decoration: none;
-    color: #3B6D11;
-    font-size: 13px;
-    display: block;
+    color: #000000;
+    font-size: 16px;
+    display: flex;
     margin-bottom: 10px;
+    font-family: 'Inter', sans-serif;
+}
+
+.iconoVolver {
+    width: 18px;
+    height: 18px;
+    margin-right: 8px;
 }
 
 h2 {
-    font-size: 20px;
+    font-size: 24px;
     color: #000000;
     margin-bottom: 15px;
+    font-weight: 700;
+    font-family: 'Inter', sans-serif;
 }
 
 .subTituloLogin {
     color: #3B6D11;
     margin-bottom: 20px;
-    font-size: 12px;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
 }
 
+/*boton de google*/
 .btnGoogle {
     background-color: #3B6D11;
     color: #FFFFFF;
-    border: 1px solid #ddd;
+    border: none;
     padding: 3px;
-    width: 100%;
-    height: 36px;
-    border-radius: 6px;
-    font-size: 1rem;
+    width: 310px;
+    height: 35px;
+    border-radius: 4px;
+    font-size: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
     margin-bottom: 25px;
     cursor: pointer;
-    transition: background 0.3s, border-color 0.3s;
+    transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+    font-family: 'Inter', sans-serif;
+    position: relative;
+    overflow: hidden;
+    gap: 10px;
+}
+
+.btnGoogle img {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+}
+
+.btnGoogle span {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    color: #FFFFFF;
+    line-height: 1;
+}
+
+.btnGoogle:hover, .btnGoogle:focus {
+    background-color: #4d8a11;
+    box-shadow: 0 4px 16px #3B6D1133;
+    transform: translateY(0px) scale(1.018);
+}
+
+.google-signin-container:hover .btnGoogle,
+.btnGoogle.btn-hover {
+    background-color: #4d8a11;
+    box-shadow: 0 4px 16px #3B6D1133;
+    transform: translateY(0px) scale(1.018);
+}
+
+.google-signin-container:hover {
+    transform: translateY(0px) scale(1.018);
+}
+
+.google-signin-container {
+    width: 310px;
+    height: 35px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s, box-shadow 0.3s, transform 0.3s;
+    font-family: 'Inter', sans-serif;
+}
+
+.google-signin-container > .btnGoogle {
+    position: relative;
+    z-index: 1;
+}
+
+.google-hit-area {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.google-hit-area > div,
+.google-hit-area iframe {
+    width: 100% !important;
+    height: 35px !important;
+}
+
+.google-signin-container.btn-hover {
+    box-shadow: 0 4px 16px #3B6D1133;
+    transform: translateY(0px) scale(1.018);
+}
+
+.google-signin-container.btn-wave::after {
+    content: '';
+    position: absolute;
+    left: var(--wave-x, 50%);
+    top: var(--wave-y, 50%);
+    width: 0;
+    height: 0;
+    background: rgba(223, 255, 170, 0.4);
+    border-radius: 100%;
+    transform: translate(-50%, -50%);
+    animation: wave 0.4s linear;
+    pointer-events: none;
+    z-index: 3;
+}
+
+.mensaje-google {
+    min-height: 20px;
+    margin-bottom: 14px;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    color: #000000;
+    font-size: 14px;
+}
+
+.btnGoogle.btn-wave::after {
+    content: '';
+    position: absolute;
+    left: var(--wave-x, 50%);
+    top: var(--wave-y, 50%);
+    width: 0;
+    height: 0;
+    background: rgba(223, 255, 170, 0.4);
+    border-radius: 100%;
+    transform: translate(-50%, -50%);
+    animation: wave 0.4s linear;
+    pointer-events: none;
+    z-index: 2;
 }
 
 .gruposFormulario {
     margin-bottom: 20px;
     display: flex;
     flex-direction: column;
+    width: 80%;
 }
 
 label {
-    font-size: 13px;
+    font-size: 16px;
     color: #3B6D11;
     margin-bottom: 8px;
     font-weight: 600;
+    font-family: 'Inter', sans-serif;
 }
 
 input {
+    width: 310px;
     padding: 10px;
     border: 1px solid #97C459;
-    border-radius: 6px;
+    border-radius: 4px;
     font-size: 1rem;
     outline: none;
-    height: 29px;
+    height: 30px;
+    font-size: 16px;
+    color: #000000;
+    font-family: 'Inter', sans-serif;
+    transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
 }
 
 .contenedorContraseña {
@@ -170,13 +292,67 @@ input {
 }
 
 .contenedorContraseña input {
-    width: 100%;
-    padding-right: 38px;
+    width: 310px;
+    height: 30px;
+    border: 1px solid #97C459;
+    border-radius: 4px;
+    color: #000000;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+}
+/* Mensajes de error debajo de los campos */
+.mensaje-error {
+    margin-top: 6px;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    color: #000000;
+    font-size: 16px;
+    display: block;
+    min-height: 20px;
+    animation: fadeIn 0.2s;
 }
 
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Borde rojo cereza en error */
+input.input-error {
+    border-color: #E85D5D !important;
+}
+
+input.shake {
+    animation: shake 0.6s cubic-bezier(.36,.07,.19,.97) both;
+}
+@keyframes shake {
+    10%, 90% { transform: translateX(-2px); }
+    20%, 80% { transform: translateX(2px); }
+    30%, 50%, 70% { transform: translateX(-2px); }
+    40%, 60% { transform: translateX(2px); }
+}
+
+/* Efectos visuales en campos */
+.input-focus input,
+.input-hover input {
+    box-shadow: 0 0 8px #97C45933;
+    transform: scale(1.03);
+    z-index: 2;
+}
+
+@keyframes wave {
+    to {
+        width: 100px;
+        height: 100px;
+        opacity: 0;
+    }
+}
+
+/*icono del ojo*/
 .iconoOjo {
     position: absolute;
-    right: 12px;
+    right: -15px;
     top: 50%;
     transform: translateY(-50%);
     width: 23px;
@@ -185,100 +361,288 @@ input {
     opacity: 0.7;
     transition: opacity 0.2s;
 }
-.iconoOjo:hover, .iconoOjo:focus {
-    opacity: 1;
+
+/*apartado de olvidaste contraseña*/
+.contenedorOlvidasteContraseña {
+    margin-top: -10px;
 }
+
 
 .olvidasteContraseña {
-    text-align: right;
+    display: inline-block;
+    margin-left: 160px;
     font-size: 12px;
-    color: #3B6D11;
+    color: #000000;
     text-decoration: none;
-    margin-top: 8px;
+    font-family: 'Inter', sans-serif;
+    position: relative;
+    border-radius: 4px;
+    transition:
+        background 0.18s ease,
+        box-shadow 0.18s ease,
+        transform 0.18s ease;
+    overflow: hidden;
+    z-index: 1;
 }
 
+.olvidasteContraseña:hover,
+.olvidasteContraseña:focus {
+    background-color: #42414122;
+    color: #000000;
+    box-shadow: 0 8px 8px #00000022;
+    transform: translateY(0px) scale(1.018);
+    outline: none;
+    text-decoration: none;
+}
+
+.olvidasteContraseña.btn-wave::after {
+    content: '';
+    position: absolute;
+    left: var(--wave-x, 50%);
+    top: var(--wave-y, 50%);
+    width: 0;
+    height: 0;
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 100%;
+    transform: translate(-50%, -50%);
+    animation: wave 0.38s linear;
+    pointer-events: none;
+    z-index: 2;
+}
+
+/*boton iniciar sesion*/
 .btnIniciarSesion {
-    background-color: #3d7a1f;
-    color: #DFFFAAC7;
+    background-color: #3B6D11;
+    color: #FFFFFF;
     border: none;
     padding: 12px;
-    width: 100%;
+    width: 310px;
     height: 30px;
     text-align: center;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 6px;
-    font-size: 1rem;
+    border-radius: 4px;
+    font-size: 16px;
     font-weight: 600;
     cursor: pointer;
-    margin-top: 10px;
+    margin-top: 25px;
     transition: background 0.3s;
+    font-family: 'Inter', sans-serif;
+    position: relative;
+    overflow: hidden;
 }
 
-.btnIniciarSesion:hover {
-    background-color: #2e5d17;
+.btnIniciarSesion:hover, .btnIniciarSesion:focus {
+    background-color: #508b33;
+    box-shadow: 0 4px 16px #3B6D1133;
+    transform: translateY(0px) scale(1.018);
+}
+
+.btnIniciarSesion.btn-wave::after {
+    content: '';
+    position: absolute;
+    left: var(--wave-x, 50%);
+    top: var(--wave-y, 50%);
+    width: 0;
+    height: 0;
+    background: rgba(223, 255, 170, 0.4);
+    border-radius: 100%;
+    transform: translate(-50%, -50%);
+    animation: wave 0.4s linear;
+    pointer-events: none;
+    z-index: 2;
+}
+
+/*apartado de crear cuenta*/
+.contenedorRegistro {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    text-align: center;
 }
 
 .noTienesCuenta {
-    text-align: center;
-    margin-top: 50px;
-    font-size: 13px;
-    color: #3B6D11;
+    display: flex;
+    gap: 10px;
+    font-size: 16px;
+    color: #000000;
+    font-family: 'Inter', sans-serif;
 }
 
 .noTienesCuenta a {
     color: #000000;
+    display: inline-block;
     text-decoration: none;
     font-weight: 700;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    border-radius: 4px;
+    transition:
+        background 0.18s ease,
+        box-shadow 0.18s ease,
+        transform 0.18s ease;
 }
 
-/* apartadoAdmin */
-.apartadoAdmin {
-    margin-top: 20px;
-    height: 47px;
-}
 
-.contenedorAdmin {
-    background-color: #5990C44D;
-    display: flex;
-    padding: 10px;
-    border: 1px solid #0C447C;
-    border-radius: 10px;
-    align-items: center;
-}
-
-.iconoAdmin {
-    background-color: #1a4a9e;
-    color: white;
-    width: 23px;
-    height: 21px;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 15px;
-}
-
-.tamañoIconoAdmin {
-    width: 16px;
-    height: 16px;
-}
-
-.textoAdmin strong {
-    font-size: 13px;
-    display: block;
+/* Hover / Focus */
+.noTienesCuenta a:hover,
+.noTienesCuenta a:focus {
+    background-color: #42414122;
     color: #000000;
+    /* sombra */
+    box-shadow: 0 8px 8px #00000022;
+    /* elevación + aumento */
+    transform: translateY(0px) scale(1.018);
+    outline: none;
+    text-decoration: none;
 }
 
-.textoAdmin p {
-    font-size: 13px;
-    color: #0C447C;
+
+/* Ripple / wave */
+.noTienesCuenta a.btn-wave::after {
+    content: '';
+    position: absolute;
+    left: var(--wave-x, 50%);
+    top: var(--wave-y, 50%);
+    width: 0;
+    height: 0;
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 100%;
+    transform: translate(-50%, -50%);
+    animation: wave 0.38s linear;
+    pointer-events: none;
+    z-index: 2;
+}
+
+
+/* Responsive */
+@media (max-width: 900px) {
+    body {
+        height: auto;
+        min-height: 100vh;
+    }
+
+    .contenedor {
+        flex-direction: column;
+        min-height: 100vh;
+        height: auto;
+    }
+
+    .seccionInformacion,
+    .seccionLogin {
+        width: 100%;
+    }
+
+    .seccionInformacion {
+        padding: 28px 20px;
+    }
+
+    .seccionIzquierda .subTitulo {
+        margin-bottom: 28px;
+    }
+
+    .beneficios h3 {
+        margin-bottom: 18px;
+    }
+
+    .item-beneficio {
+        margin-bottom: 14px;
+    }
+
+    .seccionLogin {
+        padding: 24px 16px 28px;
+        align-items: flex-start;
+    }
+
+    .contenedorLogin {
+        max-width: 100%;
+    }
+
+    .gruposFormulario {
+        width: 100%;
+    }
+
+    input,
+    .contenedorContraseña input,
+    .btnIniciarSesion,
+    .btnGoogle,
+    .google-signin-container,
+    .pasos {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .contenedorContraseña {
+        width: 100%;
+    }
+
+    .contenedorContraseña input {
+        padding-right: 42px;
+    }
+
+    .iconoOjo {
+        right: 10px;
+    }
+
+    .olvidasteContraseña {
+        margin-left: 0;
+    }
+
+    .contenedorOlvidasteContraseña {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: -4px;
+    }
+
+    .noTienesCuenta {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .apartadoAdmin {
+        height: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .seccionLogin {
+        padding: 20px 14px 24px;
+    }
+
+    h2 {
+        font-size: 22px;
+        margin-bottom: 10px;
+    }
+
+    .subTituloLogin,
+    label,
+    .noTienesCuenta,
+    .noTienesCuenta a {
+        font-size: 15px;
+    }
+
+    input,
+    .contenedorContraseña input,
+    .btnIniciarSesion,
+    .btnGoogle,
+    .google-signin-container {
+        height: 38px;
+    }
+
+    .iconoOjo {
+        width: 20px;
+        height: 18px;
+        right: 11px;
+    }
 }
 
 /* Responsivo para móviles */
 @media (max-width: 900px) {
-    .contenedor { flex-direction: column; }
-    .seccionInformacion, .seccionLogin { width: 100%; }
-    .seccionInformacion { padding: 40px 20px; }
+    .contenedorAdmin {
+        align-items: flex-start;
+    }
 }

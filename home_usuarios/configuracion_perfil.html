@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VozPark – Configuración</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #FAF8F2; min-height: 100vh; }
+
+    /* HEADER */
+    .vp-header { display:flex; align-items:center; width:100%; height:60px; background:#1A2E0F; padding:0 20px; position:sticky; top:0; z-index:100; }
+    .vp-brand { display:flex; flex-direction:column; padding-right:16px; flex-shrink:0; }
+    .vp-brand__name { font-size:20px; font-weight:700; color:#DFFFAA; line-height:1.2; }
+    .vp-brand__sub  { font-size:16px; color:#97C459; line-height:1.2; }
+    .vp-hdr-div { width:1px; height:40px; background:#F4FAEA; opacity:.55; flex-shrink:0; margin-right:16px; }
+    .vp-spacer { flex:1; }
+    .vp-user { display:flex; align-items:center; gap:8px; margin-right:14px; flex-shrink:0; }
+    .vp-user__avatar { width:20px; height:20px; border-radius:50%; background:#3B6D11; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:700; color:#DFFFAA; }
+    .vp-user__name { font-family:'Open Sans',sans-serif; font-size:20px; font-weight:600; color:#FFFFFF; white-space:nowrap; }
+    .vp-logout-hdr { display:flex; align-items:center; justify-content:center; width:40px; height:20px; background:#F4FAEA; border:none; border-radius:4px; font-family:'Inter',sans-serif; font-size:16px; color:#1A2E0F; cursor:pointer; position:relative; overflow:hidden; transition:background .2s; }
+
+    /* Ripple */
+    .ripple { position:absolute; border-radius:50%; background:rgba(59,109,17,.22); transform:scale(0); animation:ripple-anim .55s linear; pointer-events:none; }
+    @keyframes ripple-anim { to { transform:scale(4); opacity:0; } }
+
+    /* Modal */
+    .vp-modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:999; align-items:center; justify-content:center; }
+    .vp-modal-overlay.active { display:flex; }
+    .vp-modal { background:#FFFFFF; border:1px solid #E2E8F0; border-radius:12px; padding:28px 32px 24px; width:360px; max-width:92vw; display:flex; flex-direction:column; gap:20px; }
+    .vp-modal__title { font-size:16px; font-weight:700; color:#000000; text-align:center; line-height:1.4; }
+    .vp-modal__actions { display:flex; gap:12px; }
+    .vp-modal__btn { flex:1; height:40px; border:none; border-radius:8px; font-family:'Inter',sans-serif; font-size:16px; color:#DFFFAA; background:#3B6D11; cursor:pointer; position:relative; overflow:hidden; transition:filter .2s; }
+    .vp-modal__btn--danger { background:#E85D5D; color:#FFFFFF; }
+    .vp-modal__btn:hover { filter:brightness(1.12); }
+
+    /* Alert toast */
+    .vp-toast {
+      display:none; position:fixed; top:76px; left:50%; transform:translateX(-50%);
+      background:#3B6D11; color:#DFFFAA; border-radius:6px;
+      padding:10px 24px; font-size:15px; z-index:1000;
+      box-shadow:0 4px 16px rgba(59,109,17,.30);
+      animation: toast-in .3s ease;
+    }
+    .vp-toast.show { display:block; }
+    @keyframes toast-in { from { opacity:0; transform:translateX(-50%) translateY(-8px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }
+
+    /* MAIN */
+    .vp-main { padding:28px 24px 60px; max-width:900px; margin:0 auto; }
+    .vp-page-title { font-size:24px; font-weight:700; color:#000000; margin-bottom:24px; }
+
+    /* Section card */
+    .vp-section {
+      background:#FFFFFF; border:1px solid rgba(151,196,89,.30);
+      border-radius:8px; padding:20px 24px; margin-bottom:20px;
+    }
+    .vp-section__title { font-size:16px; font-weight:700; color:#000000; margin-bottom:18px; }
+    .vp-section--danger {
+      background:#FDF0F0; border-color:rgba(196,89,89,.30);
+    }
+    .vp-section--danger .vp-section__title { color:#B45050; }
+    .vp-section--danger .vp-section__desc  { font-size:14px; color:#000000; margin-bottom:14px; }
+
+    /* Form field */
+    .vp-field { margin-bottom:14px; }
+    .vp-field label { display:block; font-size:14px; color:#000000; margin-bottom:5px; }
+    .vp-field__wrap { position:relative; }
+    .vp-input {
+      width:100%; height:35px; border:1px solid rgba(151,196,89,.30); border-radius:4px;
+      padding:0 12px; font-family:'Inter',sans-serif; font-size:14px; color:#000000;
+      outline:none; transition:border-color .2s;
+      background:#FFFFFF;
+    }
+    .vp-input:focus { border-color:rgba(151,196,89,.70); }
+    .vp-input[readonly] { background:#F8FFF0; color:#64748B; cursor:not-allowed; }
+    .vp-input.error { border-color:#E85D5D; animation:shake .3s ease; }
+    @keyframes shake {
+      0%,100%{ transform:translateX(0); }
+      20%,60%{ transform:translateX(-4px); }
+      40%,80%{ transform:translateX(4px); }
+    }
+    .vp-input--pwd { padding-right:40px; }
+    .vp-eye {
+      position:absolute; right:10px; top:50%; transform:translateY(-50%);
+      background:none; border:none; cursor:pointer; color:#000000; padding:0;
+      display:flex; align-items:center;
+    }
+    .vp-eye svg { width:18px; height:18px; }
+    .vp-field-error { font-size:14px; color:#E85D5D; margin-top:4px; display:none; }
+    .vp-field-error.show { display:block; }
+
+    /* Buttons */
+    .vp-btn-save {
+      width:100%; height:40px; background:#3B6D11; border:none; border-radius:4px;
+      font-family:'Inter',sans-serif; font-size:16px; color:#F4FAEA;
+      cursor:pointer; position:relative; overflow:hidden; transition:background .2s, box-shadow .2s;
+    }
+    .vp-btn-save:hover { background:#4a8a16; box-shadow:0 4px 14px rgba(59,109,17,.25); }
+
+    .vp-btn-change-pwd {
+      width:100%; height:40px;
+      background:rgba(151,196,89,.30); border:none; border-radius:4px;
+      font-family:'Inter',sans-serif; font-size:16px; color:#3B6D11;
+      cursor:pointer; position:relative; overflow:hidden; transition:background .2s, box-shadow .2s;
+      opacity:.5; pointer-events:none;
+    }
+    .vp-btn-change-pwd.enabled {
+      opacity:1; pointer-events:auto;
+    }
+    .vp-btn-change-pwd.enabled:hover { background:rgba(151,196,89,.50); box-shadow:0 4px 12px rgba(59,109,17,.20); }
+
+    .vp-btn-delete {
+      width:100%; height:40px;
+      background:rgba(196,89,89,.30); border:1px solid #B45050; border-radius:4px;
+      font-family:'Inter',sans-serif; font-size:16px; color:#FFFFFF;
+      cursor:pointer; position:relative; overflow:hidden; transition:background .2s, box-shadow .2s;
+    }
+    .vp-btn-delete:hover { background:rgba(196,89,89,.50); box-shadow:0 4px 12px rgba(196,89,89,.25); }
+
+    /* Responsive */
+    @media (max-width:640px) {
+      .vp-main { padding:20px 14px 48px; }
+      .vp-user__name { display:none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="vp-header">
+  <div class="vp-brand">
+    <span class="vp-brand__name">VozPark</span>
+    <span class="vp-brand__sub">Parques urbanos – El Salvador</span>
+  </div>
+  <div class="vp-hdr-div"></div>
+  <div class="vp-spacer"></div>
+  <div class="vp-user">
+    <div class="vp-user__avatar">MG</div>
+    <span class="vp-user__name">María González</span>
+  </div>
+  <button class="vp-logout-hdr" id="btn-logout">Salir</button>
+</header>
+
+<!-- MODALS -->
+<div class="vp-modal-overlay" id="modal-cuenta">
+  <div class="vp-modal">
+    <p class="vp-modal__title">¿Estás seguro de guardar los cambios?</p>
+    <div class="vp-modal__actions">
+      <button class="vp-modal__btn" data-modal="modal-cuenta" data-action="cancel">Cancelar</button>
+      <button class="vp-modal__btn" data-modal="modal-cuenta" data-action="save-cuenta">Confirmar</button>
+    </div>
+  </div>
+</div>
+<div class="vp-modal-overlay" id="modal-pwd">
+  <div class="vp-modal">
+    <p class="vp-modal__title">¿Estás seguro de cambiar tu contraseña?</p>
+    <div class="vp-modal__actions">
+      <button class="vp-modal__btn" data-modal="modal-pwd" data-action="cancel">Cancelar</button>
+      <button class="vp-modal__btn" data-modal="modal-pwd" data-action="save-pwd">Confirmar</button>
+    </div>
+  </div>
+</div>
+<div class="vp-modal-overlay" id="modal-delete">
+  <div class="vp-modal">
+    <p class="vp-modal__title">¿Estás seguro de eliminar tu cuenta? Esta acción es permanente e irreversible</p>
+    <div class="vp-modal__actions">
+      <button class="vp-modal__btn" data-modal="modal-delete" data-action="cancel">Cancelar</button>
+      <button class="vp-modal__btn vp-modal__btn--danger" data-modal="modal-delete" data-action="delete">Eliminar</button>
+    </div>
+  </div>
+</div>
+<div class="vp-modal-overlay" id="modal-logout">
+  <div class="vp-modal">
+    <p class="vp-modal__title">¿Estás seguro de cerrar sesión?</p>
+    <div class="vp-modal__actions">
+      <button class="vp-modal__btn" data-modal="modal-logout" data-action="cancel">Cancelar</button>
+      <button class="vp-modal__btn" data-modal="modal-logout" data-action="logout">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="vp-toast" id="toast"></div>
+
+<!-- MAIN -->
+<main class="vp-main">
+  <h1 class="vp-page-title">Configuración</h1>
+
+  <!-- CUENTA -->
+  <div class="vp-section">
+    <div class="vp-section__title">⚙ Cuenta</div>
+
+    <div class="vp-field">
+      <label for="nombre">Nombre completo</label>
+      <input class="vp-input" id="nombre" type="text" value="María González"/>
+      <div class="vp-field-error" id="err-nombre">El nombre es obligatorio</div>
+    </div>
+    <div class="vp-field">
+      <label for="correo">Correo electrónico</label>
+      <input class="vp-input" id="correo" type="email" value="maria.gonzalez@email.com" readonly/>
+      <div class="vp-field-error" id="err-correo"></div>
+    </div>
+    <div class="vp-field">
+      <label for="telefono">Teléfono</label>
+      <input class="vp-input" id="telefono" type="tel" value="7890-1234"/>
+      <div class="vp-field-error" id="err-telefono">El teléfono es obligatorio</div>
+    </div>
+    <div class="vp-field">
+      <label for="zona">Zona de residencia</label>
+      <input class="vp-input" id="zona" type="text" value="Centro Histórico, San Salvador"/>
+      <div class="vp-field-error" id="err-zona">La zona de residencia es obligatoria</div>
+    </div>
+
+    <button class="vp-btn-save" id="btn-save-cuenta">Guardar cambios</button>
+  </div>
+
+  <!-- SEGURIDAD -->
+  <div class="vp-section">
+    <div class="vp-section__title">🔒 Seguridad</div>
+
+    <div class="vp-field">
+      <label for="pwd-actual">Contraseña actual</label>
+      <div class="vp-field__wrap">
+        <input class="vp-input vp-input--pwd" id="pwd-actual" type="password"/>
+        <button class="vp-eye" data-target="pwd-actual" type="button" aria-label="Mostrar contraseña">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+      <div class="vp-field-error" id="err-pwd-actual"></div>
+    </div>
+    <div class="vp-field">
+      <label for="pwd-nueva">Nueva contraseña</label>
+      <div class="vp-field__wrap">
+        <input class="vp-input vp-input--pwd" id="pwd-nueva" type="password"/>
+        <button class="vp-eye" data-target="pwd-nueva" type="button" aria-label="Mostrar contraseña">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+      <div class="vp-field-error" id="err-pwd-nueva"></div>
+    </div>
+    <div class="vp-field">
+      <label for="pwd-confirm">Confirmar nueva contraseña</label>
+      <div class="vp-field__wrap">
+        <input class="vp-input vp-input--pwd" id="pwd-confirm" type="password"/>
+        <button class="vp-eye" data-target="pwd-confirm" type="button" aria-label="Mostrar contraseña">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+      <div class="vp-field-error" id="err-pwd-confirm"></div>
+    </div>
+
+    <button class="vp-btn-change-pwd" id="btn-change-pwd">Cambiar contraseña</button>
+  </div>
+
+  <!-- ZONA DE PELIGRO -->
+  <div class="vp-section vp-section--danger">
+    <div class="vp-section__title">⚠ Zona de peligro</div>
+    <div class="vp-section__desc">Estas acciones son permanentes e irreversibles</div>
+    <button class="vp-btn-delete" id="btn-delete">Eliminar mi cuenta</button>
+  </div>
+
+</main>
+
+<script>
+/* ── Ripple ── */
+function ripple(btn, e) {
+  const rect = btn.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  const r = document.createElement('span');
+  r.className = 'ripple';
+  r.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX-rect.left-size/2}px;top:${e.clientY-rect.top-size/2}px`;
+  btn.appendChild(r);
+  r.addEventListener('animationend', () => r.remove());
+}
+
+/* ── Toast ── */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+/* ── Modal helpers ── */
+const openModal  = id => document.getElementById(id).classList.add('active');
+const closeModal = id => document.getElementById(id).classList.remove('active');
+
+document.querySelectorAll('[data-action]').forEach(btn => {
+  btn.addEventListener('click', e => {
+    ripple(btn, e);
+    const action = btn.dataset.action;
+    const modal  = btn.dataset.modal;
+    if (action === 'cancel')  { closeModal(modal); return; }
+    if (action === 'logout')  { window.location.href = '../home_invitado.php'; return; }
+    if (action === 'delete')  { closeModal(modal); window.location.href = '../home_invitado.php'; return; }
+    if (action === 'save-cuenta') {
+      closeModal(modal);
+      showToast('✓ Cambios guardados correctamente');
+    }
+    if (action === 'save-pwd') {
+      closeModal(modal);
+      showToast('✓ Contraseña actualizada correctamente');
+      ['pwd-actual','pwd-nueva','pwd-confirm'].forEach(id => { document.getElementById(id).value = ''; });
+      updatePwdBtn();
+    }
+  });
+});
+
+/* Close on overlay click or ESC */
+document.querySelectorAll('.vp-modal-overlay').forEach(ov => {
+  ov.addEventListener('click', e => { if (e.target === ov) ov.classList.remove('active'); });
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape')
+    document.querySelectorAll('.vp-modal-overlay.active').forEach(ov => ov.classList.remove('active'));
+});
+
+/* ── Field validation helpers ── */
+function setErr(inputId, errId, msg) {
+  const inp = document.getElementById(inputId);
+  const err = document.getElementById(errId);
+  inp.classList.add('error');
+  err.textContent = msg;
+  err.classList.add('show');
+  setTimeout(() => inp.classList.remove('error'), 400);
+  return false;
+}
+function clearErr(inputId, errId) {
+  document.getElementById(inputId).classList.remove('error');
+  const err = document.getElementById(errId);
+  if (err) { err.classList.remove('show'); }
+}
+
+/* ── Cuenta validation ── */
+document.getElementById('btn-save-cuenta').addEventListener('click', e => {
+  ripple(e.currentTarget, e);
+  let ok = true;
+  const nombre   = document.getElementById('nombre').value.trim();
+  const telefono = document.getElementById('telefono').value.trim();
+  const zona     = document.getElementById('zona').value.trim();
+  ['nombre','telefono','zona'].forEach(id => clearErr(id, `err-${id}`));
+
+  if (!nombre)   { setErr('nombre','err-nombre','El nombre es obligatorio'); ok = false; }
+  if (!telefono) { setErr('telefono','err-telefono','El teléfono es obligatorio'); ok = false; }
+  if (!zona)     { setErr('zona','err-zona','La zona de residencia es obligatoria'); ok = false; }
+  if (ok) openModal('modal-cuenta');
+});
+
+/* ── Password validation ── */
+function updatePwdBtn() {
+  const a = document.getElementById('pwd-actual').value;
+  const n = document.getElementById('pwd-nueva').value;
+  const c = document.getElementById('pwd-confirm').value;
+  const btn = document.getElementById('btn-change-pwd');
+  btn.classList.toggle('enabled', !!(a && n && c));
+}
+['pwd-actual','pwd-nueva','pwd-confirm'].forEach(id =>
+  document.getElementById(id).addEventListener('input', updatePwdBtn));
+
+document.getElementById('btn-change-pwd').addEventListener('click', e => {
+  ripple(e.currentTarget, e);
+  const FAKE_PWD = 'password123';
+  const actual  = document.getElementById('pwd-actual').value;
+  const nueva   = document.getElementById('pwd-nueva').value;
+  const confirm = document.getElementById('pwd-confirm').value;
+  let ok = true;
+  ['pwd-actual','pwd-nueva','pwd-confirm'].forEach(id => clearErr(id, `err-${id}`));
+
+  if (!actual)              { setErr('pwd-actual','err-pwd-actual','La contraseña actual es obligatoria'); ok = false; }
+  else if (actual !== FAKE_PWD) { setErr('pwd-actual','err-pwd-actual','La contraseña actual es incorrecta'); ok = false; }
+  if (!nueva)               { setErr('pwd-nueva','err-pwd-nueva','La nueva contraseña es obligatoria'); ok = false; }
+  else if (nueva.length < 8){ setErr('pwd-nueva','err-pwd-nueva','La contraseña debe tener mínimo 8 caracteres'); ok = false; }
+  if (!confirm)             { setErr('pwd-confirm','err-pwd-confirm','Debes confirmar tu nueva contraseña'); ok = false; }
+  else if (nueva !== confirm){ setErr('pwd-confirm','err-pwd-confirm','Las contraseñas no coinciden'); ok = false; }
+  if (ok) openModal('modal-pwd');
+});
+
+/* ── Delete account ── */
+document.getElementById('btn-delete').addEventListener('click', e => {
+  ripple(e.currentTarget, e);
+  openModal('modal-delete');
+});
+
+/* ── Logout ── */
+document.getElementById('btn-logout').addEventListener('click', e => {
+  ripple(e.currentTarget, e);
+  openModal('modal-logout');
+});
+
+/* ── Eye toggle ── */
+document.querySelectorAll('.vp-eye').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const inp = document.getElementById(btn.dataset.target);
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+  });
+});
+
+/* ── Ripple on all buttons ── */
+document.querySelectorAll('.vp-btn-save, .vp-btn-delete, .vp-logout-hdr').forEach(btn =>
+  btn.addEventListener('click', e => ripple(btn, e)));
+</script>
+<script src="sidebar_ciudadano.js"></script>
+</body>
+</html>

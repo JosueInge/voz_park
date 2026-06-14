@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VozPark – Visualización General</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --verde-1:   #1A2E0F;
+      --verde-2:   #2D4F1A;
+      --verde-3:   #549430;
+      --verde-lima:#97C459;
+      --crema:     #DFFFAA;
+      --dorado:    #DAA520;
+      --dorado-osc:#B8860B;
+    }
+
+    body { font-family: 'Inter', sans-serif; }
+
+    /* ── Ripple ── */
+    .ripple {
+      position: absolute; border-radius: 50%;
+      background: rgba(255,255,255,.25);
+      transform: scale(0);
+      animation: rpl .55s linear;
+      pointer-events: none;
+    }
+    @keyframes rpl { to { transform: scale(4); opacity: 0; } }
+
+    /* ════════════════════════════════════════
+       HERO — Visualización general
+    ════════════════════════════════════════ */
+    .vp-hero {
+      background: linear-gradient(145deg,
+        var(--verde-1)  0%,
+        var(--verde-2) 50%,
+        var(--verde-3) 100%
+      );
+      padding: 72px 24px 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Patrón sutil de fondo */
+    .vp-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2397C459' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+      pointer-events: none;
+    }
+
+    .vp-hero__content {
+      position: relative;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    /* Título */
+    .vp-hero__title {
+      font-size: clamp(28px, 5vw, 36px);
+      font-weight: 700;
+      line-height: 1.25;
+      margin-bottom: 20px;
+    }
+    .vp-hero__title .t1 { color: var(--crema); }
+    .vp-hero__title .t2 { color: var(--verde-lima); }
+
+    /* Descripción */
+    .vp-hero__desc {
+      font-size: 16px;
+      color: var(--crema);
+      line-height: 1.7;
+      max-width: 600px;
+      margin: 0 auto 32px;
+    }
+
+    /* Botones */
+    .vp-hero__btns {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .vp-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100px;
+      height: 25px;
+      border-radius: 4px;
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      cursor: pointer;
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+      transition: filter .2s, background .2s;
+    }
+    .vp-btn:hover  { filter: brightness(1.15); }
+    .vp-btn:active { filter: brightness(.90); }
+
+    /* Crear cuenta — dorado */
+    .vp-btn--register {
+      background: rgba(184,134,11,.40);
+      border: 1px solid var(--dorado);
+      color: var(--dorado);
+    }
+    .vp-btn--register:hover { background: rgba(184,134,11,.62); }
+
+    /* Iniciar sesión — transparente */
+    .vp-btn--login {
+      background: transparent;
+      border: 1px solid rgba(151,196,89,.30);
+      color: var(--crema);
+    }
+    .vp-btn--login:hover { background: rgba(151,196,89,.12); }
+
+    /* ── Responsivo ── */
+    @media (max-width: 480px) {
+      .vp-hero { padding: 48px 16px 56px; }
+      .vp-btn  { width: 92px; font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════
+     VISUALIZACIÓN GENERAL
+════════════════════════════════════════ -->
+<section class="vp-hero">
+  <div class="vp-hero__content">
+
+    <!-- Título -->
+    <h1 class="vp-hero__title">
+      <span class="t1">Tu voz mejora los </span><span class="t2">parques urbanos</span>
+    </h1>
+
+    <!-- Descripción -->
+    <p class="vp-hero__desc">
+      VozPark es la plataforma inteligente de gestión y participación ciudadana que conecta
+      a los salvadoreños con la Alcaldía para mejorar los parques de San Salvador en tiempo real.
+    </p>
+
+    <!-- Botones -->
+    <div class="vp-hero__btns">
+      <a href="registro.html" class="vp-btn vp-btn--register">Crear cuenta</a>
+      <a href="login.html"    class="vp-btn vp-btn--login">Iniciar sesión</a>
+    </div>
+
+  </div>
+</section>
+
+<script>
+  /* Efecto ripple */
+  document.querySelectorAll('.vp-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      const rect = btn.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
+      const r = document.createElement('span');
+      r.className = 'ripple';
+      r.style.cssText = `width:${size}px;height:${size}px;`
+                      + `left:${e.clientX - rect.left - size/2}px;`
+                      + `top:${e.clientY  - rect.top  - size/2}px`;
+      btn.appendChild(r);
+      r.addEventListener('animationend', () => r.remove());
+    });
+  });
+</script>
+
+</body>
+</html>

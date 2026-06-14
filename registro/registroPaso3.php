@@ -13,10 +13,10 @@
         <?php include 'seccionBeneficios.php'; ?>
 
         <section class="panelFormulario">
+          <div class="contenidoFormulario">
             <div class="encabezadoFormulario">
-                <a href="../login/login.php" class="linkVolver">‹ Ya tengo cuenta</a>
+                <a href="../login/login.php" class="linkVolver">Ya tengo cuenta</a>
                 <h1>Crear cuenta en VozPark</h1>
-                <p>Es gratuito y toma menos de 2 minutos</p>
             </div>
 
             <div class="pasos">
@@ -26,7 +26,7 @@
             </div>
 
             <form class="formularioRegistro">
-                <p class="paso-label">Paso 3 de 3 · Información personal</p>
+                <p class="paso-label">Paso 3 de 3 – Confirmación de registro</p>
 
                 <div class="grupoInput">
                     <div class="custom-box">
@@ -46,12 +46,16 @@
                             Acepto los <a class="terminosYcondiciones" href="#">Términos y Condiciones</a> y la <a class="politicaPrivacidad" href="#">Política de Privacidad</a> de Voz Park
                         </label>
                     </div>
+                                        <p id="mensaje-terminos" class="mensaje-terminos" aria-live="polite"></p>
                 </div>
 
-                <button type="button" class="btn-continue" disabled>Continuar →</button>
-                <div id="toast-verificacion" class="toast-vozpark" style="display:none;"></div>
-                <button onclick="history.back()" type="button" class="btn-atras"> ← Atrás</button>
+                <div class="grupoBotones">    
+                                    <button type="button" class="btn-continue">Continuar →</button>
+                  <div id="toast-verificacion" class="toast-vozpark" style="display:none;"></div>
+                                    <button type="button" class="btn-atras"> ← Atrás</button>
+                </div>
             </form>
+            </div>
         </section>
     </main>
 </body>

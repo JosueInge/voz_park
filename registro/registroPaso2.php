@@ -13,10 +13,10 @@
         <?php include 'seccionBeneficios.php'; ?>
 
         <section class="panelFormulario">
+          <div class="contenidoFormulario">
             <div class="encabezadoFormulario">
-                <a href="../login/login.php" class="linkVolver">‹ Ya tengo cuenta</a>
+                <a href="../login/login.php" class="linkVolver">Ya tengo cuenta</a>
                 <h1>Crear cuenta en VozPark</h1>
-                <p>Es gratuito y toma menos de 2 minutos</p>
             </div>
 
             <div class="pasos">
@@ -26,16 +26,16 @@
             </div>
 
             <form class="formuarioRegistro">
-                <p class="pasoLabel">Paso 2 de 3 · Información personal</p>
+                <p class="pasoLabel">Paso 2 de 3 – Creación de contraseña</p>
 
                 <div class="grupoInput">
                     <label for="password">Contraseña *</label>
-                    <input type="password" id="password" placeholder="Minimo 8 caracteres">
+                    <input type="password" id="password" placeholder="Escribe tu contraseña">
                 </div>
 
                 <div class="grupoInput">
                     <label for="confirmarPassword">Confirmar contraseña *</label>
-                    <input type="password" id="confirmarPassword" placeholder="Repite tu contraseña">
+                    <input type="password" id="confirmarPassword" placeholder="Escriba nuevamente tu contraseña">
                 </div>
 
                 <div class="grupoInput">
@@ -52,6 +52,7 @@
                 <button type="button" class="btn-continue">Continuar →</button>
                 <button onclick="history.back()" type="button" class="btn-atras"> ← Atrás</button>
             </form>
+          </div>
         </section>
     </main>
 </body>

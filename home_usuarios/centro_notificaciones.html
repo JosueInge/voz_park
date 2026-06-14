@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VozPark – Notificaciones</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #FAF8F2; min-height: 100vh; }
+
+    /* HEADER */
+    .vp-header { display:flex; align-items:center; width:100%; height:60px; background:#1A2E0F; padding:0 20px; position:sticky; top:0; z-index:100; }
+    .vp-brand { display:flex; flex-direction:column; padding-right:16px; flex-shrink:0; }
+    .vp-brand__name { font-size:20px; font-weight:700; color:#DFFFAA; line-height:1.2; }
+    .vp-brand__sub  { font-size:16px; color:#97C459; line-height:1.2; }
+    .vp-hdr-div { width:1px; height:40px; background:#F4FAEA; opacity:.55; flex-shrink:0; margin-right:16px; }
+    .vp-spacer { flex:1; }
+    .vp-user { display:flex; align-items:center; gap:8px; margin-right:14px; }
+    .vp-user__avatar { width:20px; height:20px; border-radius:50%; background:#3B6D11; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:700; color:#DFFFAA; }
+    .vp-user__name { font-family:'Open Sans',sans-serif; font-size:20px; font-weight:600; color:#FFFFFF; white-space:nowrap; }
+    .vp-logout-hdr { display:flex; align-items:center; justify-content:center; width:40px; height:20px; background:#F4FAEA; border:none; border-radius:4px; font-family:'Inter',sans-serif; font-size:16px; color:#1A2E0F; cursor:pointer; position:relative; overflow:hidden; transition:background .2s; }
+
+    /* Ripple */
+    .ripple { position:absolute; border-radius:50%; background:rgba(59,109,17,.22); transform:scale(0); animation:ripple-anim .55s linear; pointer-events:none; }
+    @keyframes ripple-anim { to { transform:scale(4); opacity:0; } }
+
+    /* Modal logout */
+    .vp-modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:999; align-items:center; justify-content:center; }
+    .vp-modal-overlay.active { display:flex; }
+    .vp-modal { background:#1A2E0F; border:1px solid #3B6D11; border-radius:12px; padding:28px 32px 24px; width:340px; max-width:90vw; display:flex; flex-direction:column; gap:20px; }
+    .vp-modal__title { font-family:'Arial',sans-serif; font-size:16px; font-weight:700; color:#FFFFFF; text-align:center; }
+    .vp-modal__actions { display:flex; gap:12px; }
+    .vp-modal__btn { flex:1; height:40px; border:none; border-radius:8px; font-family:'Inter',sans-serif; font-size:16px; color:#DFFFAA; background:#3B6D11; cursor:pointer; position:relative; overflow:hidden; transition:filter .2s; }
+    .vp-modal__btn:hover { filter:brightness(1.15); }
+
+    /* MAIN */
+    .vp-main { padding:28px 24px 60px; max-width:800px; margin:0 auto; }
+    .vp-page-title { font-size:24px; font-weight:700; color:#000000; margin-bottom:20px; }
+
+    /* Filter chips */
+    .vp-filters { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:24px; }
+    .vp-filter {
+      display:inline-flex; align-items:center; justify-content:center;
+      padding:5px 16px; border-radius:10px; border:none;
+      font-family:'Inter',sans-serif; font-size:14px; color:#000000;
+      cursor:pointer; position:relative; overflow:hidden;
+      transition:filter .18s, box-shadow .18s; user-select:none;
+    }
+    .vp-filter--todas   { background:rgba(55,48,163,.30); }
+    .vp-filter--reportes{ background:rgba(151,196,89,.30); }
+    .vp-filter--alertas { background:rgba(196,89,89,.30); }
+    .vp-filter.active   { filter:brightness(.75); box-shadow:0 2px 8px rgba(0,0,0,.15); }
+    .vp-filter:hover:not(.active) { filter:brightness(.88); }
+
+    /* Notifications list */
+    .vp-notif-list { display:flex; flex-direction:column; gap:12px; }
+
+    /* Empty state */
+    .vp-empty { text-align:center; font-size:16px; color:#000000; padding:48px 0; display:none; }
+    .vp-empty.show { display:block; }
+
+    /* Notification card - base */
+    .vp-notif-card {
+      position:relative; display:flex; gap:12px; align-items:flex-start;
+      padding:14px 16px; border-radius:10px;
+      transition:box-shadow .18s;
+    }
+    .vp-notif-card:hover { box-shadow:0 4px 16px rgba(0,0,0,.08); }
+
+    /* Card types */
+    .vp-notif-card--reporte {
+      background:#FFFFFF; border:1px solid rgba(151,196,89,.30);
+    }
+    .vp-notif-card--alerta {
+      background:#FDF0F0; border:1px solid rgba(196,89,89,.30);
+      border-radius:8px;
+    }
+
+    /* Avatar */
+    .vp-notif-avatar {
+      width:36px; height:36px; border-radius:50%; flex-shrink:0;
+      display:flex; align-items:center; justify-content:center;
+      font-size:14px; font-weight:700; color:#FFFFFF;
+    }
+    .vp-notif-avatar--reporte { background:#325600; }
+    .vp-notif-avatar--alerta  { background:#B45050; }
+
+    /* Card body */
+    .vp-notif-body { flex:1; min-width:0; }
+    .vp-notif-top  { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:6px; }
+
+    /* Category badge */
+    .vp-notif-cat {
+      display:inline-block; padding:2px 10px; border-radius:20px;
+      font-size:12px; color:#000000;
+    }
+    .vp-notif-cat--reporte { background:rgba(151,196,89,.30); }
+    .vp-notif-cat--alerta  { background:rgba(196,89,89,.30); }
+
+    /* Date */
+    .vp-notif-date { font-size:12px; color:rgba(0,0,0,.25); }
+
+    /* Message */
+    .vp-notif-msg { font-size:14px; color:#000000; line-height:1.5; }
+    .vp-notif-msg a { font-weight:700; color:#000000; text-decoration:underline; cursor:pointer; }
+    .vp-notif-msg a:hover { color:#3B6D11; }
+
+    /* Dismiss button */
+    .vp-notif-dismiss {
+      position:absolute; top:10px; right:10px;
+      width:20px; height:20px; border-radius:4px;
+      background:#070707; border:none; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      flex-shrink:0; transition:background .18s;
+    }
+    .vp-notif-dismiss:hover { background:#2d2d2d; }
+    .vp-notif-dismiss svg { width:12px; height:12px; color:#FFFFFF; }
+
+    /* Responsive */
+    @media (max-width:640px) {
+      .vp-user__name { display:none; }
+      .vp-brand__sub { display:none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="vp-header">
+  <div class="vp-brand">
+    <span class="vp-brand__name">VozPark</span>
+    <span class="vp-brand__sub">Parques urbanos – El Salvador</span>
+  </div>
+  <div class="vp-hdr-div"></div>
+  <div class="vp-spacer"></div>
+  <div class="vp-user">
+    <div class="vp-user__avatar">MG</div>
+    <span class="vp-user__name">María González</span>
+  </div>
+  <button class="vp-logout-hdr" id="btn-logout">Salir</button>
+</header>
+
+<!-- LOGOUT MODAL -->
+<div class="vp-modal-overlay" id="logout-modal">
+  <div class="vp-modal">
+    <p class="vp-modal__title">¿Estás seguro de cerrar sesión?</p>
+    <div class="vp-modal__actions">
+      <button class="vp-modal__btn" id="btn-cancel">Cancelar</button>
+      <button class="vp-modal__btn" id="btn-confirm">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main class="vp-main">
+  <h1 class="vp-page-title">Centro de notificaciones</h1>
+
+  <!-- Filters -->
+  <div class="vp-filters">
+    <button class="vp-filter vp-filter--todas active"    data-filter="todas"   >Todas</button>
+    <button class="vp-filter vp-filter--reportes"        data-filter="reportes">Reportes</button>
+    <button class="vp-filter vp-filter--alertas"         data-filter="alertas" >Alertas</button>
+  </div>
+
+  <!-- List -->
+  <div class="vp-notif-list" id="notif-list"></div>
+  <div class="vp-empty" id="notif-empty">No tienes notificaciones</div>
+</main>
+
+<script>
+/* ── Data ── */
+let NOTIFS = [
+  { id:1, tipo:'reporte', avatar:'MG', fecha:'Hace 10 min', msg:'Tu reporte <a href="../home_admin/gestion_incidencias.html">Iluminación #5</a> ha sido asignado a un técnico.', },
+  { id:2, tipo:'alerta',  avatar:'⚠',  fecha:'Hace 35 min', msg:'Se detectó una <a href="../home_admin/gestion_incidencias.html">incidencia urgente</a> en Parque Central.', },
+  { id:3, tipo:'reporte', avatar:'MG', fecha:'Hace 2 hrs',  msg:'Tu reporte <a href="../home_admin/gestion_incidencias.html">Basura acumulada #3</a> fue marcado como resuelto.', },
+  { id:4, tipo:'alerta',  avatar:'⚠',  fecha:'Ayer',        msg:'Mantenimiento programado en <a href="../home_invitado.html">Parque La Libertad</a> este sábado.', },
+  { id:5, tipo:'reporte', avatar:'MG', fecha:'Hace 2 días', msg:'Se ha actualizado el estado de tu reporte <a href="../home_admin/gestion_incidencias.html">Bancas dañadas #2</a>.', },
+];
+
+let activeFilter = 'todas';
+
+/* ── Render ── */
+function render() {
+  const list  = document.getElementById('notif-list');
+  const empty = document.getElementById('notif-empty');
+  const data  = NOTIFS.filter(n => activeFilter === 'todas' || n.tipo === activeFilter.slice(0,-1) + (activeFilter.endsWith('es') ? 'e' : '') || n.tipo === (activeFilter === 'reportes' ? 'reporte' : 'alerta'));
+
+  if (!data.length) { list.innerHTML = ''; empty.classList.add('show'); return; }
+  empty.classList.remove('show');
+
+  list.innerHTML = data.map(n => `
+    <div class="vp-notif-card vp-notif-card--${n.tipo}" data-id="${n.id}">
+      <div class="vp-notif-avatar vp-notif-avatar--${n.tipo}">${n.avatar}</div>
+      <div class="vp-notif-body">
+        <div class="vp-notif-top">
+          <span class="vp-notif-cat vp-notif-cat--${n.tipo}">${n.tipo === 'reporte' ? 'Reportes' : 'Alertas'}</span>
+          <span class="vp-notif-date">${n.fecha}</span>
+        </div>
+        <div class="vp-notif-msg">${n.msg}</div>
+      </div>
+      <button class="vp-notif-dismiss" data-dismiss="${n.id}" aria-label="Descartar">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+  `).join('');
+
+  /* Dismiss listeners */
+  list.querySelectorAll('.vp-notif-dismiss').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const id = parseInt(btn.dataset.dismiss);
+      NOTIFS = NOTIFS.filter(n => n.id !== id);
+      render();
+    });
+  });
+}
+
+/* ── Filter buttons ── */
+document.querySelectorAll('.vp-filter').forEach(btn => {
+  btn.addEventListener('click', e => {
+    ripple(btn, e);
+    document.querySelectorAll('.vp-filter').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeFilter = btn.dataset.filter;
+    render();
+  });
+});
+
+/* ── Logout ── */
+document.getElementById('btn-logout').addEventListener('click', e => {
+  ripple(document.getElementById('btn-logout'), e);
+  document.getElementById('logout-modal').classList.add('active');
+});
+document.getElementById('btn-cancel').addEventListener('click',  () => document.getElementById('logout-modal').classList.remove('active'));
+document.getElementById('btn-confirm').addEventListener('click', () => { window.location.href = '../login.html'; });
+document.getElementById('logout-modal').addEventListener('click', e => { if (e.target === document.getElementById('logout-modal')) document.getElementById('logout-modal').classList.remove('active'); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') document.getElementById('logout-modal').classList.remove('active'); });
+
+/* ── Ripple ── */
+function ripple(btn, e) {
+  const rect = btn.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  const r = document.createElement('span');
+  r.className = 'ripple';
+  r.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX-rect.left-size/2}px;top:${e.clientY-rect.top-size/2}px`;
+  btn.appendChild(r);
+  r.addEventListener('animationend', () => r.remove());
+}
+document.querySelectorAll('.vp-modal__btn, .vp-logout-hdr').forEach(b => b.addEventListener('click', e => ripple(b, e)));
+
+/* ── Init ── */
+render();
+</script>
+<script src="sidebar_ciudadano.js"></script>
+</body>
+</html>

@@ -7,6 +7,69 @@ document.addEventListener('DOMContentLoaded', function() {
 	const liMayus = document.querySelector('.val-mayuscula');
 	const liNum = document.querySelector('.val-numero');
 	const btnContinue = document.querySelector('.btn-continue');
+	const btnAtras = document.querySelector('.btn-atras');
+
+	function crearRipple(event) {
+		const button = event.currentTarget;
+		const circle = document.createElement('span');
+		const diameter = Math.max(button.clientWidth, button.clientHeight);
+		const radius = diameter / 2;
+
+		circle.classList.add('ripple');
+		circle.style.width = circle.style.height = `${diameter}px`;
+		circle.style.left = `${event.offsetX - radius}px`;
+		circle.style.top = `${event.offsetY - radius}px`;
+
+		const oldRipple = button.querySelector('.ripple');
+		if (oldRipple) oldRipple.remove();
+
+		button.appendChild(circle);
+	}
+
+	function mostrarError(input, mensaje) {
+		const container = input.closest('.grupoInput') || input.parentElement;
+		let error = container.querySelector('.mensaje-error');
+
+		if (!error) {
+			error = document.createElement('div');
+			error.className = 'mensaje-error';
+			container.appendChild(error);
+		}
+
+		error.textContent = mensaje;
+		error.style.display = 'block';
+		input.classList.add('input-error', 'shake');
+
+		setTimeout(() => {
+			input.classList.remove('shake');
+		}, 450);
+
+		if (input.errorTimeout) {
+			clearTimeout(input.errorTimeout);
+		}
+		input.errorTimeout = setTimeout(() => {
+			limpiarError(input);
+		}, 2500);
+	}
+
+	function limpiarError(input) {
+		if (input.errorTimeout) {
+			clearTimeout(input.errorTimeout);
+			input.errorTimeout = null;
+		}
+
+		const container = input.closest('.grupoInput') || input.parentElement;
+		const error = container.querySelector('.mensaje-error');
+		if (error) {
+			error.style.display = 'none';
+			error.textContent = '';
+		}
+		input.classList.remove('input-error', 'shake');
+	}
+
+	function limpiarTodosLosErrores() {
+		[passwordInput, confirmarInput].forEach((input) => limpiarError(input));
+	}
 
 	function validarPassword() {
 		const value = passwordInput.value;
@@ -31,33 +94,48 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 
 	passwordInput.addEventListener('input', validarPassword);
-
-	// Toast
-	function mostrarToast(mensaje) {
-		let toast = document.createElement('div');
-		toast.className = 'toast-vozpark';
-		toast.textContent = mensaje;
-		document.body.appendChild(toast);
-		setTimeout(() => {
-			toast.classList.add('show');
-		}, 10);
-		setTimeout(() => {
-			toast.classList.remove('show');
-			setTimeout(() => toast.remove(), 300);
-		}, 2500);
+	btnContinue.addEventListener('pointerdown', crearRipple);
+	if (btnAtras) {
+		btnAtras.addEventListener('pointerdown', crearRipple);
 	}
+	passwordInput.addEventListener('input', function() {
+		limpiarError(passwordInput);
+	});
+	confirmarInput.addEventListener('input', function() {
+		limpiarError(confirmarInput);
+	});
 
 	btnContinue.addEventListener('click', function(e) {
-		// Validar requisitos de contraseña
-		if (!(li8.classList.contains('cumplido') && liMayus.classList.contains('cumplido') && liNum.classList.contains('cumplido'))) {
-			mostrarToast('Completa los requisitos de la contraseña.');
+		const password = passwordInput.value;
+		const confirmacion = confirmarInput.value;
+
+		limpiarTodosLosErrores();
+
+		if (!password.trim()) {
+			mostrarError(passwordInput, 'La contraseña es obligatoria.');
 			return;
 		}
-		// Validar coincidencia de confirmación
-		if (passwordInput.value !== confirmarInput.value) {
-			mostrarToast('La contraseña de confirmación no coincide.');
+		if (password.length < 8) {
+			mostrarError(passwordInput, 'Debe tener al menos 8 caracteres.');
 			return;
 		}
+		if (!/[A-ZÁÉÍÓÚÜÑ]/.test(password)) {
+			mostrarError(passwordInput, 'Debe incluir una mayúscula.');
+			return;
+		}
+		if (!/[0-9]/.test(password)) {
+			mostrarError(passwordInput, 'Debe incluir un numero.');
+			return;
+		}
+
+		if (password !== confirmacion) {
+			mostrarError(confirmarInput, 'Las contraseñas no coinciden.');
+			return;
+		}
+
+		// Guardar contraseña validada para el registro final en paso 3.
+		localStorage.setItem('vozpark_password', password);
+
 		// Si todo está bien, redirige
 		window.location.href = 'registroPaso3.php';
 	});

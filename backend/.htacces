@@ -1,0 +1,111 @@
+<?php
+// index.php — Router principal VozPark Backend
+
+require_once __DIR__ . '/config/database.php';
+require_once __DIR__ . '/helpers/response.php';
+require_once __DIR__ . '/helpers/jwt.php';
+
+// ── CORS ──────────────────────────────────────────────────────────────────────
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+header('Access-Control-Allow-Headers: Authorization, Content-Type');
+header('Content-Type: application/json; charset=utf-8');
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(204);
+    exit;
+}
+
+// ── Método y ruta ─────────────────────────────────────────────────────────────
+$method = $_SERVER['REQUEST_METHOD'];
+$uri    = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$base   = '/vozpark/backend';                      // ajustar según servidor
+$path   = '/' . ltrim(str_replace($base, '', $uri), '/');
+$path   = rtrim($path, '/') ?: '/';
+
+// ── Segmentos ─────────────────────────────────────────────────────────────────
+$segments = explode('/', ltrim($path, '/'));
+$seg0     = $segments[0] ?? '';    // primer segmento
+$seg1     = $segments[1] ?? '';    // segundo segmento
+$seg2     = $segments[2] ?? '';    // tercer segmento (ID normalmente)
+$id       = isset($segments[2]) && is_numeric($segments[2]) ? (int)$segments[2] : null;
+$id1      = isset($segments[1]) && is_numeric($segments[1]) ? (int)$segments[1] : null;
+
+// ── Dispatch ──────────────────────────────────────────────────────────────────
+match(true) {
+
+    // ── Encabezado / Búsqueda ────────────────────────────────────────────────
+    $method === 'GET'  && $path === '/api/bienvenida' => (function () {
+        require_once __DIR__ . '/controllers/EncabezadoController.php';
+        EncabezadoController::bienvenida();
+    })(),
+
+    $method === 'GET'  && $path === '/api/buscar' => (function () {
+        require_once __DIR__ . '/controllers/EncabezadoController.php';
+        EncabezadoController::buscar();
+    })(),
+
+    // ── Reportes ─────────────────────────────────────────────────────────────
+    $method === 'GET'  && $path === '/reportes/mis-reportes' => (function () {
+        require_once __DIR__ . '/controllers/ReporteController.php';
+        ReporteController::misReportes();
+    })(),
+
+    $method === 'GET'  && $seg0 === 'reportes' && $id1 !== null => (function () use ($id1) {
+        require_once __DIR__ . '/controllers/ReporteController.php';
+        ReporteController::detalle($id1);
+    })(),
+
+    $method === 'POST' && $path === '/reportes' => (function () {
+        require_once __DIR__ . '/controllers/ReporteController.php';
+        ReporteController::crear();
+    })(),
+
+    $method === 'GET'  && $path === '/incidencias/recientes' => (function () {
+        require_once __DIR__ . '/controllers/ReporteController.php';
+        ReporteController::recientes();
+    })(),
+
+    // ── Perfil ───────────────────────────────────────────────────────────────
+    $method === 'GET' && $path === '/perfil' => (function () {
+        require_once __DIR__ . '/controllers/PerfilController.php';
+        PerfilController::ver();
+    })(),
+
+    $method === 'PUT' && $path === '/perfil/foto' => (function () {
+        // PHP no llena $_FILES en PUT; usamos _method override o POST + campo _method
+        require_once __DIR__ . '/controllers/PerfilController.php';
+        PerfilController::actualizarFoto();
+    })(),
+
+    // Soporte PUT via POST + ?_method=PUT
+    $method === 'POST' && $path === '/perfil/foto' => (function () {
+        require_once __DIR__ . '/controllers/PerfilController.php';
+        PerfilController::actualizarFoto();
+    })(),
+
+    // ── Parques ──────────────────────────────────────────────────────────────
+    $method === 'GET' && $path === '/parques' => (function () {
+        require_once __DIR__ . '/controllers/ParqueController.php';
+        ParqueController::listar();
+    })(),
+
+    $method === 'GET' && $path === '/config/maps' => (function () {
+        require_once __DIR__ . '/controllers/ParqueController.php';
+        ParqueController::mapsConfig();
+    })(),
+
+    // ── Notificaciones ───────────────────────────────────────────────────────
+    $method === 'GET'    && $path === '/notificaciones' => (function () {
+        require_once __DIR__ . '/controllers/NotificacionController.php';
+        NotificacionController::listar();
+    })(),
+
+    $method === 'DELETE' && $seg0 === 'notificaciones' && $id1 !== null => (function () use ($id1) {
+        require_once __DIR__ . '/controllers/NotificacionController.php';
+        NotificacionController::eliminar($id1);
+    })(),
+
+    // ── 404 ─────────────────────────────────────────────────────────────────
+    default => error('Ruta no encontrada', 404),
+};

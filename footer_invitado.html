@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VozPark – Footer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --verde-oscuro: #1A2E0F;
+      --crema:        #DFFFAA;
+    }
+
+    body { font-family: 'Inter', sans-serif; }
+
+    /* ════════════════════════════════════════
+       FOOTER
+    ════════════════════════════════════════ */
+    .vp-footer {
+      background: var(--verde-oscuro);
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    /* VozPark — izquierda */
+    .vp-footer__brand {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--crema);
+      white-space: nowrap;
+    }
+
+    /* Copyright — centro */
+    .vp-footer__copy {
+      flex: 1;
+      font-size: 16px;
+      color: var(--crema);
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      padding: 0 16px;
+    }
+
+    /* Links — derecha */
+    .vp-footer__links {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .vp-footer__link {
+      font-size: 16px;
+      color: var(--crema);
+      text-decoration: none;
+      white-space: nowrap;
+      position: relative;
+      transition: opacity .2s;
+    }
+    /* Línea inferior blanca en hover */
+    .vp-footer__link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0; right: 0;
+      height: 1px;
+      background: #FFFFFF;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform .22s ease;
+    }
+    .vp-footer__link:hover::after { transform: scaleX(1); }
+    .vp-footer__link:hover        { opacity: .85; }
+
+    /* ── Responsivo ── */
+    @media (max-width: 760px) {
+      .vp-footer {
+        height: auto;
+        padding: 20px 20px;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 10px;
+      }
+      .vp-footer__copy  { padding: 0; }
+      .vp-footer__links { justify-content: center; flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════ -->
+<footer class="vp-footer">
+
+  <!-- Nombre del sistema — izquierda -->
+  <span class="vp-footer__brand">VozPark</span>
+
+  <!-- Copyright — centro -->
+  <span class="vp-footer__copy">
+    © 2026 VozPark - Alcaldía de San Salvador Centro - Todos los derechos reservados
+  </span>
+
+  <!-- Links legales — derecha -->
+  <div class="vp-footer__links">
+    <a href="home_usuarios/sobre_nosotros.html" class="vp-footer__link">Términos y Condiciones</a>
+    <a href="home_usuarios/sobre_nosotros.html" class="vp-footer__link">Políticas de Privacidad</a>
+  </div>
+
+</footer>
+
+</body>
+</html>

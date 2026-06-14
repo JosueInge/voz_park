@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VozPark – Políticas de privacidad</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Inter',sans-serif;background:#FAF8F2;min-height:100vh;}
+
+    /* ══ HEADER ══ */
+    .vp-header{display:flex;align-items:center;width:100%;height:60px;background:#1A2E0F;padding:0 20px;position:sticky;top:0;z-index:100;}
+    .vp-brand{display:flex;flex-direction:column;padding-right:16px;flex-shrink:0;}
+    .vp-brand__name{font-size:20px;font-weight:700;color:#DFFFAA;line-height:1.2;}
+    .vp-brand__sub{font-size:16px;color:#97C459;line-height:1.2;}
+    .vp-hdr-div{width:1px;height:40px;background:#F4FAEA;opacity:.55;flex-shrink:0;margin-right:16px;}
+    .vp-spacer{flex:1;}
+    .vp-user{display:flex;align-items:center;gap:8px;margin-right:14px;}
+    .vp-user__avatar{width:20px;height:20px;border-radius:50%;background:#3B6D11;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#DFFFAA;}
+    .vp-user__name{font-family:'Open Sans',sans-serif;font-size:20px;font-weight:600;color:#FFFFFF;white-space:nowrap;}
+    .vp-logout-hdr{display:flex;align-items:center;justify-content:center;width:40px;height:20px;background:#F4FAEA;border:none;border-radius:4px;font-family:'Inter',sans-serif;font-size:16px;color:#1A2E0F;cursor:pointer;position:relative;overflow:hidden;transition:background .2s;}
+    .vp-logout-hdr:hover{background:#e2f0d6;}
+
+    /* Ripple */
+    .ripple{position:absolute;border-radius:50%;background:rgba(59,109,17,.22);transform:scale(0);animation:ripple-anim .55s linear;pointer-events:none;}
+    @keyframes ripple-anim{to{transform:scale(4);opacity:0;}}
+
+    /* Modal */
+    .vp-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:999;align-items:center;justify-content:center;}
+    .vp-modal-overlay.active{display:flex;}
+    .vp-modal{background:#1A2E0F;border:1px solid #3B6D11;border-radius:12px;padding:28px 32px 24px;width:340px;max-width:90vw;display:flex;flex-direction:column;gap:20px;}
+    .vp-modal__title{font-family:'Arial',sans-serif;font-size:16px;font-weight:700;color:#FFFFFF;text-align:center;}
+    .vp-modal__actions{display:flex;gap:12px;}
+    .vp-modal__btn{flex:1;height:40px;border:none;border-radius:8px;font-family:'Inter',sans-serif;font-size:16px;color:#DFFFAA;background:#3B6D11;cursor:pointer;position:relative;overflow:hidden;transition:filter .2s;}
+    .vp-modal__btn:hover{filter:brightness(1.15);}
+
+    /* ══ MAIN ══ */
+    .vp-main{padding:28px 24px 56px;max-width:1100px;margin:0 auto;}
+
+    .vp-page-title{
+      font-size:20px;font-weight:700;color:#000000;margin-bottom:8px;
+    }
+
+    .vp-last-update{
+      display:flex;align-items:center;gap:6px;
+      font-size:14px;color:#000000;margin-bottom:22px;
+    }
+    .vp-last-update svg{color:#000;}
+
+    /* Contenedor principal */
+    .vp-legal-box{
+      background:#FFFFFF;
+      border:1px solid rgba(89,144,196,.30);
+      border-radius:10px;
+      padding:28px 32px;
+    }
+
+    .vp-section{margin-bottom:24px;}
+    .vp-section:last-child{margin-bottom:0;}
+
+    .vp-section-title{
+      font-family:'Inter',sans-serif;
+      font-size:20px;font-weight:700;color:#3B6D11;
+      margin-bottom:10px;
+    }
+
+    .vp-section-content{
+      font-family:'Inter',sans-serif;
+      font-size:16px;color:#000000;line-height:1.6;
+      margin-bottom:8px;text-align:justify;
+    }
+    .vp-section-content:last-child{margin-bottom:0;}
+
+    /* Responsive */
+    @media(max-width:640px){
+      .vp-user__name,.vp-brand__sub{display:none;}
+      .vp-main{padding:18px 14px 48px;}
+      .vp-legal-box{padding:20px 22px;}
+      .vp-page-title{font-size:20px;}
+      .vp-section-title{font-size:18px;}
+      .vp-section-content{font-size:14px;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="vp-header">
+  <div class="vp-brand">
+    <span class="vp-brand__name">VozPark</span>
+    <span class="vp-brand__sub">Parques urbanos – El Salvador</span>
+  </div>
+  <div class="vp-hdr-div"></div>
+  <div class="vp-spacer"></div>
+  <div class="vp-user">
+    <div class="vp-user__avatar">MG</div>
+    <span class="vp-user__name">María González</span>
+  </div>
+  <button class="vp-logout-hdr" id="btn-logout">Salir</button>
+</header>
+
+<!-- Logout modal -->
+<div class="vp-modal-overlay" id="logout-modal">
+  <div class="vp-modal">
+    <p class="vp-modal__title">¿Estás seguro de cerrar sesión?</p>
+    <div class="vp-modal__actions">
+      <button class="vp-modal__btn" id="btn-cancel">Cancelar</button>
+      <button class="vp-modal__btn" id="btn-confirm">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main class="vp-main">
+  <h1 class="vp-page-title">Políticas de privacidad</h1>
+
+  <div class="vp-last-update">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+    </svg>
+    <span>Última actualización: Junio de 2026</span>
+  </div>
+
+  <div class="vp-legal-box">
+      <div class="vp-section">
+        <h2 class="vp-section-title">Responsable del tratamiento de datos</h2>
+        <p class="vp-section-content">El responsable del tratamiento de los datos personales recolectados a través de la plataforma VozPark es la Alcaldía Municipal de San Salvador Centro, con correo electrónico de contacto info@sansalvador.gob.sv, en cumplimiento de la Ley de Protección de Datos Personales de El Salvador (Decreto Legislativo N.° 534) y demás normativa aplicable.</p>
+      </div>
+
+      <div class="vp-section">
+        <h2 class="vp-section-title">Datos personales que recolectamos</h2>
+        <p class="vp-section-content">Al registrarse en VozPark, recolectamos únicamente los datos estrictamente necesarios para la prestación del servicio:</p>
+        <p class="vp-section-content">Nombre completo.</p>
+        <p class="vp-section-content">Correo electrónico.</p>
+        <p class="vp-section-content">Zona de residencia.</p>
+        <p class="vp-section-content">Adicionalmente, durante el uso de la plataforma se generan los siguientes datos de manera automática o por acción del usuario:</p>
+        <p class="vp-section-content">Coordenadas de geolocalización indicadas por el usuario para identificar el lugar de una incidencia dentro del parque. VozPark no rastrea ni almacena la ubicación en tiempo real del dispositivo del usuario.</p>
+        <p class="vp-section-content">Contenido de los reportes de incidencias: descripción textual, fotografías adjuntas, fecha y hora del reporte, estado del reporte y comentarios intercambiados con el personal municipal.</p>
+        <p class="vp-section-content">Historial completo de reportes e incidencias asociadas al perfil del usuario.</p>
+        <p class="vp-section-content">Participación en encuestas, votaciones y propuestas de mejora, asociadas al perfil del usuario. No existe modalidad de participación anónima.</p>
+        <p class="vp-section-content">Historial de interacciones con el chatbot ciudadano, procesadas a través de los servidores de OpenAI.</p>
+        <p class="vp-section-content">Notificaciones recibidas dentro de la aplicación relacionadas con el estado de los reportes del usuario.</p>
+        <p class="vp-section-content">Datos de uso de la plataforma: fecha y hora de acceso, funcionalidades utilizadas y patrones de navegación dentro de la app, utilizados exclusivamente para análisis estadístico interno.</p>
+      </div>
+
+      <div class="vp-section">
+        <h2 class="vp-section-title">Finalidad del tratamiento</h2>
+        <p class="vp-section-content">Los datos personales recolectados serán utilizados exclusivamente para los siguientes fines:</p>
+        <p class="vp-section-content">Gestionar el registro, la autenticación y la configuración del perfil del usuario en la plataforma.</p>
+        <p class="vp-section-content">Procesar, asignar y dar seguimiento a los reportes de incidencias en parques urbanos municipales.</p>
+        <p class="vp-section-content">Facilitar la comunicación entre el ciudadano y el personal municipal sobre el estado y evolución de las incidencias reportadas.</p>
+        <p class="vp-section-content">Enviar notificaciones dentro de la aplicación sobre cambios en el estado de los reportes y novedades relevantes.</p>
+        <p class="vp-section-content">Gestionar la participación ciudadana a través de encuestas, votaciones y propuestas de mejora, y mostrar los resultados agregados dentro de la plataforma.</p>
+        <p class="vp-section-content">Operar el chatbot ciudadano para orientar al usuario sobre el uso de la plataforma.</p>
+        <p class="vp-section-content">Realizar análisis estadístico y analítica de datos sobre el uso de los parques, patrones de incidencias, tiempos de respuesta y participación ciudadana, con el fin de apoyar la toma de decisiones de gestión municipal. Este análisis se realiza sobre datos agregados y, en la medida de lo posible, anonimizados.</p>
+        <p class="vp-section-content">Generar reportes e indicadores de desempeño para el personal municipal a través de herramientas de visualización de datos (Power BI). Estos reportes son de uso interno exclusivo del personal autorizado de la Alcaldía y no son accesibles para los ciudadanos usuarios de la plataforma.</p>
+        <p class="vp-section-content">Cumplir con las obligaciones legales aplicables a la Alcaldía de San Salvador Centro.</p>
+        <p class="vp-section-content">Los datos personales no serán utilizados para fines de publicidad comercial ni serán vendidos, cedidos o transferidos a terceros fuera de los casos previstos en esta política.</p>
+      </div>
+
+      <div class="vp-section">
+        <h2 class="vp-section-title">Analítica de datos y uso interno</h2>
+        <p class="vp-section-content">VozPark recopila y procesa datos de uso de la plataforma e información sobre incidencias con el fin de generar análisis que permitan a la Alcaldía de San Salvador Centro tomar decisiones informadas sobre la gestión y mantenimiento de los parques urbanos. Esta analítica incluye:</p>
+        <p class="vp-section-content">Identificación de zonas con mayor concentración de incidencias o reportes ciudadanos.</p>
+        <p class="vp-section-content">Análisis de tiempos de respuesta y resolución de incidencias por parte del personal municipal.</p>
+        <p class="vp-section-content">Indicadores de participación ciudadana y uso de las funcionalidades de la plataforma.</p>
+        <p class="vp-section-content">Patrones de uso de los parques y áreas prioritarias de intervención.</p>
+        <p class="vp-section-content">Indicadores alineados a los Objetivos de Desarrollo Sostenible (ODS) relacionados con la gestión de espacios públicos.</p>
+        <p class="vp-section-content">Toda la analítica de datos se realiza sobre información agregada y es de uso exclusivo del personal autorizado de la Alcaldía. Los ciudadanos no tienen acceso a los dashboards ni reportes internos generados a partir de estos análisis.</p>
+        <p class="vp-section-content">Los datos individuales de los usuarios no serán utilizados para la elaboración de perfiles de comportamiento con fines distintos a los descritos en esta política.</p>
+      </div>
+
+      <div class="vp-section">
+        <h2 class="vp-section-title">Chatbot ciudadano y procesamiento por terceros</h2>
+        <p class="vp-section-content">El chatbot integrado en VozPark opera mediante la tecnología de inteligencia artificial de OpenAI (GPT-5.4). Las conversaciones que el usuario sostiene con el chatbot son procesadas a través de los servidores de OpenAI, sujetas a su propia política de privacidad y términos de uso, disponibles en https://openai.com/policies.</p>
+        <p class="vp-section-content">La Alcaldía de San Salvador Centro establece los parámetros y restricciones de funcionamiento del chatbot dentro de VozPark, limitando su función a la orientación sobre el uso de la plataforma. No obstante, se recomienda expresamente al usuario no compartir información personal sensible, datos de terceros ni información confidencial en las conversaciones con el chatbot.</p>
+        <p class="vp-section-content">La Alcaldía no asume responsabilidad por el tratamiento de datos que OpenAI realice conforme a sus propias políticas, más allá de los acuerdos de uso establecidos con dicho proveedor.</p>
+      </div>
+
+      <div class="vp-section">
+        <h2 class="vp-section-title">Base legal del tratamiento</h2>
+        <p class="vp-section-content">El tratamiento de los datos personales se realiza con base en:</p>
+        <p class="vp-section-content">El consentimiento explícito del usuario al registrarse en la plataforma y aceptar esta Política de Privacidad.</p>
+        <p class="vp-section-content">El cumplimiento de las funciones de gestión pública y prestación de servicios municipales de la Alcaldía de San Salvador Centro.</p>
+        <p class="vp-section-content">El interés público en la mejora de los espacios recreativos urbanos del municipio y la transparencia en la gestión municipal.</p>
+      </div>
+
+      <div class="vp-section">
+        <h2 class="vp-section-title">Compartición de datos con terceros</h2>
+        <p class="vp-section-content">La Alcaldía de San Salvador Centro podrá compartir datos con los siguientes terceros, únicamente en la medida estrictamente necesaria para la operación de la plataforma:</p>
+        <p class="vp-section-content">DigitalOcean: proveedor de infraestructura cloud donde se aloja la plataforma. Actúa como encargado del tratamiento bajo acuerdos de confidencialidad y seguridad, conforme a sus propias políticas de privacidad.</p>
+        <p class="vp-section-content">Google Maps Platform: proveedor del servicio de geolocalización y mapas utilizado en la plataforma para la visualización de incidencias y rutas de accesibilidad de parques.</p>
+        <p class="vp-section-content">OpenAI: proveedor de la tecnología de inteligencia artificial que opera el chatbot ciudadano. Las conversaciones con el chatbot son procesadas conforme a las políticas de OpenAI.</p>
+        <p class="vp-section-content">Microsoft Power BI: herramienta de visualización de datos utilizada para la generación de reportes e indicadores internos del personal municipal. Los datos procesados en Power BI son de uso exclusivo de la Alcaldía.</p>
+        <p class="vp-section-content">Personal municipal de la Alcaldía de San Salvador Centro con acceso autorizado para la gestión, asignación y resolución de incidencias reportadas por los ciudadanos.</p>
+        <p class="vp-section-content">No se realizarán transferencias de datos personales a terceros fuera de los descritos anteriormente, ni se venderán, cederán o compartirán datos con fines comerciales bajo ninguna circunstancia.</p>
+      </div>
+
+      <div class="vp-section">
+        <h2 class="vp-section-title">Conservación de los datos</h2>
+        <p class="vp-section-content">Los datos personales serán conservados durante el tiempo que el usuario mantenga su cuenta activa en la plataforma y por un período adicional de cinco (5) años tras la cancelación de la cuenta o la finalización operativa del proyecto, conforme a los plazos razonables para la conservación de registros de gestión pública municipal en El Salvador.</p>
+        <p class="vp-section-content">Transcurrido dicho plazo, los datos personales serán eliminados de forma segura o anonimizados de manera irreversible, conservando únicamente información estadística agregada sin posibilidad de identificar al usuario. Los datos anonimizados podrán ser conservados indefinidamente con fines de análisis histórico de la gestión municipal.</p>
+      </div>
+
+      <div class="vp-section">
+        <h2 class="vp-section-title">Derechos del titular de los datos</h2>
+        <p class="vp-section-content">Conforme a la Ley de Protección de Datos Personales de El Salvador (Decreto Legislativo N.° 534), el usuario tiene derecho a:</p>
+        <p class="vp-section-content">Acceso: conocer qué datos personales suyos son tratados por la Alcaldía y con qué finalidad.</p>
+        <p class="vp-section-content">Rectificación: solicitar la corrección de datos inexactos, incompletos o desactualizados.</p>
+        <p class="vp-section-content">Cancelación: solicitar la eliminación de sus datos cuando ya no sean necesarios para los fines para los que fueron recolectados, salvo que exista obligación legal de conservarlos.</p>
+        <p class="vp-section-content">Oposición: oponerse al tratamiento de sus datos en los casos previstos por la ley.</p>
+        <p class="vp-section-content">Revocación del consentimiento: retirar el consentimiento otorgado para el tratamiento de sus datos, sin que ello afecte la licitud del tratamiento previo a la revocación.</p>
+        <p class="vp-section-content">Para ejercer cualquiera de estos derechos, el usuario puede enviar su solicitud al correo electrónico info@sansalvador.gob.sv, indicando su nombre completo, el derecho que desea ejercer y los datos a los que se refiere su solicitud. La Alcaldía responderá en un plazo razonable conforme a lo establecido en la legislación vigente.</p>
+      </div>
+
+      <div class="vp-section">
+        <h2 class="vp-section-title">Seguridad de los datos</h2>
+        <p class="vp-section-content">La Alcaldía de San Salvador Centro implementa medidas técnicas y organizativas adecuadas para proteger los datos personales de los usuarios frente a accesos no autorizados, pérdida, alteración, divulgación indebida o destrucción. Entre estas medidas se incluyen:</p>
+        <p class="vp-section-content">Cifrado de todas las comunicaciones mediante protocolo SSL/TLS.</p>
+        <p class="vp-section-content">Control de acceso por roles y permisos diferenciados entre usuarios ciudadanos y personal municipal dentro de la plataforma.</p>
+        <p class="vp-section-content">Protección de la infraestructura mediante Cloudflare y configuraciones de seguridad en los servidores de DigitalOcean.</p>
+        <p class="vp-section-content">Revisiones periódicas de seguridad, análisis de vulnerabilidades y auditorías técnicas.</p>
+        <p class="vp-section-content">Almacenamiento seguro de contraseñas mediante técnicas de cifrado irreversible.</p>
+        <p class="vp-section-content">En caso de detectarse una brecha de seguridad que afecte los datos personales de los usuarios, la Alcaldía adoptará las medidas correctivas necesarias y notificará a los afectados conforme a lo establecido en la Ley de Protección de Datos Personales de El Salvador.</p>
+      </div>
+
+      <div class="vp-section">
+        <h2 class="vp-section-title">Uso de cookies y tecnologías de rastreo</h2>
+        <p class="vp-section-content">VozPark puede utilizar cookies de sesión y tecnologías similares para mantener la sesión del usuario activa y garantizar el correcto funcionamiento de la plataforma. No se utilizan cookies de publicidad ni de rastreo de comportamiento con fines comerciales.</p>
+        <p class="vp-section-content">El usuario puede configurar su navegador o dispositivo para rechazar las cookies; sin embargo, esto puede afectar el funcionamiento de algunas funcionalidades de la plataforma, incluyendo el mantenimiento de la sesión activa.</p>
+      </div>
+
+      <div class="vp-section">
+        <h2 class="vp-section-title">Menores de edad</h2>
+        <p class="vp-section-content">VozPark está dirigida exclusivamente a personas mayores de 18 años. La Alcaldía de San Salvador Centro no recolecta intencionalmente datos personales de menores de edad. Si se detecta que un usuario menor de 18 años ha creado una cuenta en la plataforma, dicha cuenta será cancelada de inmediato y sus datos personales eliminados a la brevedad posible, conforme a lo establecido en la legislación salvadoreña de protección de datos y de protección de la niñez.</p>
+      </div>
+
+      <div class="vp-section">
+        <h2 class="vp-section-title">Modificaciones a esta política</h2>
+        <p class="vp-section-content">La Alcaldía de San Salvador Centro podrá actualizar la presente Política de Privacidad cuando sea necesario para reflejar cambios en la plataforma, en los proveedores tecnológicos utilizados, en la legislación aplicable o en las prácticas de tratamiento de datos. Las modificaciones serán publicadas dentro de la plataforma e indicarán la fecha de la última actualización. El uso continuado de VozPark tras la publicación de modificaciones constituirá la aceptación de las mismas.</p>
+      </div>
+
+      <div class="vp-section">
+        <h2 class="vp-section-title">Contacto y ejercicio de derechos</h2>
+        <p class="vp-section-content">Para cualquier consulta, solicitud de ejercicio de derechos o reclamación relacionada con el tratamiento de sus datos personales, el usuario puede contactar a la Alcaldía de San Salvador Centro a través del correo electrónico: info@sansalvador.gob.sv</p>
+      </div>
+  </div>
+</main>
+
+<script>
+  window.VP_SECTION = 'politicas';
+
+  function ripple(btn,e){
+    const rect=btn.getBoundingClientRect(),size=Math.max(rect.width,rect.height);
+    const r=document.createElement('span');r.className='ripple';
+    r.style.cssText=`width:${size}px;height:${size}px;left:${e.clientX-rect.left-size/2}px;top:${e.clientY-rect.top-size/2}px`;
+    btn.appendChild(r);r.addEventListener('animationend',()=>r.remove());
+  }
+  document.getElementById('btn-logout').addEventListener('click',e=>{
+    ripple(document.getElementById('btn-logout'),e);
+    document.getElementById('logout-modal').classList.add('active');
+  });
+  document.getElementById('btn-cancel').addEventListener('click',()=>document.getElementById('logout-modal').classList.remove('active'));
+  document.getElementById('btn-confirm').addEventListener('click',()=>{window.location.href='../home_invitado.php';});
+  document.getElementById('logout-modal').addEventListener('click',e=>{if(e.target===document.getElementById('logout-modal'))document.getElementById('logout-modal').classList.remove('active');});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')document.getElementById('logout-modal').classList.remove('active');});
+  document.querySelectorAll('.vp-modal__btn,.vp-logout-hdr').forEach(b=>b.addEventListener('click',e=>ripple(b,e)));
+</script>
+<script src="sidebar_ciudadano.js"></script>
+</body>
+</html>

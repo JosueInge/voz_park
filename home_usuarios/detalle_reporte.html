@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VozPark – Detalle del Reporte</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Inter',sans-serif;background:#FAF8F2;min-height:100vh;}
+
+    /* ══ HEADER ══ */
+    .vp-header{display:flex;align-items:center;width:100%;height:60px;background:#1A2E0F;padding:0 20px;position:sticky;top:0;z-index:100;}
+    .vp-brand{display:flex;flex-direction:column;padding-right:16px;flex-shrink:0;}
+    .vp-brand__name{font-size:20px;font-weight:700;color:#DFFFAA;line-height:1.2;}
+    .vp-brand__sub{font-size:16px;color:#97C459;line-height:1.2;}
+    .vp-hdr-div{width:1px;height:40px;background:#F4FAEA;opacity:.55;flex-shrink:0;margin-right:16px;}
+    .vp-spacer{flex:1;}
+    .vp-user{display:flex;align-items:center;gap:8px;margin-right:14px;}
+    .vp-user__avatar{width:20px;height:20px;border-radius:50%;background:#3B6D11;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#DFFFAA;}
+    .vp-user__name{font-family:'Open Sans',sans-serif;font-size:20px;font-weight:600;color:#FFFFFF;white-space:nowrap;}
+    .vp-logout-hdr{display:flex;align-items:center;justify-content:center;width:40px;height:20px;background:#F4FAEA;border:none;border-radius:4px;font-family:'Inter',sans-serif;font-size:16px;color:#1A2E0F;cursor:pointer;position:relative;overflow:hidden;transition:background .2s;}
+
+    /* Ripple */
+    .ripple{position:absolute;border-radius:50%;background:rgba(59,109,17,.22);transform:scale(0);animation:ripple-anim .55s linear;pointer-events:none;}
+    @keyframes ripple-anim{to{transform:scale(4);opacity:0;}}
+
+    /* Modal logout */
+    .vp-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:999;align-items:center;justify-content:center;}
+    .vp-modal-overlay.active{display:flex;}
+    .vp-modal{background:#1A2E0F;border:1px solid #3B6D11;border-radius:12px;padding:28px 32px 24px;width:340px;max-width:90vw;display:flex;flex-direction:column;gap:20px;}
+    .vp-modal__title{font-family:'Arial',sans-serif;font-size:16px;font-weight:700;color:#FFFFFF;text-align:center;}
+    .vp-modal__actions{display:flex;gap:12px;}
+    .vp-modal__btn{flex:1;height:40px;border:none;border-radius:8px;font-family:'Inter',sans-serif;font-size:16px;color:#DFFFAA;background:#3B6D11;cursor:pointer;position:relative;overflow:hidden;transition:filter .2s;}
+    .vp-modal__btn:hover{filter:brightness(1.15);}
+
+    /* Lightbox */
+    .vp-lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:998;align-items:center;justify-content:center;}
+    .vp-lightbox.active{display:flex;}
+    .vp-lightbox__inner{position:relative;width:800px;height:600px;max-width:95vw;max-height:90vh;border-radius:8px;overflow:hidden;background:#111;display:flex;align-items:center;justify-content:center;}
+    .vp-lightbox__img{width:100%;height:100%;object-fit:contain;}
+    .vp-lightbox__ph{color:#94A3B8;font-size:15px;text-align:center;padding:20px;}
+    .vp-lightbox__close{position:absolute;top:10px;right:10px;background:none;border:none;cursor:pointer;color:#E33639;display:flex;align-items:center;}
+    .vp-lightbox__close svg{width:24px;height:24px;}
+
+    /* ══ MAIN ══ */
+    .vp-main{padding:28px 24px 60px;max-width:900px;margin:0 auto;}
+
+    /* Back + title row */
+    .vp-top-row{display:flex;align-items:center;gap:14px;margin-bottom:20px;flex-wrap:wrap;}
+    .vp-btn-back{
+      display:inline-flex;align-items:center;gap:6px;
+      background:transparent;border:none;border-radius:5px;
+      font-family:'Inter',sans-serif;font-size:16px;color:#1A2E0F;
+      cursor:pointer;padding:6px 10px;
+      position:relative;overflow:hidden;
+      transition:background .18s,box-shadow .18s;
+    }
+    .vp-btn-back:hover{background:rgba(26,46,15,.08);box-shadow:0 2px 8px rgba(26,46,15,.10);}
+    .vp-btn-back svg{width:18px;height:18px;flex-shrink:0;}
+    .vp-page-title{font-size:24px;font-weight:700;color:#1A2E0F;}
+
+    /* Detail container */
+    .vp-detail-box{
+      background:#FFFFFF;border:1px solid rgba(151,196,89,.30);
+      border-radius:8px;padding:22px 26px;
+      display:flex;flex-direction:column;gap:20px;
+    }
+    .vp-detail-section-title{font-size:16px;font-weight:700;color:#1A2E0F;}
+
+    /* Read-only field row */
+    .vp-field-row{display:flex;flex-direction:column;gap:4px;padding:10px 0;border-bottom:1px solid rgba(151,196,89,.20);}
+    .vp-field-row:last-of-type{border-bottom:none;}
+    .vp-field-row__label{font-size:16px;color:#000000;}
+    .vp-field-row__value{font-size:16px;color:#3B6D11;}
+
+    /* Tipo incidencia with icon */
+    .vp-tipo-cell{display:flex;align-items:center;gap:8px;}
+    .vp-tipo-cell svg{width:16px;height:16px;color:#3B6D11;flex-shrink:0;}
+
+    /* Urgency badge */
+    .vp-badge{display:inline-block;padding:3px 12px;border-radius:4px;font-size:16px;white-space:nowrap;}
+    .badge-alta  {background:rgba(196,89,89,.30); color:#B45050;}
+    .badge-media {background:rgba(196,175,89,.30);color:#AC7152;}
+    .badge-baja  {background:rgba(202,204,201,.50);color:#484646;}
+
+    /* Description box */
+    .vp-desc-box{
+      background:#FFFFFF;border:1px solid rgba(151,196,89,.30);
+      border-radius:4px;padding:10px 14px;
+      font-size:16px;color:#3B6D11;line-height:1.6;min-height:60px;
+    }
+
+    /* Evidence */
+    .vp-evidence-grid{display:flex;flex-wrap:wrap;gap:14px;margin-top:6px;}
+    .vp-evidence-thumb{
+      width:350px;max-width:100%;height:200px;
+      border-radius:12px;border:1px solid #97C459;
+      object-fit:cover;cursor:pointer;
+      background:rgba(151,196,89,.10);
+      display:flex;align-items:center;justify-content:center;
+      transition:transform .18s,box-shadow .18s;overflow:hidden;
+    }
+    .vp-evidence-thumb:hover{transform:scale(1.02);box-shadow:0 6px 20px rgba(59,109,17,.18);}
+    .vp-evidence-thumb img{width:100%;height:100%;object-fit:cover;}
+    .vp-evidence-thumb__ph{font-size:13px;color:#94A3B8;text-align:center;padding:10px;}
+
+    /* Responsive */
+    @media(max-width:640px){
+      .vp-user__name,.vp-brand__sub{display:none;}
+      .vp-evidence-thumb{width:100%;}
+      .vp-main{padding:18px 14px 50px;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="vp-header">
+  <div class="vp-brand">
+    <span class="vp-brand__name">VozPark</span>
+    <span class="vp-brand__sub">Parques urbanos – El Salvador</span>
+  </div>
+  <div class="vp-hdr-div"></div>
+  <div class="vp-spacer"></div>
+  <div class="vp-user">
+    <div class="vp-user__avatar">MG</div>
+    <span class="vp-user__name">María González</span>
+  </div>
+  <button class="vp-logout-hdr" id="btn-logout">Salir</button>
+</header>
+
+<!-- Logout modal -->
+<div class="vp-modal-overlay" id="logout-modal">
+  <div class="vp-modal">
+    <p class="vp-modal__title">¿Estás seguro de cerrar sesión?</p>
+    <div class="vp-modal__actions">
+      <button class="vp-modal__btn" id="btn-cancel">Cancelar</button>
+      <button class="vp-modal__btn" id="btn-confirm">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div class="vp-lightbox" id="lightbox">
+  <div class="vp-lightbox__inner">
+    <button class="vp-lightbox__close" id="lightbox-close">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <img class="vp-lightbox__img" id="lightbox-img" src="" alt="" style="display:none;"/>
+    <div class="vp-lightbox__ph" id="lightbox-ph">Vista previa de demostración</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main class="vp-main">
+
+  <div class="vp-top-row">
+    <button class="vp-btn-back" id="btn-back">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Volver
+    </button>
+    <h1 class="vp-page-title">Detalle del reporte</h1>
+  </div>
+
+  <div class="vp-detail-box">
+    <div class="vp-detail-section-title">Información del reporte</div>
+
+    <!-- Tipo -->
+    <div class="vp-field-row">
+      <span class="vp-field-row__label">Tipo de incidencia</span>
+      <div class="vp-tipo-cell" id="val-tipo">
+        <!-- injected by JS -->
+      </div>
+    </div>
+
+    <!-- Parque -->
+    <div class="vp-field-row">
+      <span class="vp-field-row__label">Parque</span>
+      <span class="vp-field-row__value" id="val-parque">—</span>
+    </div>
+
+    <!-- Urgencia -->
+    <div class="vp-field-row">
+      <span class="vp-field-row__label">Nivel de urgencia</span>
+      <span id="val-urgencia">—</span>
+    </div>
+
+    <!-- Descripción -->
+    <div class="vp-field-row">
+      <span class="vp-field-row__label">Descripción</span>
+      <div class="vp-desc-box" id="val-descripcion">—</div>
+    </div>
+
+    <!-- Ubicación -->
+    <div class="vp-field-row">
+      <span class="vp-field-row__label">Ubicación en el parque</span>
+      <span class="vp-field-row__value" id="val-ubicacion">—</span>
+    </div>
+
+    <!-- Evidencia -->
+    <div>
+      <span class="vp-field-row__label" style="display:block;margin-bottom:10px;">Evidencia fotográfica</span>
+      <div class="vp-evidence-grid" id="evidence-grid"></div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+/* ── Dataset (mismo que mis_reportes.html) ── */
+const REPORTS = [
+  { id:1, tipo:'Iluminación',      icono:'luz',     parque:'Parque Central',     urgencia:'Alta',  descripcion:'Varios postes de luz en el sector norte del parque no funcionan desde hace tres días, generando inseguridad nocturna para los visitantes.',  ubicacion:'Sector norte, cerca de área de juegos', fotos:2 },
+  { id:2, tipo:'Basura acumulada', icono:'basura',  parque:'Parque El Bosque',   urgencia:'Media', descripcion:'Acumulación de residuos sólidos junto al área de bancas y sendero principal. Se requiere limpieza urgente antes del fin de semana.',        ubicacion:'Entrada principal, lado oeste',         fotos:1 },
+  { id:3, tipo:'Bancas dañadas',   icono:'banca',   parque:'Parque La Libertad', urgencia:'Baja',  descripcion:'Dos bancas del área de descanso presentan tablones rotos. Ya fueron reparadas satisfactoriamente.',                                        ubicacion:'Área de descanso central',              fotos:1 },
+  { id:4, tipo:'Grafiti',          icono:'grafiti', parque:'Parque Central',     urgencia:'Baja',  descripcion:'Pinturas vandálicas en el muro perimetral del sector sur. El caso fue resuelto y el muro fue repintado.',                                   ubicacion:'Muro perimetral, sector sur',           fotos:2 },
+];
+
+const ICON_SVG = {
+  luz:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`,
+  basura: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>`,
+  banca:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="4" rx="1"/><line x1="5" y1="11" x2="5" y2="17"/><line x1="19" y1="11" x2="19" y2="17"/></svg>`,
+  grafiti:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>`,
+};
+
+/* ── Load report from URL ?id= ── */
+const params = new URLSearchParams(window.location.search);
+const id     = parseInt(params.get('id')) || 1;
+const rep    = REPORTS.find(r => r.id === id) || REPORTS[0];
+
+/* ── Populate ── */
+// Tipo
+document.getElementById('val-tipo').innerHTML =
+  `${ICON_SVG[rep.icono] || ''}<span style="font-size:16px;color:#3B6D11;">${rep.tipo}</span>`;
+
+// Parque
+document.getElementById('val-parque').textContent = rep.parque;
+
+// Urgencia
+const urgCls = { Alta:'badge-alta', Media:'badge-media', Baja:'badge-baja' };
+document.getElementById('val-urgencia').innerHTML =
+  `<span class="vp-badge ${urgCls[rep.urgencia]}">${rep.urgencia}</span>`;
+
+// Descripción
+document.getElementById('val-descripcion').textContent = rep.descripcion;
+
+// Ubicación
+document.getElementById('val-ubicacion').textContent = rep.ubicacion;
+
+// Evidencia (demo placeholders)
+const grid = document.getElementById('evidence-grid');
+for (let i = 0; i < rep.fotos; i++) {
+  const div = document.createElement('div');
+  div.className = 'vp-evidence-thumb';
+  div.innerHTML = `<div class="vp-evidence-thumb__ph">Foto ${i+1} de evidencia<br/>(demo)</div>`;
+  div.addEventListener('click', () => openLightbox(null, `Foto ${i+1} – ${rep.tipo}`));
+  grid.appendChild(div);
+}
+
+/* ── Lightbox ── */
+function openLightbox(src, label) {
+  const lb  = document.getElementById('lightbox');
+  const img = document.getElementById('lightbox-img');
+  const ph  = document.getElementById('lightbox-ph');
+  if (src) { img.src=src; img.style.display='block'; ph.style.display='none'; }
+  else      { img.style.display='none'; ph.style.display='block'; ph.textContent=label||'Vista previa'; }
+  lb.classList.add('active');
+}
+document.getElementById('lightbox-close').addEventListener('click', () =>
+  document.getElementById('lightbox').classList.remove('active'));
+document.getElementById('lightbox').addEventListener('click', e => {
+  if (e.target === document.getElementById('lightbox'))
+    document.getElementById('lightbox').classList.remove('active');
+});
+
+/* ── Back button ── */
+document.getElementById('btn-back').addEventListener('click', e => {
+  ripple(document.getElementById('btn-back'), e);
+  window.location.href = 'mis_reportes.html';
+});
+
+/* ── Logout ── */
+document.getElementById('btn-logout').addEventListener('click', e => {
+  ripple(document.getElementById('btn-logout'), e);
+  document.getElementById('logout-modal').classList.add('active');
+});
+document.getElementById('btn-cancel').addEventListener('click',  () => document.getElementById('logout-modal').classList.remove('active'));
+document.getElementById('btn-confirm').addEventListener('click', () => { window.location.href = '../home_invitado.php'; });
+document.getElementById('logout-modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('logout-modal')) document.getElementById('logout-modal').classList.remove('active');
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.getElementById('logout-modal').classList.remove('active');
+    document.getElementById('lightbox').classList.remove('active');
+  }
+});
+
+/* ── Ripple ── */
+function ripple(btn, e) {
+  const rect=btn.getBoundingClientRect(), size=Math.max(rect.width,rect.height);
+  const r=document.createElement('span'); r.className='ripple';
+  r.style.cssText=`width:${size}px;height:${size}px;left:${e.clientX-rect.left-size/2}px;top:${e.clientY-rect.top-size/2}px`;
+  btn.appendChild(r); r.addEventListener('animationend',()=>r.remove());
+}
+document.querySelectorAll('.vp-modal__btn,.vp-logout-hdr').forEach(b =>
+  b.addEventListener('click', e => ripple(b, e)));
+</script>
+<script src="sidebar_ciudadano.js"></script>
+</body>
+</html>

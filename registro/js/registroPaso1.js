@@ -1,28 +1,4 @@
 
-// Mensaje toast
-function showToast(message) {
-    const toast = document.getElementById('toast');
-    toast.textContent = message;
-    toast.classList.add('show');
-    // Limpiar cualquier timeout anterior
-    if (toast.hideTimeout) clearTimeout(toast.hideTimeout);
-    toast.hideTimeout = setTimeout(() => {
-        toast.classList.remove('show');
-    }, 6000); // tiempo que se muestra el mensaje
-}
-
-// Mensaje toast para la zona de residencia
-function showToastResidencia(message) {
-    const toast = document.getElementById('toast');
-    toast.textContent = message;
-    toast.classList.add('show');
-    // Limpiar cualquier timeout anterior
-    if (toast.hideTimeout) clearTimeout(toast.hideTimeout);
-    toast.hideTimeout = setTimeout(() => {
-        toast.classList.remove('show');
-    }, 10000); // tiempo que se muestra el mensaje
-}
-
 // Validaciones
 const nameInput = document.getElementById('name');
 const emailInput = document.getElementById('email');
@@ -30,48 +6,118 @@ const phoneInput = document.getElementById('phone');
 const locationInput = document.getElementById('location');
 const btnContinuar = document.querySelector('.btn-continuar');
 
-//Nombre
-function validarNombre(nombre) {
-    return /^[A-Za-zÁÉÍÓÚáéíóúÑñ ]{3,50}$/.test(nombre.trim());
+function mostrarError(input, mensaje) {
+    const container = input.closest('.grupoInput') || input.parentElement;
+    let error = container.querySelector('.mensaje-error');
+
+    if (!error) {
+        error = document.createElement('div');
+        error.className = 'mensaje-error';
+        container.appendChild(error);
+    }
+
+    error.textContent = mensaje;
+    error.style.display = 'block';
+
+    input.classList.add('input-error', 'shake');
+    setTimeout(() => {
+        input.classList.remove('shake');
+    }, 450);
+
+    if (input.errorTimeout) {
+        clearTimeout(input.errorTimeout);
+    }
+    input.errorTimeout = setTimeout(() => {
+        limpiarError(input);
+    }, 2500);
 }
 
-//Email
-function validarEmail(email) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+function limpiarError(input) {
+    if (input.errorTimeout) {
+        clearTimeout(input.errorTimeout);
+        input.errorTimeout = null;
+    }
+
+    const container = input.closest('.grupoInput') || input.parentElement;
+    const error = container.querySelector('.mensaje-error');
+    if (error) {
+        error.style.display = 'none';
+        error.textContent = '';
+    }
+    input.classList.remove('input-error', 'shake');
 }
 
-//Teléfono
-function validarTelefono(telefono) {
-    return /^\d{8}$/.test(telefono.trim());
+function limpiarTodosLosErrores() {
+    [nameInput, emailInput, phoneInput, locationInput].forEach((input) => limpiarError(input));
 }
 
-//Zona de residencia
-function validarZona(zona) {
-    return typeof zona === 'string' && zona.trim().length >= 10 && zona.trim().length <= 25 && /^[A-Za-zÁÉÍÓÚáéíóúÑñ 0-9.,-]+$/.test(zona.trim());
-}
+btnContinuar.addEventListener('click', function(event) {
+    // Efecto onda (ripple)
+    const createRipple = (event) => {
+        const button = event.currentTarget;
+        const circle = document.createElement('span');
+        const diameter = Math.max(button.clientWidth, button.clientHeight);
+        const radius = diameter / 2;
+        circle.classList.add('ripple');
+        circle.style.width = circle.style.height = `${diameter}px`;
+        circle.style.left = `${event.offsetX - radius}px`;
+        circle.style.top = `${event.offsetY - radius}px`;
+        // Eliminar ripples previos
+        const oldRipple = button.querySelector('.ripple');
+        if (oldRipple) oldRipple.remove();
+        button.appendChild(circle);
+    };
+    createRipple(event);
 
-btnContinuar.addEventListener('click', function() {
-    // Validaciones y mensajes toast SOLO al hacer clic
-    if (!validarNombre(nameInput.value)) {
-        showToast('Error: El nombre debe tener al menos 3 letras, máximo 50, solo ingrese letras.');
+    // Nombre
+    function validarNombre(nombre) {
+        return /^[A-Za-zÁÉÍÓÚáéíóúÑñ ]{3,50}$/.test(nombre.trim());
+    }
+
+    // Email
+    function validarEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+    }
+
+    // Teléfono (8 dígitos)
+    function validarTelefono(telefono) {
+        return /^\d{8}$/.test(telefono.trim());
+    }
+
+    limpiarTodosLosErrores();
+
+    // Validaciones y mensajes por campo SOLO al hacer clic
+    if (!nameInput.value.trim() || !validarNombre(nameInput.value)) {
+        mostrarError(nameInput, 'El nombre es obligatorio.');
+        return;
+    }
+    if (!emailInput.value.trim()) {
+        mostrarError(emailInput, 'El correo electrónico es obligatorio.');
         return;
     }
     if (!validarEmail(emailInput.value)) {
-        showToast('Error: El correo electrónico no es válido.');
+        mostrarError(emailInput, 'Formato de correo incorrecto.');
+        return;
+    }
+    if (!phoneInput.value.trim()) {
+        mostrarError(phoneInput, 'El número de teléfono es obligatorio.');
         return;
     }
     if (!validarTelefono(phoneInput.value)) {
-        showToast('Error: El numero de telefono solo debe contener 8 numeros.');
+        mostrarError(phoneInput, 'Formato de teléfono incorrecto.');
         return;
     }
-    if (!validarZona(locationInput.value)) {
-        showToastResidencia('Error: La zona de residencia debe tener como minimo 10 letras y como máximo 25, puede ingresar: letras, números, espacios y caracteres especiales como ., -');
+    if (!locationInput.value.trim()) {
+        mostrarError(locationInput, 'La zona de residencia es obligatoria.');
         return;
     }
     // Guardar datos en localStorage
     localStorage.setItem('vozpark_nombre', nameInput.value.trim());
     localStorage.setItem('vozpark_email', emailInput.value.trim());
+    localStorage.setItem('vozpark_phone', phoneInput.value.trim());
     localStorage.setItem('vozpark_location', locationInput.value.trim());
-    // Si todo es válido, continuar
-    window.location.href = 'registroPaso2.php';
+    // Esperar un momento para mostrar el efecto ripple antes de redirigir
+    setTimeout(function() {
+        window.location.href = 'registroPaso2.php';
+    }, 350); // 350ms para que el efecto se vea bien
 });
