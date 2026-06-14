@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VozPark Admin – Panel Principal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #F9FCFF;
+      min-height: 100vh;
+    }
+
+    /* ════════════════════════ HEADER ════════════════════════ */
+    .vp-header {
+      display: flex; align-items: center; width: 100%; height: 55px;
+      background: #0F172A; border-bottom: 1px solid #1E40AF;
+      padding: 0 16px; position: sticky; top: 0; z-index: 100;
+    }
+    .vp-brand { display:flex; flex-direction:column; justify-content:center; padding-right:14px; flex-shrink:0; }
+    .vp-brand__name { font-size:16px; color:#EFF6FF; line-height:1.2; white-space:nowrap; }
+    .vp-brand__sub  { font-size:16px; color:#2290BF;  line-height:1.2; white-space:nowrap; }
+    .vp-hdr-divider { width:1px; height:40px; background:rgba(244,250,234,.30); flex-shrink:0; margin-right:14px; }
+    .vp-breadcrumb  { display:flex; align-items:center; gap:5px; flex:1; min-width:0; }
+    .vp-breadcrumb__root    { display:flex; align-items:center; gap:5px; font-size:16px; color:#334155; white-space:nowrap; }
+    .vp-breadcrumb__sep     { font-size:16px; color:#7685B7; }
+    .vp-breadcrumb__current { font-size:16px; color:#AAB0C3; white-space:nowrap; }
+    .vp-user { display:flex; align-items:center; gap:8px; background:linear-gradient(90deg,rgba(30,64,175,.70),rgba(30,64,175,.10)); border:1px solid #1E40AF; border-radius:6px; padding:4px 10px; flex-shrink:0; margin-left:12px; }
+    .vp-user__avatar { width:32px; height:32px; border-radius:50%; background:#1E40AF; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700; color:#93C5FD; }
+    .vp-user__name { font-size:16px; font-weight:600; color:#FFFFFF; line-height:1.2; white-space:nowrap; }
+    .vp-user__role { font-size:12px; color:#EFF6FF; line-height:1.2; white-space:nowrap; }
+    .vp-logout-btn { display:flex; align-items:center; justify-content:center; gap:5px; width:55px; height:25px; background:transparent; border:1px solid rgba(59,130,246,.30); border-radius:4px; cursor:pointer; font-family:'Inter',sans-serif; font-size:14px; color:#1E40AF; flex-shrink:0; margin-left:8px; position:relative; overflow:hidden; transition:background .2s; }
+    .vp-logout-btn:hover { background:rgba(59,130,246,.08); }
+    .vp-logout-btn svg { width:16px; height:16px; }
+    .ripple { position:absolute; border-radius:50%; background:rgba(59,130,246,.30); transform:scale(0); animation:ripple-anim .55s linear; pointer-events:none; }
+    @keyframes ripple-anim { to { transform:scale(4); opacity:0; } }
+
+    /* logout modal */
+    .vp-modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:999; align-items:center; justify-content:center; }
+    .vp-modal-overlay.active { display:flex; }
+    .vp-modal { background:#1E293B; border:1px solid #334155; border-radius:10px; padding:28px 32px 24px; width:340px; max-width:90vw; display:flex; flex-direction:column; gap:20px; }
+    .vp-modal__title { font-size:16px; font-weight:700; color:#FFFFFF; text-align:center; }
+    .vp-modal__actions { display:flex; gap:12px; }
+    .vp-modal__btn { flex:1; height:40px; border:none; border-radius:8px; font-family:'Inter',sans-serif; font-size:16px; color:#FFFFFF; cursor:pointer; transition:filter .2s; }
+    .vp-modal__btn:hover { filter:brightness(1.12); }
+    .vp-modal__btn--cancel  { background:#3B82F6; }
+    .vp-modal__btn--confirm { background:#1E40AF; }
+
+    /* ════════════════════════ MAIN ════════════════════════ */
+    .vp-main { padding: 24px 24px 48px; max-width: 1400px; margin: 0 auto; }
+
+    /* ── Page heading ── */
+    .vp-page-title { font-size:24px; font-weight:700; color:#0F172A; margin-bottom:4px; }
+    .vp-page-sub   { font-size:16px; color:#0F172A; margin-bottom:20px; }
+
+    /* ════════════════════════ METRIC CARDS ════════════════════════ */
+    .vp-metrics {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+    .vp-card {
+      width: 180px;
+      min-height: 95px;
+      background: #FFFFFF;
+      border-radius: 8px;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .vp-card:first-child { border: 1px solid rgba(118,133,183,.80); }
+    .vp-card:not(:first-child) { border: 1px solid rgba(118,133,183,.30); }
+    .vp-card__label  { font-size:14px; color:#313E52; }
+    .vp-card__number { font-size:24px; font-weight:700; color:#166534; line-height:1.1; }
+    .vp-card__desc   { font-size:14px; color:#1A2E0F; }
+
+    /* ════════════════════════ PENDING TABLE ════════════════════════ */
+    .vp-pending-wrap {
+      background: #FFFFFF;
+      border: 1px solid rgba(118,133,183,.80);
+      border-radius: 10px;
+      width: 100%;
+      max-width: 750px;
+      padding: 16px 18px;
+      margin-bottom: 10px;
+    }
+    .vp-pending-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .vp-pending-header h2 { font-size:16px; font-weight:700; color:#000000; }
+
+    .vp-btn-ver-todos {
+      display: inline-flex; align-items:center; justify-content:center;
+      width:110px; height:30px;
+      background: #1E40AF; border:none; border-radius:4px;
+      font-family:'Inter',sans-serif; font-size:14px; color:#FFFFFF;
+      cursor:pointer; position:relative; overflow:hidden;
+      transition: background .2s, box-shadow .2s;
+      text-decoration: none;
+    }
+    .vp-btn-ver-todos:hover { background:#1D3BA0; box-shadow:0 4px 10px rgba(30,64,175,.30); }
+
+    /* Pending table */
+    .vp-ptable { width:100%; border-collapse:collapse; }
+    .vp-ptable thead tr { background:#F8FAFC; }
+    .vp-ptable thead th {
+      font-size:14px; font-weight:600; color:#000000;
+      padding:9px 12px; text-align:left;
+      border-right:1px solid #97C459; white-space:nowrap;
+    }
+    .vp-ptable thead th:last-child { border-right:none; }
+    .vp-ptable tbody tr { border-top:1px solid #F1F5F9; transition:background .15s; }
+    .vp-ptable tbody tr:hover { background:#F8FAFC; }
+    .vp-ptable tbody td {
+      font-size:14px; color:#000000;
+      padding:8px 12px;
+      border-right:1px solid rgba(151,196,89,.20);
+      vertical-align:middle;
+    }
+    .vp-ptable tbody td:last-child { border-right:none; }
+
+    .vp-inc-cell { display:flex; align-items:center; gap:7px; }
+    .vp-inc-cell svg { width:16px; height:16px; color:#3B6D11; flex-shrink:0; }
+
+    /* Badges */
+    .vp-badge { display:inline-block; padding:2px 9px; border-radius:4px; font-size:14px; white-space:nowrap; }
+    .badge-alta    { background:rgba(196,89,89,.30);   color:#B45050; }
+    .badge-media   { background:rgba(196,175,89,.30);  color:#AC7152; }
+    .badge-baja    { background:rgba(202,204,201,.50);  color:#484646; }
+    .badge-sin     { background:rgba(89,144,196,.30);  color:#0C447C; }
+    .badge-asig    { background:rgba(130,196,89,.30);  color:#3B6D11; }
+
+    /* Action buttons in table */
+    .vp-btn-asignar, .vp-btn-ver {
+      display:inline-flex; align-items:center; justify-content:center;
+      border:none; border-radius:4px;
+      font-family:'Inter',sans-serif; font-size:14px;
+      cursor:pointer; position:relative; overflow:hidden;
+      transition:background .2s, box-shadow .2s;
+      text-decoration:none;
+    }
+    .vp-btn-asignar { width:70px; height:28px; background:#1E40AF; color:#FFFFFF; }
+    .vp-btn-asignar:hover { background:#1D3BA0; box-shadow:0 3px 8px rgba(30,64,175,.30); }
+    .vp-btn-ver     { width:80px; height:28px; background:#5990C4; color:#1E40AF; }
+    .vp-btn-ver:hover { background:#4a80b4; box-shadow:0 3px 8px rgba(89,144,196,.30); }
+
+    /* Export PDF */
+    .vp-export-wrap { display:flex; justify-content:flex-end; margin-bottom:28px; }
+    .vp-btn-export {
+      display:inline-flex; align-items:center; justify-content:center; gap:6px;
+      width:130px; height:30px;
+      background:#DBEAFE; border:1px solid rgba(34,144,191,.70); border-radius:4px;
+      font-family:'Inter',sans-serif; font-size:14px; color:#1E40AF;
+      cursor:pointer; position:relative; overflow:hidden;
+      transition:background .2s, box-shadow .2s;
+    }
+    .vp-btn-export:hover { background:#BFDBFE; box-shadow:0 3px 8px rgba(34,144,191,.20); }
+    .vp-btn-export svg { width:14px; height:14px; flex-shrink:0; }
+
+    /* ════════════════════════ MAP SECTION ════════════════════════ */
+    .vp-map-section { width:100%; }
+
+    .vp-map-topbar {
+      display:flex; align-items:flex-start; justify-content:space-between;
+      flex-wrap:wrap; gap:10px; margin-bottom:14px;
+    }
+    .vp-map-titles { display:flex; flex-direction:column; gap:2px; }
+    .vp-map-title  { font-size:24px; font-weight:700; color:#0F172A; }
+    .vp-map-sub    { font-size:14px; color:#0F172A; }
+
+    /* Filter chips */
+    .vp-map-filters { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:4px; }
+    .vp-map-filter {
+      display:inline-flex; align-items:center; gap:6px;
+      padding:4px 12px;
+      background:#DBEAFE; border:1px solid rgba(34,144,191,.75); border-radius:4px;
+      font-family:'Inter',sans-serif; font-size:14px; color:#1E40AF;
+      cursor:pointer; position:relative; overflow:hidden;
+      transition:background .2s, box-shadow .2s;
+      user-select:none;
+    }
+    .vp-map-filter:hover { background:#BFDBFE; box-shadow:0 2px 6px rgba(34,144,191,.20); }
+    .vp-map-filter.active { background:#1E40AF; color:#FFFFFF; border-color:#1E40AF; }
+    .vp-map-filter__dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+
+    /* Map + Panel layout */
+    .vp-map-layout {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    /* Map container */
+    .vp-map-container {
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      min-height: 480px;
+      background: #E2E8F0;
+    }
+    #gmap { width:100%; height:100%; min-height:480px; }
+
+    /* Map legend */
+    .vp-map-legend {
+      position: absolute;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255,255,255,.85);
+      border-radius: 4px;
+      padding: 6px 14px;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      pointer-events: none;
+      backdrop-filter: blur(4px);
+      white-space: nowrap;
+    }
+    .vp-legend-item { display:flex; align-items:center; gap:6px; font-size:12px; color:#000000; }
+    .vp-legend-dot  { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+
+    /* Right panel */
+    .vp-map-panel {
+      background: #FFFFFF;
+      border: 1px solid rgba(118,133,183,.50);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .vp-panel-head {
+      padding: 12px 14px;
+      border-bottom: 1px solid #F1F5F9;
+      font-size: 14px;
+      font-weight: 600;
+      color: #0F172A;
+    }
+    .vp-panel-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .vp-panel-empty {
+      text-align:center; font-size:14px; color:#0F172A;
+      padding: 30px 0;
+    }
+
+    /* Incident card in panel */
+    .vp-inc-card {
+      border-radius: 6px;
+      border: 1px solid #F1F5F9;
+      border-left: 4px solid #7685B7;
+      padding: 9px 11px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      background: #FAFAFA;
+    }
+    .vp-inc-card__top    { display:flex; align-items:center; gap:6px; }
+    .vp-inc-card__top svg{ width:16px; height:16px; flex-shrink:0; }
+    .vp-inc-card__name   { font-size:14px; font-weight:700; color:#000000; }
+    .vp-inc-card__meta   { font-size:12px; color:#000000; }
+    .vp-inc-card__badge  { display:inline-block; padding:1px 8px; border-radius:10px; font-size:12px; color:#000000; }
+    .badge-card-alta  { background:rgba(196,89,89,.30); }
+    .badge-card-media { background:rgba(196,175,89,.30); }
+    .badge-card-baja  { background:rgba(202,204,201,.50); }
+
+    /* Ver todas btn */
+    .vp-btn-all {
+      display:flex; align-items:center; justify-content:center;
+      width:100%; height:38px;
+      background:#1E40AF; border:none; border-radius:0 0 8px 8px;
+      font-family:'Inter',sans-serif; font-size:14px; color:#FFFFFF;
+      cursor:pointer; position:relative; overflow:hidden;
+      transition:background .2s;
+      text-decoration:none;
+      flex-shrink:0;
+    }
+    .vp-btn-all:hover { background:#1D3BA0; }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .vp-map-layout { grid-template-columns: 1fr; }
+      .vp-map-panel  { min-height: 260px; }
+    }
+    @media (max-width: 640px) {
+      .vp-main { padding:14px 12px 40px; }
+      .vp-metrics { gap:10px; }
+      .vp-card { width:calc(50% - 5px); }
+      .vp-brand__sub, .vp-user__role { display:none; }
+      .vp-pending-wrap { max-width:100%; }
+    }
+    @media (max-width: 400px) {
+      .vp-card { width:100%; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════ HEADER ══════════════════════════ -->
+<header class="vp-header">
+  <div class="vp-brand">
+    <span class="vp-brand__name">VozPark Admin</span>
+    <span class="vp-brand__sub">Portal Municipal</span>
+  </div>
+  <div class="vp-hdr-divider"></div>
+  <nav class="vp-breadcrumb">
+    <span class="vp-breadcrumb__root">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#97C459" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><polyline points="9 21 9 12 15 12 15 21"/></svg>
+      Admin
+    </span>
+    <span class="vp-breadcrumb__sep">›</span>
+    <span class="vp-breadcrumb__current">Panel Principal</span>
+  </nav>
+  <div class="vp-user">
+    <div class="vp-user__avatar">CA</div>
+    <div>
+      <div class="vp-user__name">Carlos Amaya</div>
+      <div class="vp-user__role">Administrador · Alcaldía SS</div>
+    </div>
+  </div>
+  <button class="vp-logout-btn" id="btn-logout">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    <span>Salir</span>
+  </button>
+</header>
+
+<!-- Logout modal -->
+<div class="vp-modal-overlay" id="logout-modal">
+  <div class="vp-modal">
+    <p class="vp-modal__title">¿Estás seguro de cerrar sesión?</p>
+    <div class="vp-modal__actions">
+      <button class="vp-modal__btn vp-modal__btn--cancel"  id="btn-cancel">Cancelar</button>
+      <button class="vp-modal__btn vp-modal__btn--confirm" id="btn-confirm">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════ MAIN ══════════════════════════ -->
+<main class="vp-main">
+
+  <!-- Page heading -->
+  <h1 class="vp-page-title">Panel principal</h1>
+  <p class="vp-page-sub">Gestión municipal · Alcaldía de San Salvador Centro</p>
+
+  <!-- ════════ METRIC CARDS ════════ -->
+  <div class="vp-metrics">
+    <div class="vp-card">
+      <span class="vp-card__label">Reportes activos</span>
+      <span class="vp-card__number" id="m-activos">—</span>
+      <span class="vp-card__desc"  id="m-urgentes">— urgentes</span>
+    </div>
+    <div class="vp-card">
+      <span class="vp-card__label">Resueltos hoy</span>
+      <span class="vp-card__number" id="m-resueltos">—</span>
+      <span class="vp-card__desc">vs ayer</span>
+    </div>
+    <div class="vp-card">
+      <span class="vp-card__label">Personal activo</span>
+      <span class="vp-card__number" id="m-personal">—</span>
+      <span class="vp-card__desc">en campo ahora</span>
+    </div>
+    <div class="vp-card">
+      <span class="vp-card__label">Parques cubiertos</span>
+      <span class="vp-card__number" id="m-parques">—</span>
+      <span class="vp-card__desc"  id="m-parques-total">de — registrados</span>
+    </div>
+  </div>
+
+  <!-- ════════ PENDING TABLE ════════ -->
+  <div class="vp-pending-wrap">
+    <div class="vp-pending-header">
+      <h2>Reportes pendientes de asignación</h2>
+      <a href="gestion_incidencias.html" class="vp-btn-ver-todos">Ver todos →</a>
+    </div>
+    <table class="vp-ptable" id="pending-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Incidencia</th>
+          <th>Parque</th>
+          <th>Urgencia</th>
+          <th>Estado</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody id="pending-body"></tbody>
+    </table>
+  </div>
+  <div class="vp-export-wrap">
+    <button class="vp-btn-export" id="btn-export">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="12" x2="12" y2="18"/><polyline points="9 15 12 18 15 15"/></svg>
+      Exportar PDF
+    </button>
+  </div>
+
+
+    
+</main>
+
+<!-- ══════════════════════════ SCRIPTS ══════════════════════════ -->
+<script>
+/* ─── Dataset ─── */
+const INCIDENTS = [
+  { id:1, tipo:'Iluminación',      icono:'luz',     parque:'Parque Central',        urgencia:'Alta',  estado:'Sin asignar', asignado:null,           lat:13.6930, lng:-89.2183 },
+  { id:2, tipo:'Bancas dañadas',   icono:'banca',   parque:'Parque La Libertad',    urgencia:'Media', estado:'En curso',    asignado:'Luis Martínez', lat:13.6989, lng:-89.1912 },
+  { id:3, tipo:'Basura acumulada', icono:'basura',  parque:'Parque Infantil Norte', urgencia:'Alta',  estado:'En curso',    asignado:'Ana García',    lat:13.7065, lng:-89.2050 },
+  { id:4, tipo:'Grafiti',          icono:'grafiti', parque:'Parque El Bosque',      urgencia:'Baja',  estado:'Resuelto',    asignado:'Pedro López',   lat:13.6870, lng:-89.2300 },
+  { id:5, tipo:'Fuga de agua',     icono:'agua',    parque:'Parque Simón Bolívar',  urgencia:'Alta',  estado:'Sin asignar', asignado:null,            lat:13.6950, lng:-89.2250 },
+  { id:6, tipo:'Juegos rotos',     icono:'juego',   parque:'Parque Central',        urgencia:'Media', estado:'En curso',    asignado:'María Rivas',   lat:13.6935, lng:-89.2190 },
+  { id:7, tipo:'Árbol caído',      icono:'arbol',   parque:'Parque La Libertad',    urgencia:'Alta',  estado:'Sin asignar', asignado:null,            lat:13.6995, lng:-89.1920 },
+  { id:8, tipo:'Iluminación',      icono:'luz',     parque:'Parque El Bosque',      urgencia:'Baja',  estado:'Resuelto',    asignado:'Carlos Vega',   lat:13.6875, lng:-89.2310 },
+];
+
+const PERSONAL = [
+  { nombre:'Luis Martínez', lat:13.6992, lng:-89.1915 },
+  { nombre:'Ana García',    lat:13.7068, lng:-89.2055 },
+  { nombre:'María Rivas',   lat:13.6938, lng:-89.2195 },
+];
+
+const ICON_SVG = {
+  luz:    `<svg viewBox="0 0 24 24" fill="none" stroke="#3B6D11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`,
+  banca:  `<svg viewBox="0 0 24 24" fill="none" stroke="#3B6D11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="4" rx="1"/><line x1="5" y1="11" x2="5" y2="17"/><line x1="19" y1="11" x2="19" y2="17"/></svg>`,
+  basura: `<svg viewBox="0 0 24 24" fill="none" stroke="#3B6D11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>`,
+  grafiti:`<svg viewBox="0 0 24 24" fill="none" stroke="#3B6D11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>`,
+  agua:   `<svg viewBox="0 0 24 24" fill="none" stroke="#3B6D11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6.5 8 4 12.5 4 15.5a8 8 0 0 0 16 0C20 12.5 17.5 8 12 2z"/></svg>`,
+  juego:  `<svg viewBox="0 0 24 24" fill="none" stroke="#3B6D11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M12 12h.01M8 12h.01M16 12h.01"/></svg>`,
+  arbol:  `<svg viewBox="0 0 24 24" fill="none" stroke="#3B6D11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V12M12 12L5 6h14L12 12zM9 6L6 2h12L15 6"/></svg>`,
+};
+
+/* ─── Metrics ─── */
+const activos  = INCIDENTS.filter(i => i.estado !== 'Resuelto').length;
+const urgentes = INCIDENTS.filter(i => i.urgencia === 'Alta' && i.estado !== 'Resuelto').length;
+const resueltos = INCIDENTS.filter(i => i.estado === 'Resuelto').length;
+const personalCount = PERSONAL.length;
+const parquesUnicos = [...new Set(INCIDENTS.map(i => i.parque))].length;
+const parquesTotal  = 5;
+
+document.getElementById('m-activos').textContent      = activos;
+document.getElementById('m-urgentes').textContent     = `${urgentes} urgentes`;
+document.getElementById('m-resueltos').textContent    = resueltos;
+document.getElementById('m-personal').textContent     = personalCount;
+document.getElementById('m-parques').textContent      = parquesUnicos;
+document.getElementById('m-parques-total').textContent= `de ${parquesTotal} registrados`;
+
+/* ─── Pending table ─── */
+const pendingData = INCIDENTS.filter(i => i.estado === 'Sin asignar' || i.estado === 'Asignado');
+
+function renderPending() {
+  const tbody = document.getElementById('pending-body');
+  tbody.innerHTML = pendingData.map(inc => `
+    <tr>
+      <td>#${inc.id}</td>
+      <td>
+        <div class="vp-inc-cell">
+          ${ICON_SVG[inc.icono]||''}
+          ${inc.tipo}
+        </div>
+      </td>
+      <td>${inc.parque}</td>
+      <td><span class="vp-badge badge-${inc.urgencia==='Alta'?'alta':inc.urgencia==='Media'?'media':'baja'}">${inc.urgencia}</span></td>
+      <td><span class="vp-badge ${inc.estado==='Sin asignar'?'badge-sin':'badge-asig'}">${inc.estado}</span></td>
+      <td>
+        ${inc.estado === 'Sin asignar'
+          ? `<a href="detalle_incidencia.html?id=${inc.id}" class="vp-btn-asignar">Asignar</a>`
+          : `<a href="detalle_incidencia.html?id=${inc.id}" class="vp-btn-ver">Ver</a>`
+        }
+      </td>
+    </tr>
+  `).join('');
+  tbody.querySelectorAll('.vp-btn-asignar, .vp-btn-ver').forEach(btn =>
+    btn.addEventListener('click', e => createRipple(btn, e)));
+}
+renderPending();
+
+/* ─── Right panel ─── */
+function renderPanel() {
+  const list = document.getElementById('panel-list');
+  const recent = INCIDENTS.filter(i => i.estado !== 'Resuelto').slice(0, 6);
+  if (!recent.length) {
+    list.innerHTML = '<div class="vp-panel-empty">No hay incidencias recientes</div>';
+    return;
+  }
+  const urgBorderColor = { Alta:'#E85D5D', Media:'#C4AF59', Baja:'#7685B7' };
+  const urgBadgeClass  = { Alta:'badge-card-alta', Media:'badge-card-media', Baja:'badge-card-baja' };
+
+  list.innerHTML = recent.map(inc => `
+    <div class="vp-inc-card" style="border-left-color:${urgBorderColor[inc.urgencia]};">
+      <div class="vp-inc-card__top">
+        ${ICON_SVG[inc.icono]||''}
+        <span class="vp-inc-card__name">${inc.tipo}</span>
+      </div>
+      <div class="vp-inc-card__meta">${inc.parque} · ${inc.asignado ? inc.asignado + ' asignado' : 'Sin asignar'}</div>
+      <span class="vp-inc-card__badge ${urgBadgeClass[inc.urgencia]}">${inc.urgencia}</span>
+    </div>
+  `).join('');
+}
+renderPanel();
+
+/* ─── Google Maps ─── */
+let map, markersInc = [], markersPersonal = [];
+let activeFilters = { urgente: true, revision: true };
+
+function incToMapType(inc) {
+  if (inc.urgencia === 'Alta') return 'urgente';
+  return 'revision';
+}
+
+function makeMarkerSvg(color, label) {
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
+    <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="16" cy="16" r="15" fill="${color}" stroke="white" stroke-width="2"/>
+      <text x="16" y="21" font-family="Arial,sans-serif" font-size="16" font-weight="bold" fill="white" text-anchor="middle">${label}</text>
+    </svg>
+  `)}`;
+}
+
+function makeMarkerSvgSelected(color, label) {
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
+    <svg width="36" height="36" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="18" cy="18" r="16" fill="${color}" stroke="white" stroke-width="3"/>
+      <text x="18" y="23" font-family="Arial,sans-serif" font-size="17" font-weight="bold" fill="white" text-anchor="middle">${label}</text>
+    </svg>
+  `)}`;
+}
+
+function initMap() {
+  map = new google.maps.Map(document.getElementById('gmap'), {
+    center: { lat: 13.6966, lng: -89.2182 },
+    zoom: 14,
+    mapTypeControl: false,
+    streetViewControl: false,
+    fullscreenControl: false,
+    styles: [
+      { featureType:'poi', elementType:'labels', stylers:[{visibility:'off'}] },
+      { featureType:'transit', stylers:[{visibility:'off'}] }
+    ]
+  });
+
+  // Incident markers
+  INCIDENTS.filter(i => i.estado !== 'Resuelto').forEach(inc => {
+    const type  = incToMapType(inc);
+    const color = type === 'urgente' ? '#E85D5D' : '#C4AF59';
+    const label = type === 'urgente' ? '!' : '~';
+
+    const marker = new google.maps.Marker({
+      position: { lat: inc.lat, lng: inc.lng },
+      map: map,
+      icon: { url: makeMarkerSvg(color, label), scaledSize: new google.maps.Size(32,32) },
+      title: inc.tipo,
+      _incType: type,
+      _color: color,
+      _label: label,
+    });
+
+    marker.addListener('click', () => {
+      // Reset all
+      markersInc.forEach(m => {
+        m.setIcon({ url: makeMarkerSvg(m._color, m._label), scaledSize: new google.maps.Size(32,32) });
+      });
+      // Highlight selected
+      marker.setIcon({ url: makeMarkerSvgSelected(color, label), scaledSize: new google.maps.Size(36,36) });
+    });
+
+    markersInc.push(marker);
+  });
+
+  // Personal markers
+  PERSONAL.forEach(p => {
+    const initial = p.nombre.charAt(0);
+    const marker = new google.maps.Marker({
+      position: { lat: p.lat, lng: p.lng },
+      map: map,
+      icon: { url: makeMarkerSvg('#2290BF', initial), scaledSize: new google.maps.Size(32,32) },
+      title: p.nombre,
+    });
+    markersPersonal.push(marker);
+  });
+}
+
+function applyMapFilters() {
+  markersInc.forEach(m => {
+    const show = activeFilters[m._incType];
+    m.setVisible(show);
+  });
+}
+
+// Filter buttons
+document.querySelectorAll('.vp-map-filter').forEach(btn => {
+  btn.addEventListener('click', e => {
+    createRipple(btn, e);
+    const key = btn.dataset.filter;
+    activeFilters[key] = !activeFilters[key];
+    btn.classList.toggle('active', activeFilters[key]);
+    applyMapFilters();
+  });
+});
+
+/* ─── Logout modal ─── */
+document.getElementById('btn-logout').addEventListener('click', e => {
+  createRipple(document.getElementById('btn-logout'), e);
+  document.getElementById('logout-modal').classList.add('active');
+});
+document.getElementById('btn-cancel').addEventListener('click', () =>
+  document.getElementById('logout-modal').classList.remove('active'));
+document.getElementById('btn-confirm').addEventListener('click', () => {
+  document.getElementById('logout-modal').classList.remove('active');
+  window.location.href = '../login/login.php';
+});
+document.getElementById('logout-modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('logout-modal'))
+    document.getElementById('logout-modal').classList.remove('active');
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.getElementById('logout-modal').classList.remove('active');
+});
+
+/* ─── Export PDF placeholder ─── */
+document.getElementById('btn-export').addEventListener('click', e => {
+  createRipple(document.getElementById('btn-export'), e);
+  window.print();
+});
+
+/* ─── Ripple ─── */
+function createRipple(btn, e) {
+  const rect = btn.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  const x = (e.clientX - rect.left) - size / 2;
+  const y = (e.clientY - rect.top)  - size / 2;
+  const r = document.createElement('span');
+  r.className = 'ripple';
+  r.style.cssText = `width:${size}px;height:${size}px;left:${x}px;top:${y}px`;
+  btn.appendChild(r);
+  r.addEventListener('animationend', () => r.remove());
+}
+document.querySelectorAll('.vp-logout-btn, .vp-modal__btn, .vp-btn-export, .vp-btn-ver-todos, .vp-map-filter').forEach(btn =>
+  btn.addEventListener('click', e => createRipple(btn, e)));
+
+/* ─── Google Maps callback (global) ─── */
+window.initMap = initMap;
+</script>
+
+<script src="sidebar.js"></script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<div class="reportes-container">
+
+    <div class="reportes-header">
+
+        <h3>
+            Reportes pendientes de asignación
+        </h3>
+
+        <a href="gestion_incidencias.php"
+           class="btn-ver-todos">
+
+            Ver todos →
+
+        </a>
+
+    </div>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VozPark – Encabezado</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --verde-oscuro: #1A2E0F;
+      --verde-lima:   #97C459;
+      --crema:        #DFFFAA;
+      --dorado:       #DAA520;
+      --dorado-osc:   #B8860B;
+    }
+
+    body { font-family: 'Inter', sans-serif; }
+
+    /* ── Ripple ── */
+    .ripple {
+      position: absolute; border-radius: 50%;
+      background: rgba(255,255,255,.25);
+      transform: scale(0);
+      animation: rpl .55s linear;
+      pointer-events: none;
+    }
+    @keyframes rpl { to { transform: scale(4); opacity: 0; } }
+
+    /* ════════════════════════════════════════
+       HEADER
+    ════════════════════════════════════════ */
+    .vp-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      height: 60px;
+      background: var(--verde-oscuro);
+      padding: 0 24px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    /* Brand */
+    .vp-brand { display: flex; flex-direction: column; justify-content: center; }
+    .vp-brand__name {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--crema);
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+    .vp-brand__sub {
+      font-size: 16px;
+      color: var(--verde-lima);
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+
+    /* Botones */
+    .vp-header__btns { display: flex; gap: 10px; align-items: center; }
+
+    .vp-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100px;
+      height: 25px;
+      border-radius: 4px;
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      cursor: pointer;
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+      transition: filter .2s, background .2s;
+    }
+    .vp-btn:hover  { filter: brightness(1.15); }
+    .vp-btn:active { filter: brightness(.90); }
+
+    /* Iniciar sesión */
+    .vp-btn--login {
+      background: transparent;
+      border: 1px solid rgba(151,196,89,.30);
+      color: var(--crema);
+    }
+    .vp-btn--login:hover { background: rgba(151,196,89,.10); }
+
+    /* Crear cuenta */
+    .vp-btn--register {
+      background: rgba(184,134,11,.40);
+      border: 1px solid var(--dorado);
+      color: var(--dorado);
+    }
+    .vp-btn--register:hover { background: rgba(184,134,11,.60); }
+
+    /* ── Responsivo ── */
+    @media (max-width: 480px) {
+      .vp-brand__sub  { display: none; }
+      .vp-btn         { width: 88px; font-size: 14px; }
+      .vp-header      { padding: 0 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════
+     ENCABEZADO
+════════════════════════════════════════ -->
+<header class="vp-header">
+
+  <!-- Brand -->
+  <div class="vp-brand">
+    <span class="vp-brand__name">VozPark</span>
+    <span class="vp-brand__sub">Parques urbanos – El Salvador</span>
+  </div>
+
+  <!-- Botones de acceso -->
+  <div class="vp-header__btns">
+    <a href="login.html"    class="vp-btn vp-btn--login">Iniciar sesión</a>
+    <a href="registro.html" class="vp-btn vp-btn--register">Crear cuenta</a>
+  </div>
+
+</header>
+
+<script>
+  /* Efecto ripple en los botones */
+  document.querySelectorAll('.vp-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      const rect = btn.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
+      const r = document.createElement('span');
+      r.className = 'ripple';
+      r.style.cssText = `width:${size}px;height:${size}px;`
+                      + `left:${e.clientX - rect.left - size/2}px;`
+                      + `top:${e.clientY  - rect.top  - size/2}px`;
+      btn.appendChild(r);
+      r.addEventListener('animationend', () => r.remove());
+    });
+  });
+</script>
+
+</body>
+</html>

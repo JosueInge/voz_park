@@ -1,0 +1,449 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Inter',sans-serif;
+}
+
+body{
+    background:#F8FAFC;
+}
+
+/* CONTENIDO PRINCIPAL */
+
+.main-content{
+
+    margin-left:245px;
+    margin-top:55px;
+
+    padding:25px;
+
+    min-height:100vh;
+
+}
+
+/* ENCABEZADO */
+
+.top-section{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-start;
+
+    margin-bottom:20px;
+
+}
+
+.titulo{
+
+    font-size:24px;
+
+    font-weight:700;
+
+    color:#0F172A;
+
+}
+
+.subtitulo{
+
+    font-size:14px;
+
+    color:#0F172A;
+
+    margin-top:6px;
+
+}
+
+/* FILTROS */
+
+.filtros{
+
+    display:flex;
+
+    gap:10px;
+
+}
+
+.filtro-btn{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    padding:8px 14px;
+
+    background:#DBEAFE;
+
+    border:1px solid #2290BF;
+
+    border-radius:4px;
+
+    color:#1E40AF;
+
+    cursor:pointer;
+
+    font-size:14px;
+
+    transition:.3s;
+
+}
+
+.filtro-btn:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 4px 10px rgba(0,0,0,.10);
+
+}
+
+/* CIRCULOS */
+
+.circulo{
+
+    width:10px;
+
+    height:10px;
+
+    border-radius:50%;
+
+}
+
+.rojo{
+
+    background:#E85D5D;
+
+}
+
+.amarillo{
+
+    background:#C4AF59;
+
+}
+
+.azul{
+
+    background:#2290BF;
+
+}
+
+/* CONTENEDOR */
+
+.contenedor-mapa{
+
+    display:flex;
+
+    gap:20px;
+
+}
+
+/* MAPA */
+
+.mapa-wrapper{
+
+    width:70%;
+
+    position:relative;
+
+}
+
+#map{
+
+    width:100%;
+
+    height:75vh;
+
+    border-radius:8px;
+
+    overflow:hidden;
+
+    background:#E5E7EB;
+
+}
+
+/* LEYENDA */
+
+.leyenda{
+
+    position:absolute;
+
+    left:15px;
+
+    bottom:15px;
+
+    background:rgba(255,255,255,.85);
+
+    padding:10px 15px;
+
+    border-radius:4px;
+
+    display:flex;
+
+    gap:18px;
+
+}
+
+.item-leyenda{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:6px;
+
+    font-size:12px;
+
+    color:#000000;
+
+}
+
+/* PANEL DERECHO */
+
+.panel-derecho{
+
+    width:30%;
+
+    background:#FFFFFF;
+
+    border-radius:8px;
+
+    padding:15px;
+
+    border:1px solid #E2E8F0;
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.panel-derecho h3{
+
+    font-size:16px;
+
+    color:#0F172A;
+
+    margin-bottom:15px;
+
+}
+
+/* TARJETAS */
+
+.incidencia-card{
+
+    background:#FFFFFF;
+
+    border-radius:8px;
+
+    padding:12px;
+
+    margin-bottom:12px;
+
+    box-shadow:0 2px 6px rgba(0,0,0,.05);
+
+}
+
+.incidencia-card.urgente{
+
+    border-left:5px solid #E85D5D;
+
+}
+
+.incidencia-card.media{
+
+    border-left:5px solid #C4AF59;
+
+}
+
+.incidencia-card.baja{
+
+    border-left:5px solid #7685B7;
+
+}
+
+.contenido-card{
+
+    display:flex;
+
+    gap:12px;
+
+}
+
+.icono-card{
+
+    font-size:18px;
+
+}
+
+.contenido-card h4{
+
+    font-size:14px;
+
+    font-weight:700;
+
+    color:#000000;
+
+    margin-bottom:5px;
+
+}
+
+.contenido-card p{
+
+    font-size:12px;
+
+    color:#000000;
+
+    margin-bottom:8px;
+
+}
+
+/* BADGES */
+
+.badge{
+
+    padding:4px 10px;
+
+    border-radius:10px;
+
+    font-size:12px;
+
+    display:inline-block;
+
+}
+
+.badge-urgente{
+
+    background:rgba(196,89,89,.30);
+
+    color:#000000;
+
+}
+
+.badge-media{
+
+    background:rgba(196,175,89,.30);
+
+    color:#000000;
+
+}
+
+.badge-baja{
+
+    background:rgba(202,204,201,.50);
+
+    color:#000000;
+
+}
+
+/* BOTON */
+
+.btn-ver-todas{
+
+    margin-top:auto;
+
+    width:100%;
+
+    text-align:center;
+
+    background:#1E40AF;
+
+    color:#FFFFFF;
+
+    text-decoration:none;
+
+    padding:12px;
+
+    border-radius:4px;
+
+    font-size:14px;
+
+    transition:.3s;
+
+}
+
+.btn-ver-todas:hover{
+
+    background:#1D4ED8;
+
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1100px){
+
+    .contenedor-mapa{
+
+        flex-direction:column;
+
+    }
+
+    .mapa-wrapper{
+
+        width:100%;
+
+    }
+
+    .panel-derecho{
+
+        width:100%;
+
+    }
+
+}
+
+@media(max-width:768px){
+
+    .main-content{
+
+        margin-left:0;
+
+        padding:15px;
+
+    }
+
+    .top-section{
+
+        flex-direction:column;
+
+        gap:15px;
+
+    }
+
+    .filtros{
+
+        flex-wrap:wrap;
+
+    }
+
+    #map{
+
+        height:60vh;
+
+    }
+
+    .leyenda{
+
+        flex-direction:column;
+
+        gap:8px;
+
+    }
+
+}
+
+.filtro-btn.activo{
+
+    background:#1E40AF;
+
+    color:#FFFFFF;
+
+}
+
+.filtro-btn.activo .circulo{
+
+    box-shadow:0 0 5px rgba(255,255,255,.8);
+
+}

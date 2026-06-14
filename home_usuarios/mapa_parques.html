@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VozPark – Mapa de Parques</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #FAF8F2; min-height: 100vh; }
+
+    /* HEADER */
+    .vp-header { display:flex; align-items:center; width:100%; height:60px; background:#1A2E0F; padding:0 20px; position:sticky; top:0; z-index:100; }
+    .vp-brand { display:flex; flex-direction:column; padding-right:16px; flex-shrink:0; }
+    .vp-brand__name { font-size:20px; font-weight:700; color:#DFFFAA; line-height:1.2; }
+    .vp-brand__sub  { font-size:16px; color:#97C459; line-height:1.2; }
+    .vp-hdr-div { width:1px; height:40px; background:#F4FAEA; opacity:.55; flex-shrink:0; margin-right:16px; }
+    .vp-spacer { flex:1; }
+    .vp-bell { position:relative; display:flex; align-items:center; margin-right:14px; cursor:pointer; }
+    .vp-bell svg { width:14px; height:18px; color:#97C459; }
+    .vp-bell__dot { position:absolute; top:0; right:-1px; width:5px; height:5px; border-radius:50%; background:#E85D5D; }
+    .vp-user { display:flex; align-items:center; gap:8px; margin-right:14px; }
+    .vp-user__avatar { width:20px; height:20px; border-radius:50%; background:#3B6D11; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:700; color:#DFFFAA; }
+    .vp-user__name { font-family:'Open Sans',sans-serif; font-size:20px; font-weight:600; color:#FFFFFF; white-space:nowrap; }
+    .vp-logout-hdr { display:flex; align-items:center; justify-content:center; width:40px; height:20px; background:#F4FAEA; border:none; border-radius:4px; font-family:'Inter',sans-serif; font-size:16px; color:#1A2E0F; cursor:pointer; position:relative; overflow:hidden; transition:background .2s; }
+
+    /* Ripple */
+    .ripple { position:absolute; border-radius:50%; background:rgba(59,109,17,.22); transform:scale(0); animation:ripple-anim .55s linear; pointer-events:none; }
+    @keyframes ripple-anim { to { transform:scale(4); opacity:0; } }
+
+    /* Modal */
+    .vp-modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:999; align-items:center; justify-content:center; }
+    .vp-modal-overlay.active { display:flex; }
+    .vp-modal { background:#1A2E0F; border:1px solid #3B6D11; border-radius:12px; padding:28px 32px 24px; width:340px; max-width:90vw; display:flex; flex-direction:column; gap:20px; }
+    .vp-modal__title { font-family:'Arial',sans-serif; font-size:16px; font-weight:700; color:#FFFFFF; text-align:center; }
+    .vp-modal__actions { display:flex; gap:12px; }
+    .vp-modal__btn { flex:1; height:40px; border:none; border-radius:8px; font-family:'Inter',sans-serif; font-size:16px; color:#DFFFAA; background:#3B6D11; cursor:pointer; position:relative; overflow:hidden; transition:filter .2s; }
+    .vp-modal__btn:hover { filter:brightness(1.15); }
+
+    /* MAIN */
+    .vp-main { padding:28px 24px 60px; max-width:1100px; margin:0 auto; }
+
+    /* ── MAP SECTION ── */
+    .vp-map-topbar { display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:14px; }
+    .vp-map-title  { font-size:24px; font-weight:700; color:#0F172A; }
+    .vp-map-sub    { font-size:14px; color:#0F172A; margin-top:2px; }
+    .vp-map-filters { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:4px; }
+    .vp-map-filter {
+      display:inline-flex; align-items:center; gap:6px; padding:4px 12px;
+      background:#DBEAFE; border:1px solid rgba(34,144,191,.75); border-radius:4px;
+      font-family:'Inter',sans-serif; font-size:14px; color:#1E40AF;
+      cursor:pointer; position:relative; overflow:hidden; transition:background .2s; user-select:none;
+    }
+    .vp-map-filter:hover  { background:#BFDBFE; }
+    .vp-map-filter.active { background:#1E40AF; color:#FFFFFF; border-color:#1E40AF; }
+    .vp-map-filter__dot { width:10px; height:10px; border-radius:50%; }
+
+    .vp-map-layout { display:grid; grid-template-columns:1fr 300px; gap:16px; align-items:stretch; margin-bottom:32px; }
+    .vp-map-container { position:relative; border-radius:8px; overflow:hidden; min-height:420px; background:#E2E8F0; }
+    #gmap { width:100%; height:100%; min-height:420px; }
+
+    .vp-map-legend {
+      position:absolute; bottom:16px; left:50%; transform:translateX(-50%);
+      background:rgba(255,255,255,.88); border-radius:4px; padding:6px 14px;
+      display:flex; gap:14px; align-items:center; pointer-events:none;
+      backdrop-filter:blur(4px); white-space:nowrap;
+    }
+    .vp-legend-item { display:flex; align-items:center; gap:5px; font-size:12px; color:#000000; }
+    .vp-legend-dot  { width:10px; height:10px; border-radius:50%; }
+
+    /* Right panel */
+    .vp-map-panel { background:#FFFFFF; border:1px solid rgba(151,196,89,.35); border-radius:8px; display:flex; flex-direction:column; overflow:hidden; }
+    .vp-panel-head { padding:12px 14px; border-bottom:1px solid #F1F5F9; font-size:14px; font-weight:600; color:#1A2E0F; }
+    .vp-panel-list { flex:1; overflow-y:auto; padding:10px; display:flex; flex-direction:column; gap:8px; }
+    .vp-panel-empty { text-align:center; font-size:14px; color:#0F172A; padding:24px 0; }
+    .vp-park-item { border-radius:6px; border:1px solid #F1F5F9; border-left:4px solid #97C459; padding:9px 11px; background:#FAFFF5; }
+    .vp-park-item__name { font-size:14px; font-weight:700; color:#1A2E0F; margin-bottom:3px; }
+    .vp-park-item__meta { font-size:12px; color:#557097; }
+    .vp-btn-all { display:flex; align-items:center; justify-content:center; height:38px; background:#3B6D11; border:none; border-radius:0 0 8px 8px; font-family:'Inter',sans-serif; font-size:14px; color:#DFFFAA; cursor:pointer; position:relative; overflow:hidden; transition:background .2s; text-decoration:none; flex-shrink:0; }
+    .vp-btn-all:hover { background:#4a8a16; }
+
+    /* ── PENDING TABLE ── */
+    .vp-pending-wrap { background:#FFFFFF; border:1px solid rgba(118,133,183,.80); border-radius:10px; width:100%; max-width:750px; padding:16px 18px; margin-bottom:10px; }
+    .vp-pending-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+    .vp-pending-header h2 { font-size:16px; font-weight:700; color:#000000; }
+    .vp-btn-ver-todos { display:inline-flex; align-items:center; justify-content:center; width:110px; height:30px; background:#1E40AF; border:none; border-radius:4px; font-family:'Inter',sans-serif; font-size:14px; color:#FFFFFF; cursor:pointer; position:relative; overflow:hidden; transition:background .2s, box-shadow .2s; text-decoration:none; }
+    .vp-btn-ver-todos:hover { background:#1D3BA0; box-shadow:0 4px 10px rgba(30,64,175,.25); }
+
+    .vp-ptable { width:100%; border-collapse:collapse; }
+    .vp-ptable thead tr { background:#F8FAFC; }
+    .vp-ptable thead th { font-size:14px; font-weight:600; color:#000000; padding:9px 12px; text-align:left; border-right:1px solid #97C459; white-space:nowrap; }
+    .vp-ptable thead th:last-child { border-right:none; }
+    .vp-ptable tbody tr { border-top:1px solid #F1F5F9; transition:background .15s; }
+    .vp-ptable tbody tr:hover { background:#F8FAFC; }
+    .vp-ptable tbody td { font-size:14px; color:#000000; padding:8px 12px; border-right:1px solid rgba(151,196,89,.20); vertical-align:middle; }
+    .vp-ptable tbody td:last-child { border-right:none; }
+
+    .vp-inc-cell { display:flex; align-items:center; gap:6px; }
+    .vp-inc-cell svg { width:16px; height:16px; color:#3B6D11; flex-shrink:0; }
+
+    .vp-badge { display:inline-block; padding:2px 9px; border-radius:4px; font-size:14px; white-space:nowrap; }
+    .badge-alta    { background:rgba(196,89,89,.30);   color:#B45050; }
+    .badge-media   { background:rgba(196,175,89,.30);  color:#AC7152; }
+    .badge-baja    { background:rgba(202,204,201,.50);  color:#484646; }
+    .badge-sin     { background:rgba(89,144,196,.30);  color:#0C447C; }
+    .badge-asig    { background:rgba(130,196,89,.30);  color:#3B6D11; }
+
+    .vp-btn-action { display:inline-flex; align-items:center; justify-content:center; border:none; border-radius:4px; font-family:'Inter',sans-serif; font-size:14px; cursor:pointer; position:relative; overflow:hidden; transition:background .2s, box-shadow .2s; text-decoration:none; }
+    .vp-btn-asignar { width:70px; height:28px; background:#1E40AF; color:#FFFFFF; }
+    .vp-btn-asignar:hover { background:#1D3BA0; box-shadow:0 3px 8px rgba(30,64,175,.25); }
+    .vp-btn-ver { width:80px; height:28px; background:#5990C4; color:#1E40AF; }
+    .vp-btn-ver:hover { background:#4a80b4; }
+
+    .vp-export-wrap { display:flex; justify-content:flex-end; margin-bottom:8px; }
+    .vp-btn-export { display:inline-flex; align-items:center; justify-content:center; gap:6px; width:130px; height:30px; background:#DBEAFE; border:1px solid rgba(34,144,191,.70); border-radius:4px; font-family:'Inter',sans-serif; font-size:14px; color:#1E40AF; cursor:pointer; position:relative; overflow:hidden; transition:background .2s, box-shadow .2s; }
+    .vp-btn-export:hover { background:#BFDBFE; }
+    .vp-btn-export svg { width:14px; height:14px; }
+
+    /* Responsive */
+    @media (max-width:860px) { .vp-map-layout { grid-template-columns:1fr; } }
+    @media (max-width:640px) {
+      .vp-user__name, .vp-brand__sub { display:none; }
+      .vp-pending-wrap { max-width:100%; }
+      .vp-ptable thead th:nth-child(4),
+      .vp-ptable tbody td:nth-child(4) { display:none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="vp-header">
+  <div class="vp-brand">
+    <span class="vp-brand__name">VozPark</span>
+    <span class="vp-brand__sub">Parques urbanos – El Salvador</span>
+  </div>
+  <div class="vp-hdr-div"></div>
+  <div class="vp-spacer"></div>
+  <div class="vp-bell">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+    <span class="vp-bell__dot"></span>
+  </div>
+  <div class="vp-user">
+    <div class="vp-user__avatar">MG</div>
+    <span class="vp-user__name">María González</span>
+  </div>
+  <button class="vp-logout-hdr" id="btn-logout">Salir</button>
+</header>
+
+<!-- LOGOUT MODAL -->
+<div class="vp-modal-overlay" id="logout-modal">
+  <div class="vp-modal">
+    <p class="vp-modal__title">¿Estás seguro de cerrar sesión?</p>
+    <div class="vp-modal__actions">
+      <button class="vp-modal__btn" id="btn-cancel">Cancelar</button>
+      <button class="vp-modal__btn" id="btn-confirm">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main class="vp-main">
+
+  <!-- Map section -->
+  <div class="vp-map-topbar">
+    <div>
+      <div class="vp-map-title">Mapa de parques</div>
+      <div class="vp-map-sub">Vista en tiempo real · <span id="parque-count">5</span> parques</div>
+    </div>
+    <div class="vp-map-filters">
+      <button class="vp-map-filter active" data-filter="urgente">
+        <span class="vp-map-filter__dot" style="background:#E85D5D;"></span>Urgente
+      </button>
+      <button class="vp-map-filter active" data-filter="revision">
+        <span class="vp-map-filter__dot" style="background:#C4AF59;"></span>En revisión
+      </button>
+    </div>
+  </div>
+
+  <div class="vp-map-layout">
+    <!-- Map -->
+    <div class="vp-map-container">
+      <div id="gmap"></div>
+      <div class="vp-map-legend">
+        <div class="vp-legend-item"><span class="vp-legend-dot" style="background:#E85D5D;"></span>Urgente</div>
+        <div class="vp-legend-item"><span class="vp-legend-dot" style="background:#C4AF59;"></span>En revisión</div>
+        <div class="vp-legend-item"><span class="vp-legend-dot" style="background:#3B6D11;"></span>Activo</div>
+      </div>
+    </div>
+    <!-- Panel -->
+    <div class="vp-map-panel">
+      <div class="vp-panel-head">Parques cercanos</div>
+      <div class="vp-panel-list" id="panel-list"></div>
+      <a href="../home_invitado.php" class="vp-btn-all">Ver todos los parques</a>
+    </div>
+  </div>
+
+  
+
+  <div class="vp-export-wrap">
+    <button class="vp-btn-export" id="btn-export">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="12" x2="12" y2="18"/><polyline points="9 15 12 18 15 15"/></svg>
+      Exportar PDF
+    </button>
+  </div>
+
+</main>
+
+<script>
+/* ── Park data ── */
+const PARKS = [
+  { nombre:'Parque Central',        zona:'Centro, SS',          estado:'urgente',  lat:13.6930, lng:-89.2183 },
+  { nombre:'Parque La Libertad',    zona:'Santa Tecla',          estado:'activo',   lat:13.6989, lng:-89.1912 },
+  { nombre:'Parque Infantil Norte', zona:'Mejicanos',            estado:'revision', lat:13.7065, lng:-89.2050 },
+  { nombre:'Parque El Bosque',      zona:'San Salvador Centro',  estado:'activo',   lat:13.6870, lng:-89.2300 },
+  { nombre:'Parque Simón Bolívar',  zona:'Centro Histórico',     estado:'urgente',  lat:13.6950, lng:-89.2250 },
+];
+
+const INCIDENTS = [
+  { id:1, tipo:'Iluminación',      icono:'luz',     parque:'Parque Central',        urgencia:'Alta',  estado:'Sin asignar' },
+  { id:3, tipo:'Basura acumulada', icono:'basura',  parque:'Parque Infantil Norte', urgencia:'Alta',  estado:'Sin asignar' },
+  { id:5, tipo:'Fuga de agua',     icono:'agua',    parque:'Parque Simón Bolívar',  urgencia:'Alta',  estado:'Sin asignar' },
+  { id:7, tipo:'Árbol caído',      icono:'arbol',   parque:'Parque La Libertad',    urgencia:'Alta',  estado:'Asignado' },
+];
+
+const ICON_SVG = {
+  luz:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`,
+  basura: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>`,
+  agua:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6.5 8 4 12.5 4 15.5a8 8 0 0 0 16 0C20 12.5 17.5 8 12 2z"/></svg>`,
+  arbol:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V12M12 12L5 6h14L12 12zM9 6L6 2h12L15 6"/></svg>`,
+};
+
+/* ── Panel ── */
+document.getElementById('panel-list').innerHTML = PARKS.map(p => {
+  const color = p.estado === 'urgente' ? '#E85D5D' : p.estado === 'revision' ? '#C4AF59' : '#3B6D11';
+  return `<div class="vp-park-item" style="border-left-color:${color};">
+    <div class="vp-park-item__name">${p.nombre}</div>
+    <div class="vp-park-item__meta">${p.zona}</div>
+  </div>`;
+}).join('');
+
+/* ── Google Maps ── */
+let map, markersMap = [], activeFilters = { urgente:true, revision:true };
+
+function makeMarkerSvg(color, label) {
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(
+    `<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="16" cy="16" r="15" fill="${color}" stroke="white" stroke-width="2"/>
+      <text x="16" y="21" font-family="Arial" font-size="15" font-weight="bold" fill="white" text-anchor="middle">${label}</text>
+    </svg>`)}`;
+}
+
+function initMap() {
+  map = new google.maps.Map(document.getElementById('gmap'), {
+    center:{ lat:13.6966, lng:-89.2182 }, zoom:14,
+    mapTypeControl:false, streetViewControl:false, fullscreenControl:false,
+  });
+  const colors = { urgente:'#E85D5D', revision:'#C4AF59', activo:'#3B6D11' };
+  const labels = { urgente:'!', revision:'~', activo:'✓' };
+
+  PARKS.forEach(p => {
+    const marker = new google.maps.Marker({
+      position:{ lat:p.lat, lng:p.lng }, map,
+      icon:{ url:makeMarkerSvg(colors[p.estado], labels[p.estado]), scaledSize:new google.maps.Size(32,32) },
+      title:p.nombre, _type:p.estado,
+    });
+    marker.addListener('click', () => {
+      markersMap.forEach(m => m.setIcon({ url:makeMarkerSvg(colors[m._type], labels[m._type]), scaledSize:new google.maps.Size(32,32) }));
+      marker.setIcon({ url:`data:image/svg+xml;charset=UTF-8,${encodeURIComponent(
+        `<svg width="36" height="36" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="18" cy="18" r="16" fill="${colors[p.estado]}" stroke="white" stroke-width="3"/>
+          <text x="18" y="23" font-family="Arial" font-size="16" font-weight="bold" fill="white" text-anchor="middle">${labels[p.estado]}</text>
+        </svg>`)}`, scaledSize:new google.maps.Size(36,36) });
+    });
+    markersMap.push(marker);
+  });
+}
+
+document.querySelectorAll('.vp-map-filter').forEach(btn => {
+  btn.addEventListener('click', e => {
+    ripple(btn, e);
+    const key = btn.dataset.filter;
+    activeFilters[key] = !activeFilters[key];
+    btn.classList.toggle('active', activeFilters[key]);
+    markersMap.forEach(m => { if (m._type !== 'activo') m.setVisible(activeFilters[m._type]); });
+  });
+});
+
+window.initMap = initMap;
+
+/* ── Logout ── */
+document.getElementById('btn-logout').addEventListener('click', e => {
+  ripple(document.getElementById('btn-logout'), e);
+  document.getElementById('logout-modal').classList.add('active');
+});
+document.getElementById('btn-cancel').addEventListener('click',  () => document.getElementById('logout-modal').classList.remove('active'));
+document.getElementById('btn-confirm').addEventListener('click', () => { window.location.href = '../home_invitado.php'; });
+document.getElementById('logout-modal').addEventListener('click', e => { if (e.target === document.getElementById('logout-modal')) document.getElementById('logout-modal').classList.remove('active'); });
+document.addEventListener('keydown', e => { if (e.key==='Escape') document.getElementById('logout-modal').classList.remove('active'); });
+
+/* ── Export ── */
+document.getElementById('btn-export').addEventListener('click', e => { ripple(e.currentTarget, e); window.print(); });
+
+/* ── Ripple ── */
+function ripple(btn, e) {
+  const rect = btn.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  const r = document.createElement('span');
+  r.className = 'ripple';
+  r.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX-rect.left-size/2}px;top:${e.clientY-rect.top-size/2}px`;
+  btn.appendChild(r);
+  r.addEventListener('animationend', () => r.remove());
+}
+document.querySelectorAll('.vp-modal__btn, .vp-logout-hdr, .vp-btn-export, .vp-map-filter').forEach(b =>
+  b.addEventListener('click', e => ripple(b, e)));
+</script>
+
+<!-- Reemplazar YOUR_API_KEY con la clave real de Google Maps -->
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap&language=es&region=SV"></script>
+<script src="sidebar_ciudadano.js"></script>
+</body>
+</html>

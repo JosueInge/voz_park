@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VozPark – Opciones de Acceso</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --verde-osc:  #1A2E0F;
+      --verde-btn:  #2D4F1A;
+      --verde-sub:  #3B6D11;
+      --dorado:     #DAA520;
+      --crema:      #DFFFAA;
+      --bg:         #FAF8F2;
+    }
+
+    body { font-family: 'Inter', sans-serif; }
+
+    /* ── Ripple ── */
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,255,.25);
+      transform: scale(0);
+      animation: rpl .55s linear;
+      pointer-events: none;
+    }
+    @keyframes rpl { to { transform: scale(4); opacity: 0; } }
+
+    /* ════════════════════════════════════════
+       OPCIONES DE ACCESO
+    ════════════════════════════════════════ */
+    .vp-cta {
+      background: var(--bg);
+      padding: 64px 24px;
+      text-align: center;
+    }
+
+    /* Título principal */
+    .vp-cta__title {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--verde-osc);
+      margin-bottom: 10px;
+    }
+
+    /* Subtítulo informativo */
+    .vp-cta__sub {
+      font-size: 16px;
+      color: var(--verde-sub);
+      margin-bottom: 28px;
+    }
+
+    /* Fila de botones */
+    .vp-cta__btns {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* Base de botón */
+    .vp-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100px;
+      height: 25px;
+      border-radius: 4px;
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      cursor: pointer;
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+      transition: filter .2s, background .2s, box-shadow .2s;
+    }
+    .vp-btn:hover  { filter: brightness(1.15); }
+    .vp-btn:active { filter: brightness(.88); }
+
+    /* Crear cuenta — verde oscuro, texto crema */
+    .vp-btn--register {
+      background: var(--verde-btn);
+      border: none;
+      color: var(--crema);
+    }
+    .vp-btn--register:hover {
+      background: #1A3D10;
+      box-shadow: 0 4px 14px rgba(45,79,26,.35);
+    }
+
+    /* Ya tengo cuenta — transparente, borde y texto dorado */
+    .vp-btn--login {
+      background: transparent;
+      border: 1px solid var(--dorado);
+      color: var(--dorado);
+    }
+    .vp-btn--login:hover {
+      background: rgba(218,165,32,.10);
+      box-shadow: 0 4px 12px rgba(218,165,32,.18);
+    }
+
+    /* ── Responsivo ── */
+    @media (max-width: 400px) {
+      .vp-cta  { padding: 48px 16px; }
+      .vp-btn  { width: 92px; font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════
+     OPCIONES DE ACCESO
+════════════════════════════════════════ -->
+<section class="vp-cta">
+
+  <!-- Título -->
+  <h2 class="vp-cta__title">Comienza a mejorar tu parque hoy</h2>
+
+  <!-- Subtítulo -->
+  <p class="vp-cta__sub">
+    Registro gratuito · Sin tarjeta de crédito · Disponible para todo El Salvador
+  </p>
+
+  <!-- Botones -->
+  <div class="vp-cta__btns">
+    <a href="registro.html" class="vp-btn vp-btn--register">Crear cuenta</a>
+    <a href="login.html"    class="vp-btn vp-btn--login">Ya tengo cuenta</a>
+  </div>
+
+</section>
+
+<script>
+  /* Efecto ripple en botones */
+  document.querySelectorAll('.vp-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      const rect = btn.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
+      const r    = document.createElement('span');
+      r.className = 'ripple';
+      r.style.cssText = `width:${size}px;height:${size}px;`
+                      + `left:${e.clientX - rect.left - size / 2}px;`
+                      + `top:${e.clientY  - rect.top  - size / 2}px`;
+      btn.appendChild(r);
+      r.addEventListener('animationend', () => r.remove());
+    });
+  });
+</script>
+
+</body>
+</html>

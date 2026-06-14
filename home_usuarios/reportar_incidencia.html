@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VozPark – Nueva Incidencia</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Inter',sans-serif;background:#FAF8F2;min-height:100vh;}
+
+    /* HEADER */
+    .vp-header{display:flex;align-items:center;width:100%;height:60px;background:#1A2E0F;padding:0 20px;position:sticky;top:0;z-index:100;}
+    .vp-brand{display:flex;flex-direction:column;padding-right:16px;flex-shrink:0;}
+    .vp-brand__name{font-size:20px;font-weight:700;color:#DFFFAA;line-height:1.2;}
+    .vp-brand__sub{font-size:16px;color:#97C459;line-height:1.2;}
+    .vp-hdr-div{width:1px;height:40px;background:#F4FAEA;opacity:.55;flex-shrink:0;margin-right:16px;}
+    .vp-spacer{flex:1;}
+    .vp-user{display:flex;align-items:center;gap:8px;margin-right:14px;}
+    .vp-user__avatar{width:20px;height:20px;border-radius:50%;background:#3B6D11;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#DFFFAA;}
+    .vp-user__name{font-family:'Open Sans',sans-serif;font-size:20px;font-weight:600;color:#FFFFFF;white-space:nowrap;}
+    .vp-logout-hdr{display:flex;align-items:center;justify-content:center;width:40px;height:20px;background:#F4FAEA;border:none;border-radius:4px;font-family:'Inter',sans-serif;font-size:16px;color:#1A2E0F;cursor:pointer;position:relative;overflow:hidden;transition:background .2s;}
+
+    /* Ripple */
+    .ripple{position:absolute;border-radius:50%;background:rgba(59,109,17,.22);transform:scale(0);animation:ripple-anim .55s linear;pointer-events:none;}
+    @keyframes ripple-anim{to{transform:scale(4);opacity:0;}}
+
+    /* Modals */
+    .vp-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.60);z-index:999;align-items:center;justify-content:center;}
+    .vp-modal-overlay.active{display:flex;}
+    .vp-modal{background:#1A2E0F;border:1px solid #3B6D11;border-radius:12px;padding:28px 32px 24px;width:400px;max-width:92vw;display:flex;flex-direction:column;gap:16px;}
+    .vp-modal__title{font-size:16px;color:#FFFFFF;text-align:center;line-height:1.4;}
+    .vp-modal__body{font-size:16px;color:#FFFFFF;text-align:center;line-height:1.5;}
+    .vp-modal__actions{display:flex;gap:12px;}
+    .vp-modal__btn{flex:1;height:40px;border:none;border-radius:8px;font-family:'Inter',sans-serif;font-size:16px;color:#DFFFAA;background:#3B6D11;cursor:pointer;position:relative;overflow:hidden;transition:filter .2s;}
+    .vp-modal__btn:hover{filter:brightness(1.12);}
+
+    /* Toast */
+    .vp-toast{display:none;position:fixed;top:76px;left:50%;transform:translateX(-50%);background:#3B6D11;color:#DFFFAA;border-radius:6px;padding:12px 28px;font-size:15px;z-index:1000;box-shadow:0 4px 16px rgba(59,109,17,.30);max-width:90vw;text-align:center;animation:toast-in .3s ease;}
+    .vp-toast.show{display:block;}
+    @keyframes toast-in{from{opacity:0;transform:translateX(-50%) translateY(-8px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
+
+    /* Lightbox */
+    .vp-lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:998;align-items:center;justify-content:center;}
+    .vp-lightbox.active{display:flex;}
+    .vp-lightbox__inner{position:relative;width:800px;height:600px;max-width:95vw;max-height:90vh;border-radius:8px;overflow:hidden;background:#111;}
+    .vp-lightbox__img{width:100%;height:100%;object-fit:contain;}
+    .vp-lightbox__close{position:absolute;top:10px;right:10px;background:none;border:none;cursor:pointer;color:#E33639;display:flex;align-items:center;}
+    .vp-lightbox__close svg{width:24px;height:24px;}
+
+    /* MAIN */
+    .vp-main{padding:28px 24px 60px;max-width:800px;margin:0 auto;}
+    .vp-page-title{font-size:20px;font-weight:700;color:#1A2E0F;margin-bottom:4px;}
+    .vp-page-sub{font-size:16px;color:#000000;margin-bottom:24px;}
+
+    /* Form container */
+    .vp-form-box{background:#FFFFFF;border:1px solid rgba(151,196,89,.30);border-radius:8px;padding:22px 24px;}
+    .vp-form-section-title{font-size:16px;color:#000000;margin-bottom:18px;}
+
+    /* Field label */
+    .vp-label{font-size:16px;color:#000000;margin-bottom:8px;display:block;}
+
+    /* Error msg */
+    .vp-err{font-size:14px;color:#000000;text-align:center;margin-top:5px;display:none;}
+    .vp-err.show{display:block;}
+
+    /* Type cards grid */
+    .vp-type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:6px;}
+    .vp-type-card{
+      display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+      width:100%;height:60px;border:1px solid rgba(151,196,89,.30);border-radius:6px;
+      background:transparent;font-family:'Inter',sans-serif;font-size:16px;color:#000000;
+      cursor:pointer;transition:background .18s,color .18s,border-color .18s;
+      position:relative;overflow:hidden;
+    }
+    .vp-type-card svg{width:20px;height:20px;flex-shrink:0;}
+    .vp-type-card:hover{background:rgba(151,196,89,.15);}
+    .vp-type-card.selected{background:#1A2E0F;color:#DFFFAA;border-color:#3B6D11;}
+    .vp-type-card.selected svg{color:#DFFFAA;}
+    .vp-type-card.error{border-color:#E85D5D;animation:shake .3s ease;}
+    @keyframes shake{0%,100%{transform:translateX(0);}20%,60%{transform:translateX(-4px);}40%,80%{transform:translateX(4px);}}
+
+    /* "Otro" input */
+    .vp-otro-wrap{display:none;margin-top:8px;}
+    .vp-otro-wrap.show{display:block;}
+    .vp-otro-input{width:500px;max-width:100%;height:25px;border:1px solid rgba(151,196,89,.30);border-radius:4px;padding:0 10px;font-family:'Inter',sans-serif;font-size:16px;color:#3B6D11;outline:none;transition:border-color .2s,box-shadow .2s;}
+    .vp-otro-input:focus{border-color:rgba(151,196,89,.7);box-shadow:0 2px 8px rgba(151,196,89,.18);}
+
+    /* Selects & inputs */
+    .vp-select,.vp-input-field{
+      height:25px;border:1px solid rgba(151,196,89,.30);border-radius:4px;
+      padding:0 10px;font-family:'Inter',sans-serif;font-size:16px;color:#3B6D11;
+      outline:none;transition:border-color .2s,box-shadow .2s,transform .18s;
+      background:#FFFFFF;width:100%;min-width:200px;
+    }
+    .vp-select:focus,.vp-input-field:focus{border-color:rgba(151,196,89,.7);box-shadow:0 2px 8px rgba(151,196,89,.15);transform:scale(1.01);}
+    .vp-select.error,.vp-input-field.error,.vp-textarea.error{border-color:#E85D5D;animation:shake .3s ease;}
+
+    /* Two-col row */
+    .vp-row-2{display:flex;gap:24px;flex-wrap:wrap;margin-bottom:16px;}
+    .vp-col{display:flex;flex-direction:column;gap:0;flex:1;min-width:0;}
+
+    /* Textarea */
+    .vp-textarea-wrap{position:relative;}
+    .vp-textarea{
+      width:100%;height:100px;border:1px solid rgba(151,196,89,.30);
+      border-radius:4px;padding:8px 10px;font-family:'Inter',sans-serif;font-size:16px;
+      color:#3B6D11;outline:none;resize:vertical;
+      transition:border-color .2s,box-shadow .2s,transform .18s;
+    }
+    .vp-textarea:focus{border-color:rgba(151,196,89,.7);box-shadow:0 2px 8px rgba(151,196,89,.15);transform:scale(1.005);}
+    .vp-char-counter{display:none;position:absolute;bottom:8px;right:10px;font-size:16px;color:#3B6D11;pointer-events:none;}
+    .vp-char-counter.show{display:block;}
+    .vp-char-counter.low{color:#E33639;}
+
+    /* Evidence uploader */
+    .vp-evidence-box{
+      width:100%;height:100px;
+      background:rgba(151,196,89,.20);border:1px solid #97C459;border-radius:6px;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      cursor:pointer;transition:background .2s;gap:4px;position:relative;overflow:hidden;
+    }
+    .vp-evidence-box:hover{background:rgba(151,196,89,.35);}
+    .vp-evidence-box.error{border-color:#E85D5D;animation:shake .3s ease;}
+    .vp-evidence-box__title{font-size:16px;font-weight:700;color:#000000;}
+    .vp-evidence-box__sub{font-size:16px;color:#000000;}
+
+    /* Previews */
+    .vp-previews{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px;}
+    .vp-preview-wrap{position:relative;width:350px;max-width:100%;height:200px;border-radius:12px;border:1px solid #97C459;overflow:hidden;}
+    .vp-preview-img{width:100%;height:100%;object-fit:cover;cursor:pointer;transition:filter .2s;}
+    .vp-preview-img:hover{filter:brightness(.88);}
+    .vp-preview-del{position:absolute;top:8px;right:8px;background:none;border:none;cursor:pointer;color:#E33629;}
+    .vp-preview-del svg{width:15px;height:15px;}
+
+    /* Buttons row */
+    .vp-btn-row{display:flex;gap:14px;flex-wrap:wrap;margin-top:24px;}
+    .vp-btn-send{display:inline-flex;align-items:center;justify-content:center;width:320px;height:35px;background:#3B6D11;border:none;border-radius:5px;font-family:'Inter',sans-serif;font-size:16px;font-weight:700;color:#FFFFFF;cursor:pointer;position:relative;overflow:hidden;transition:background .2s,box-shadow .2s;}
+    .vp-btn-send:hover{background:#4a8a16;box-shadow:0 4px 14px rgba(59,109,17,.28);}
+    .vp-btn-cancel-form{display:inline-flex;align-items:center;justify-content:center;width:140px;height:35px;background:#97C459;border:1px solid rgba(151,196,89,.30);border-radius:5px;font-family:'Inter',sans-serif;font-size:16px;color:#3B6D11;cursor:pointer;position:relative;overflow:hidden;transition:background .2s,box-shadow .2s;}
+    .vp-btn-cancel-form:hover{background:#82b04c;box-shadow:0 4px 12px rgba(59,109,17,.20);}
+
+    /* mb */
+    .mb8{margin-bottom:8px;} .mb16{margin-bottom:16px;}
+
+    @media(max-width:640px){
+      .vp-type-grid{grid-template-columns:repeat(2,1fr);}
+      .vp-textarea,.vp-evidence-box,.vp-otro-input{width:100%;}
+      .vp-btn-send{width:100%;}
+      .vp-user__name,.vp-brand__sub{display:none;}
+      .vp-row-2{flex-direction:column;}
+    }
+  </style>
+</head>
+<body>
+<header class="vp-header">
+  <div class="vp-brand"><span class="vp-brand__name">VozPark</span><span class="vp-brand__sub">Parques urbanos – El Salvador</span></div>
+  <div class="vp-hdr-div"></div>
+  <div class="vp-spacer"></div>
+  <div class="vp-user"><div class="vp-user__avatar">MG</div><span class="vp-user__name">María González</span></div>
+  <button class="vp-logout-hdr" id="btn-logout">Salir</button>
+</header>
+
+<!-- Modal: Enviar reporte -->
+<div class="vp-modal-overlay" id="modal-send">
+  <div class="vp-modal">
+    <p class="vp-modal__title">¿Estás seguro de enviar tu reporte?</p>
+    <p class="vp-modal__body">Estás a punto de enviar tu reporte. Una vez enviada, los administradores podrán revisarla antes de darle seguimiento.</p>
+    <div class="vp-modal__actions">
+      <button class="vp-modal__btn" data-modal="modal-send" data-action="cancel">Cancelar</button>
+      <button class="vp-modal__btn" data-modal="modal-send" data-action="send">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Cancelar reporte -->
+<div class="vp-modal-overlay" id="modal-cancel">
+  <div class="vp-modal">
+    <p class="vp-modal__title">¿Estás seguro de cancelar tu reporte?</p>
+    <div class="vp-modal__actions">
+      <button class="vp-modal__btn" data-modal="modal-cancel" data-action="cancel">Cancelar</button>
+      <button class="vp-modal__btn" data-modal="modal-cancel" data-action="go-home">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Logout -->
+<div class="vp-modal-overlay" id="modal-logout">
+  <div class="vp-modal">
+    <p class="vp-modal__title">¿Estás seguro de cerrar sesión?</p>
+    <div class="vp-modal__actions">
+      <button class="vp-modal__btn" data-modal="modal-logout" data-action="cancel">Cancelar</button>
+      <button class="vp-modal__btn" data-modal="modal-logout" data-action="logout">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="vp-toast" id="toast"></div>
+
+<!-- Lightbox -->
+<div class="vp-lightbox" id="lightbox">
+  <div class="vp-lightbox__inner">
+    <button class="vp-lightbox__close" id="lightbox-close">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <img class="vp-lightbox__img" id="lightbox-img" src="" alt=""/>
+  </div>
+</div>
+
+<input type="file" id="evidence-input" accept="image/jpeg,image/png" multiple style="display:none;"/>
+
+<!-- MAIN -->
+<main class="vp-main">
+  <h1 class="vp-page-title">Nueva incidencia</h1>
+  <p class="vp-page-sub">Reporta un problema en un parque urbano</p>
+
+  <div class="vp-form-box">
+    <div class="vp-form-section-title">Información del reporte</div>
+
+    <!-- Tipo de incidencia -->
+    <div class="mb16">
+      <label class="vp-label">Tipo de incidencia</label>
+      <div class="vp-type-grid" id="type-grid">
+        <button class="vp-type-card" data-tipo="Iluminación" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          Iluminación
+        </button>
+        <button class="vp-type-card" data-tipo="Vegetación" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V12M12 12L5 6h14L12 12zM9 6L6 2h12L15 6"/></svg>
+          Vegetación
+        </button>
+        <button class="vp-type-card" data-tipo="Limpieza" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+          Limpieza
+        </button>
+        <button class="vp-type-card" data-tipo="Infraestructura" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          Infraestructura
+        </button>
+        <button class="vp-type-card" data-tipo="Seguridad" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Seguridad
+        </button>
+        <button class="vp-type-card" data-tipo="Mobiliario urbano" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h16"/><rect x="2" y="5" width="20" height="14" rx="2"/></svg>
+          Mobiliario urbano
+        </button>
+      </div>
+      <div class="vp-err" id="err-tipo">Debes seleccionar un tipo de incidencia</div>
+    </div>
+
+    <!-- Parque + Urgencia -->
+    <div class="vp-row-2 mb8" style="justify-content:space-between;width:100%;">
+      <div class="vp-col">
+        <label class="vp-label">Parque</label>
+                <select class="vp-select" id="sel-parque">
+          <option value="">Cargando parques...</option>
+        </select>
+        <div class="vp-err" id="err-parque">El parque es obligatorio</div>
+      </div>
+      <div class="vp-col">
+        <label class="vp-label">Nivel de urgencia</label>
+        <select class="vp-select" id="sel-urgencia">
+          <option value="">Seleccione el nivel de urgencia</option>
+          <option>Alta</option><option>Media</option><option>Baja</option>
+        </select>
+        <div class="vp-err" id="err-urgencia">El nivel de urgencia es obligatorio</div>
+      </div>
+    </div>
+
+    <!-- Descripción -->
+    <div class="mb16">
+      <label class="vp-label">Descripción</label>
+      <div class="vp-textarea-wrap">
+        <textarea class="vp-textarea" id="desc" placeholder="Describe el problema observado" maxlength="2000"></textarea>
+        <span class="vp-char-counter" id="char-counter">0/2000</span>
+      </div>
+      <div class="vp-err" id="err-desc">La descripción es obligatoria</div>
+    </div>
+
+    <!-- Ubicación + Nombre -->
+    <div class="vp-row-2 mb16" style="justify-content:space-between;width:100%;">
+      <div class="vp-col">
+        <label class="vp-label">Ubicación en el parque</label>
+        <input class="vp-input-field" id="ubicacion" type="text" placeholder="Ej: Sector norte, cerca de área de juegos"/>
+        <div class="vp-err" id="err-ubicacion">La ubicación exacta es obligatoria</div>
+      </div>
+      <div class="vp-col">
+        <label class="vp-label">Tu nombre</label>
+        <input class="vp-input-field" id="nombre" type="text" value="María González" readonly/>
+      </div>
+    </div>
+
+    <!-- Evidencia -->
+    <div class="mb16">
+      <label class="vp-label">Evidencia fotográfica</label>
+      <div class="vp-evidence-box" id="evidence-box">
+        <span class="vp-evidence-box__title">Haz clic para subir imágenes</span>
+        <span class="vp-evidence-box__sub">Max. 2 fotos JPG, PNG</span>
+      </div>
+      <div class="vp-previews" id="previews"></div>
+      <div class="vp-err" id="err-evidence">Debes seleccionar al menos una imagen</div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="vp-btn-row">
+      <button class="vp-btn-send"        id="btn-send"  type="button">Enviar reporte</button>
+      <button class="vp-btn-cancel-form" id="btn-cancel-form" type="button">Cancelar</button>
+    </div>
+  </div>
+</main>
+
+<script>
+/* ── Ripple ── */
+function ripple(btn,e){
+  const rect=btn.getBoundingClientRect(),size=Math.max(rect.width,rect.height);
+  const r=document.createElement('span');r.className='ripple';
+  r.style.cssText=`width:${size}px;height:${size}px;left:${e.clientX-rect.left-size/2}px;top:${e.clientY-rect.top-size/2}px`;
+  btn.appendChild(r);r.addEventListener('animationend',()=>r.remove());
+}
+
+/* ── Toast ── */
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),4500);}
+
+/* ── Modal helpers ── */
+const openModal  = id => document.getElementById(id).classList.add('active');
+const closeModal = id => document.getElementById(id).classList.remove('active');
+
+document.querySelectorAll('[data-action]').forEach(btn=>{
+  btn.addEventListener('click',e=>{
+    ripple(btn,e);
+    const action=btn.dataset.action, modal=btn.dataset.modal;
+    if(action==='cancel')    { closeModal(modal); return; }
+    if(action==='logout')    { window.location.href='../home_invitado.php'; return; }
+    if(action==='go-home')   { closeModal(modal); window.location.href='inicio_plataforma.html'; return; }
+    if(action==='send'){
+      closeModal(modal);
+      enviarReporte();
+    }
+  });
+});
+
+document.querySelectorAll('.vp-modal-overlay').forEach(ov=>ov.addEventListener('click',e=>{if(e.target===ov)ov.classList.remove('active');}));
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('.vp-modal-overlay.active').forEach(o=>o.classList.remove('active'));document.getElementById('lightbox').classList.remove('active');}});
+
+/* ── Type cards ── */
+let selectedTipo = '';
+document.querySelectorAll('.vp-type-card').forEach(card=>{
+  card.addEventListener('click',e=>{
+    ripple(card,e);
+    document.querySelectorAll('.vp-type-card').forEach(c=>c.classList.remove('selected','error'));
+    card.classList.add('selected');
+    selectedTipo = card.dataset.tipo;
+    clearErr('err-tipo');
+
+  });
+});
+
+/* ── Char counter ── */
+const descTA = document.getElementById('desc');
+const counter = document.getElementById('char-counter');
+descTA.addEventListener('focus',()=>counter.classList.add('show'));
+descTA.addEventListener('blur',()=>counter.classList.remove('show'));
+descTA.addEventListener('input',()=>{
+  const len=descTA.value.length;
+  counter.textContent=`${len}/2000`;
+  counter.classList.toggle('low', len<20 && len>0);
+});
+
+/* ── Evidence upload ── */
+let uploadedFiles=[];
+document.getElementById('evidence-box').addEventListener('click',()=>{
+  if(uploadedFiles.length<2) document.getElementById('evidence-input').click();
+});
+document.getElementById('evidence-input').addEventListener('change',function(){
+  Array.from(this.files).forEach(file=>{
+    if(uploadedFiles.length>=2) return;
+    if(!['image/jpeg','image/png'].includes(file.type)) return;
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      uploadedFiles.push({name:file.name, src:ev.target.result});
+      renderPreviews();
+    };
+    reader.readAsDataURL(file);
+  });
+  this.value='';
+});
+
+function renderPreviews(){
+  const container=document.getElementById('previews');
+  clearErr('err-evidence');
+  container.innerHTML=uploadedFiles.map((f,i)=>`
+    <div class="vp-preview-wrap">
+      <img class="vp-preview-img" src="${f.src}" alt="${f.name}" data-idx="${i}"/>
+      <button class="vp-preview-del" data-del="${i}" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>`).join('');
+
+  container.querySelectorAll('.vp-preview-del').forEach(btn=>{
+    btn.addEventListener('click',()=>{uploadedFiles.splice(parseInt(btn.dataset.del),1);renderPreviews();});
+  });
+  container.querySelectorAll('.vp-preview-img').forEach(img=>{
+    img.addEventListener('click',()=>{
+      document.getElementById('lightbox-img').src=img.src;
+      document.getElementById('lightbox').classList.add('active');
+    });
+  });
+}
+
+document.getElementById('lightbox-close').addEventListener('click',()=>document.getElementById('lightbox').classList.remove('active'));
+document.getElementById('lightbox').addEventListener('click',e=>{if(e.target===document.getElementById('lightbox'))document.getElementById('lightbox').classList.remove('active');});
+
+/* ── Validation helpers ── */
+function setErr(errId,inputEl){
+  if(inputEl) inputEl.classList.add('error');
+  const err=document.getElementById(errId);err.classList.add('show');
+  if(inputEl)setTimeout(()=>inputEl.classList.remove('error'),400);
+}
+function clearErr(errId,inputEl){
+  if(inputEl)inputEl.classList.remove('error');
+  const err=document.getElementById(errId);if(err)err.classList.remove('show');
+}
+
+/* Clear errors on interaction */
+['sel-parque','sel-urgencia','ubicacion'].forEach(id=>{
+  document.getElementById(id).addEventListener('change',()=>clearErr(`err-${id.replace('sel-','')}`,document.getElementById(id)));
+  document.getElementById(id).addEventListener('input',()=>clearErr(`err-${id.replace('sel-','')}`,document.getElementById(id)));
+});
+descTA.addEventListener('input',()=>clearErr('err-desc',descTA));
+
+/* ── Submit validation ── */
+document.getElementById('btn-send').addEventListener('click',e=>{
+  ripple(document.getElementById('btn-send'),e);
+  let ok=true;
+
+  if(!selectedTipo){ document.querySelectorAll('.vp-type-card').forEach(c=>c.classList.add('error')); document.getElementById('err-tipo').classList.add('show'); ok=false; }
+
+  const parque=document.getElementById('sel-parque');
+  if(!parque.value){setErr('err-parque',parque);ok=false;}
+
+  const urgencia=document.getElementById('sel-urgencia');
+  if(!urgencia.value){setErr('err-urgencia',urgencia);ok=false;}
+
+  if(!descTA.value.trim()){setErr('err-desc',descTA);ok=false;}
+
+  const ub=document.getElementById('ubicacion');
+  if(!ub.value.trim()){setErr('err-ubicacion',ub);ok=false;}
+
+  if(!uploadedFiles.length){setErr('err-evidence');ok=false;}
+
+  if(ok) openModal('modal-send');
+});
+
+/* ── Cancel form ── */
+document.getElementById('btn-cancel-form').addEventListener('click',e=>{ripple(document.getElementById('btn-cancel-form'),e);openModal('modal-cancel');});
+
+/* ── Logout ── */
+document.getElementById('btn-logout').addEventListener('click',e=>{ripple(document.getElementById('btn-logout'),e);openModal('modal-logout');});
+
+/* ── Ripple on modal btns ── */
+document.querySelectorAll('.vp-modal__btn,.vp-logout-hdr').forEach(b=>b.addEventListener('click',e=>ripple(b,e)));
+
+/* ── URL base del backend ── */
+const BACKEND = '../backend/index.php?path=';
+
+/* ── Cargar parques desde la BD al iniciar ── */
+async function cargarParques() {
+  const sel = document.getElementById('sel-parque');
+  try {
+    const res  = await fetch(BACKEND + '/parques');
+    const json = await res.json();
+    if (!json.success || !json.data?.length) {
+      sel.innerHTML = '<option value="">Sin parques disponibles</option>';
+      return;
+    }
+    // Cada option lleva value=ID numérico y texto=nombre
+    sel.innerHTML = '<option value="">Seleccione el parque</option>' +
+      json.data.map(p => `<option value="${p.id}">${p.nombre}</option>`).join('');
+  } catch {
+    sel.innerHTML = '<option value="">Error al cargar parques</option>';
+  }
+}
+
+/* ── Enviar reporte al backend ── */
+async function enviarReporte() {
+  const token = localStorage.getItem('vp_token') ?? '';
+
+  // Verificar que parque_id sea un número válido
+  const parqueId = document.getElementById('sel-parque').value;
+  if (!parqueId || isNaN(parseInt(parqueId))) {
+    showToast('⚠ Debes seleccionar un parque válido');
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('tipo_incidencia', selectedTipo);
+  formData.append('parque_id',         parqueId);
+  formData.append('urgencia',          document.getElementById('sel-urgencia').value);
+  formData.append('descripcion',       document.getElementById('desc').value.trim());
+  formData.append('ubicacion_parque',  document.getElementById('ubicacion').value.trim());
+  formData.append('nombre_reportante', document.getElementById('nombre').value.trim());
+
+  // Convertir imágenes base64 a Blob
+  uploadedFiles.forEach(f => {
+    const arr  = f.src.split(',');
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    const u8   = new Uint8Array(bstr.length);
+    for (let i = 0; i < bstr.length; i++) u8[i] = bstr.charCodeAt(i);
+    formData.append('imagenes[]', new Blob([u8], { type: mime }), f.name || 'imagen.jpg');
+  });
+
+  try {
+    const res = await fetch(BACKEND + '/reportes', {
+      method:  'POST',
+      headers: token ? { 'Authorization': 'Bearer ' + token } : {},
+      body:    formData,
+    });
+
+    const json = await res.json().catch(() => ({}));
+
+    if (!res.ok || !json.success) {
+      const msgs = json.errores
+        ? json.errores.join(' · ')
+        : (json.debug ?? json.message ?? 'Error al enviar el reporte');
+      showToast('⚠ ' + msgs);
+      return;
+    }
+
+    showToast('✓ Tu reporte fue enviado. Los administradores lo revisarán y darán seguimiento.');
+    setTimeout(() => { window.location.href = 'inicio_plataforma.php'; }, 3200);
+
+  } catch(e) {
+    showToast('⚠ No se pudo conectar con el servidor. Intenta de nuevo.');
+  }
+}
+
+/* ── Init: cargar parques al abrir la página ── */
+cargarParques();
+</script>
+<script src="sidebar_ciudadano.js"></script>
+</body>
+</html>

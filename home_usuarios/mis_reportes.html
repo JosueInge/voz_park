@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VozPark – Mis Informes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --verde-osc:  #1A2E0F;
+      --verde-btn:  #3B6D11;
+      --verde-borde:#97C459;
+      --bg:         #FAF8F2;
+    }
+
+    body { font-family: 'Inter', sans-serif; background: var(--bg); min-height: 100vh; }
+
+    /* ══ HEADER ══ */
+    .vp-header {
+      display: flex; align-items: center; width: 100%; height: 60px;
+      background: var(--verde-osc); padding: 0 20px;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .vp-brand { display: flex; flex-direction: column; padding-right: 16px; flex-shrink: 0; }
+    .vp-brand__name { font-size: 20px; font-weight: 700; color: #DFFFAA; line-height: 1.2; }
+    .vp-brand__sub  { font-size: 16px; color: var(--verde-borde); line-height: 1.2; }
+    .vp-hdr-div { width: 1px; height: 40px; background: #F4FAEA; opacity: .55; flex-shrink: 0; margin-right: 16px; }
+    .vp-spacer  { flex: 1; }
+    .vp-bell { position: relative; display: flex; align-items: center; margin-right: 14px; cursor: pointer; }
+    .vp-bell svg { width: 14px; height: 18px; color: var(--verde-borde); }
+    .vp-bell__dot { position: absolute; top: 0; right: -1px; width: 5px; height: 5px; border-radius: 50%; background: #E85D5D; }
+    .vp-user { display: flex; align-items: center; gap: 8px; margin-right: 14px; }
+    .vp-user__avatar { width: 20px; height: 20px; border-radius: 50%; background: var(--verde-btn); display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: #DFFFAA; }
+    .vp-user__name { font-family: 'Open Sans', sans-serif; font-size: 20px; font-weight: 600; color: #FFFFFF; white-space: nowrap; }
+    .vp-logout-hdr { display: flex; align-items: center; justify-content: center; width: 40px; height: 20px; background: #F4FAEA; border: none; border-radius: 4px; font-family: 'Inter', sans-serif; font-size: 16px; color: var(--verde-osc); cursor: pointer; position: relative; overflow: hidden; transition: background .2s; }
+    .vp-logout-hdr:hover { background: #e2f0d6; }
+
+    /* Ripple */
+    .ripple { position: absolute; border-radius: 50%; background: rgba(59,109,17,.22); transform: scale(0); animation: rpl .55s linear; pointer-events: none; }
+    @keyframes rpl { to { transform: scale(4); opacity: 0; } }
+
+    /* Modal logout */
+    .vp-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 999; align-items: center; justify-content: center; }
+    .vp-modal-overlay.active { display: flex; }
+    .vp-modal { background: var(--verde-osc); border: 1px solid var(--verde-btn); border-radius: 12px; padding: 28px 32px 24px; width: 340px; max-width: 90vw; display: flex; flex-direction: column; gap: 20px; }
+    .vp-modal__title { font-family: 'Arial', sans-serif; font-size: 16px; font-weight: 700; color: #FFFFFF; text-align: center; }
+    .vp-modal__actions { display: flex; gap: 12px; }
+    .vp-modal__btn { flex: 1; height: 40px; border: none; border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 16px; color: #DFFFAA; background: var(--verde-btn); cursor: pointer; position: relative; overflow: hidden; transition: filter .2s; }
+    .vp-modal__btn:hover { filter: brightness(1.15); }
+
+    /* ══ MAIN ══ */
+    .vp-main { padding: 28px 24px 56px; max-width: 1100px; margin: 0 auto; }
+
+    /* Fila superior: título + botón */
+    .vp-top-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .vp-titles { display: flex; flex-direction: column; gap: 4px; }
+    .vp-page-title { font-size: 20px; font-weight: 700; color: var(--verde-osc); }
+    .vp-page-sub   { font-size: 16px; color: #000000; }
+
+    /* Botón + Nuevo */
+    .vp-btn-nuevo {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      width: 120px; height: 35px;
+      background: var(--verde-btn); border: none; border-radius: 4px;
+      font-family: 'Inter', sans-serif; font-size: 16px; color: #FFFFFF;
+      cursor: pointer; text-decoration: none;
+      position: relative; overflow: hidden;
+      transition: background .2s, box-shadow .2s; flex-shrink: 0;
+    }
+    .vp-btn-nuevo:hover { background: #4a8a16; box-shadow: 0 4px 12px rgba(59,109,17,.30); }
+    .vp-btn-nuevo svg   { width: 16px; height: 16px; }
+
+    /* ══ TABLA ══ */
+    .vp-table-wrap {
+      background: #FFFFFF;
+      border: 1px solid rgba(151,196,89,.30);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    /* Estado vacío */
+    .vp-empty {
+      text-align: center;
+      padding: 48px 0;
+      font-size: 16px;
+      color: #64748B;
+      display: none;
+    }
+    .vp-empty.show { display: block; }
+
+    .vp-table { width: 100%; border-collapse: collapse; }
+
+    /* Encabezados */
+    .vp-table thead tr { background: #F8FFF0; }
+    .vp-table thead th {
+      font-size: 16px; font-weight: 600; color: var(--verde-osc);
+      padding: 12px 14px; text-align: left;
+      border-right: 1px solid var(--verde-borde);
+      white-space: nowrap;
+    }
+    .vp-table thead th:last-child { border-right: none; }
+
+    /* Filas */
+    .vp-table tbody tr {
+      border-top: 1px solid #F1F5F9;
+      transition: background .15s;
+    }
+    .vp-table tbody tr:hover { background: #F8FFF0; }
+
+    .vp-table tbody td {
+      font-size: 16px; color: #000000;
+      padding: 10px 14px;
+      border-right: 1px solid rgba(151,196,89,.20);
+      vertical-align: middle;
+    }
+    .vp-table tbody td:last-child { border-right: none; }
+
+    /* Columna Incidencia: icono + texto */
+    .vp-inc-cell { display: flex; align-items: center; gap: 8px; }
+    .vp-inc-cell svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+    /* Badges urgencia */
+    .vp-badge { display: inline-block; padding: 2px 10px; border-radius: 4px; font-size: 16px; white-space: nowrap; }
+    .badge-alta    { background: rgba(196,89,89,.30);   color: #B45050; }
+    .badge-media   { background: rgba(196,175,89,.30);  color: #AC7152; }
+    .badge-baja    { background: rgba(202,204,201,.50);  color: #484646; }
+
+    /* Badges estado */
+    .badge-revision { background: rgba(196,175,89,.30);  color: #AC7152; }
+    .badge-asignado { background: rgba(89,144,196,.30);  color: #0C447C; }
+    .badge-resuelto { background: rgba(151,196,89,.30);  color: var(--verde-btn); }
+
+    /* Botón Ver */
+    .vp-btn-ver {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 80px; height: 28px;
+      background: var(--verde-btn); color: #FFFFFF;
+      font-family: 'Inter', sans-serif; font-size: 16px;
+      border: none; border-radius: 4px; cursor: pointer;
+      position: relative; overflow: hidden; text-decoration: none;
+      transition: background .2s, box-shadow .2s;
+    }
+    .vp-btn-ver:hover { background: #4a8a16; box-shadow: 0 4px 10px rgba(59,109,17,.25); }
+
+    /* ══ RESPONSIVE ══ */
+    @media (max-width: 768px) {
+      /* Ocultar columna Parque y Fecha en tablet */
+      .vp-table thead th:nth-child(3),
+      .vp-table tbody td:nth-child(3),
+      .vp-table thead th:nth-child(6),
+      .vp-table tbody td:nth-child(6) { display: none; }
+      .vp-user__name, .vp-brand__sub  { display: none; }
+    }
+    @media (max-width: 480px) {
+      /* Ocultar también Urgencia en móvil */
+      .vp-table thead th:nth-child(4),
+      .vp-table tbody td:nth-child(4) { display: none; }
+      .vp-main { padding: 18px 12px 48px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ HEADER ══ -->
+<header class="vp-header">
+  <div class="vp-brand">
+    <span class="vp-brand__name">VozPark</span>
+    <span class="vp-brand__sub">Parques urbanos – El Salvador</span>
+  </div>
+  <div class="vp-hdr-div"></div>
+  <div class="vp-spacer"></div>
+  <div class="vp-bell">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+      <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+    </svg>
+    <span class="vp-bell__dot"></span>
+  </div>
+  <div class="vp-user">
+    <div class="vp-user__avatar" id="hdr-iniciales">MG</div>
+    <span class="vp-user__name"  id="hdr-nombre">María González</span>
+  </div>
+  <button class="vp-logout-hdr" id="btn-logout">Salir</button>
+</header>
+
+<!-- Modal logout -->
+<div class="vp-modal-overlay" id="logout-modal">
+  <div class="vp-modal">
+    <p class="vp-modal__title">¿Estás seguro de cerrar sesión?</p>
+    <div class="vp-modal__actions">
+      <button class="vp-modal__btn" id="btn-cancel">Cancelar</button>
+      <button class="vp-modal__btn" id="btn-confirm">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MAIN ══ -->
+<main class="vp-main">
+
+  <!-- Fila superior -->
+  <div class="vp-top-row">
+    <div class="vp-titles">
+      <h1 class="vp-page-title">Mis informes</h1>
+      <p class="vp-page-sub">Historial de incidencias</p>
+    </div>
+    <a href="reportar_incidencia.html" class="vp-btn-nuevo">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="5" x2="12" y2="19"/>
+        <line x1="5"  y1="12" x2="19" y2="12"/>
+      </svg>
+      Nuevo
+    </a>
+  </div>
+
+  <!-- Tabla -->
+  <div class="vp-table-wrap">
+    <div class="vp-empty" id="empty-msg">Aún no has realizado ningún reporte</div>
+    <table class="vp-table" id="reports-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Incidencia</th>
+          <th>Parque</th>
+          <th>Urgencia</th>
+          <th>Estado</th>
+          <th>Fecha</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody id="reports-body">
+        <!-- Filas inyectadas por JS desde el backend -->
+      </tbody>
+    </table>
+  </div>
+
+</main>
+
+<!-- ══ SCRIPTS ══ -->
+<script>
+/* ─────────────────────────────────────────
+   CONFIGURACIÓN
+───────────────────────────────────────── */
+const API_BASE  = '../backend/index.php?path=';
+const TOKEN     = localStorage.getItem('vp_token') ?? '';
+
+/* ─────────────────────────────────────────
+   ÍCONOS SVG por tipo de incidencia
+───────────────────────────────────────── */
+const ICONOS = {
+  'Iluminación':      `<svg viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`,
+  'Vegetación':       `<svg viewBox="0 0 24 24" fill="none" stroke="#3B6D11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V12M12 12L5 6h14L12 12zM9 6L6 2h12L15 6"/></svg>`,
+  'Limpieza':         `<svg viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>`,
+  'Infraestructura':  `<svg viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>`,
+  'Seguridad':        `<svg viewBox="0 0 24 24" fill="none" stroke="#E85D5D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
+  'default':          `<svg viewBox="0 0 24 24" fill="none" stroke="#97C459" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`,
+};
+
+function getIcono(tipo) {
+  return ICONOS[tipo] ?? ICONOS['default'];
+}
+
+/* ─────────────────────────────────────────
+   BADGES
+───────────────────────────────────────── */
+const URGENCIA_CLS = { Alta: 'badge-alta', Media: 'badge-media', Baja: 'badge-baja' };
+const ESTADO_CLS   = {
+  'En revisión': 'badge-revision',
+  'Asignado':    'badge-asignado',
+  'Resuelto':    'badge-resuelto',
+};
+
+function badgeUrgencia(u) {
+  return `<span class="vp-badge ${URGENCIA_CLS[u] ?? ''}">${u}</span>`;
+}
+function badgeEstado(e) {
+  return `<span class="vp-badge ${ESTADO_CLS[e] ?? 'badge-revision'}">${e}</span>`;
+}
+
+/* ─────────────────────────────────────────
+   RENDER TABLA
+───────────────────────────────────────── */
+function renderTabla(reportes) {
+  const tbody    = document.getElementById('reports-body');
+  const table    = document.getElementById('reports-table');
+  const emptyMsg = document.getElementById('empty-msg');
+
+  if (!reportes.length) {
+    table.style.display = 'none';
+    emptyMsg.classList.add('show');
+    return;
+  }
+
+  table.style.display = '';
+  emptyMsg.classList.remove('show');
+
+  tbody.innerHTML = reportes.map(r => `
+    <tr>
+      <td>#${r.id}</td>
+      <td>
+        <div class="vp-inc-cell">
+          ${getIcono(r.tipo_incidencia)}
+          ${r.tipo_incidencia}
+        </div>
+      </td>
+      <td>${r.parque}</td>
+      <td>${badgeUrgencia(r.urgencia)}</td>
+      <td>${badgeEstado(r.estado)}</td>
+      <td>${r.fecha}</td>
+      <td>
+        <a href="detalle_reporte.html?id=${r.id}" class="vp-btn-ver">Ver</a>
+      </td>
+    </tr>
+  `).join('');
+
+  /* Ripple en botones "Ver" */
+  tbody.querySelectorAll('.vp-btn-ver').forEach(btn =>
+    btn.addEventListener('click', e => crearRipple(btn, e))
+  );
+}
+
+/* ─────────────────────────────────────────
+   CARGAR REPORTES DESDE BACKEND
+───────────────────────────────────────── */
+async function cargarReportes() {
+  try {
+    const res = await fetch(`${API_BASE}/reportes/mis-reportes`, {
+      headers: {
+        'Authorization': `Bearer ${TOKEN}`,
+        'Content-Type':  'application/json',
+      }
+    });
+
+    if (res.status === 401) {
+      window.location.href = '../login.php';
+      return;
+    }
+
+    const json = await res.json();
+
+    if (!json.success) {
+      renderTabla([]);
+      return;
+    }
+
+    renderTabla(json.data ?? []);
+
+  } catch {
+    /* Backend no disponible — mostrar estado vacío */
+    renderTabla([]);
+  }
+}
+
+/* ─────────────────────────────────────────
+   LOGOUT
+───────────────────────────────────────── */
+document.getElementById('btn-logout').addEventListener('click', e => {
+  crearRipple(document.getElementById('btn-logout'), e);
+  document.getElementById('logout-modal').classList.add('active');
+});
+document.getElementById('btn-cancel').addEventListener('click', () =>
+  document.getElementById('logout-modal').classList.remove('active')
+);
+document.getElementById('btn-confirm').addEventListener('click', () => {
+  localStorage.removeItem('vp_token');
+  window.location.href = '../home_invitado.php';
+});
+document.getElementById('logout-modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('logout-modal'))
+    document.getElementById('logout-modal').classList.remove('active');
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape')
+    document.getElementById('logout-modal').classList.remove('active');
+});
+
+/* ─────────────────────────────────────────
+   RIPPLE
+───────────────────────────────────────── */
+function crearRipple(btn, e) {
+  const rect = btn.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  const r    = document.createElement('span');
+  r.className = 'ripple';
+  r.style.cssText = `width:${size}px;height:${size}px;`
+                  + `left:${e.clientX - rect.left - size/2}px;`
+                  + `top:${e.clientY  - rect.top  - size/2}px`;
+  btn.appendChild(r);
+  r.addEventListener('animationend', () => r.remove());
+}
+
+document.querySelectorAll('.vp-modal__btn, .vp-logout-hdr, .vp-btn-nuevo').forEach(b =>
+  b.addEventListener('click', e => crearRipple(b, e))
+);
+
+/* ─────────────────────────────────────────
+   INIT
+───────────────────────────────────────── */
+cargarReportes();
+</script>
+<script src="sidebar_ciudadano.js"></script>
+</body>
+</html>

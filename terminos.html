@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VozPark – Términos y condiciones</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Inter',sans-serif;background:#FAF8F2;min-height:100vh;}
+
+    /* ══ HEADER ══ */
+    .vp-header{display:flex;align-items:center;width:100%;height:60px;background:#1A2E0F;padding:0 20px;position:sticky;top:0;z-index:100;}
+    .vp-brand{display:flex;flex-direction:column;padding-right:16px;flex-shrink:0;}
+    .vp-brand__name{font-size:20px;font-weight:700;color:#DFFFAA;line-height:1.2;}
+    .vp-brand__sub{font-size:16px;color:#97C459;line-height:1.2;}
+    .vp-hdr-div{width:1px;height:40px;background:#F4FAEA;opacity:.55;flex-shrink:0;margin-right:16px;}
+    .vp-spacer{flex:1;}
+    .vp-user{display:flex;align-items:center;gap:8px;margin-right:14px;}
+    .vp-user__avatar{width:20px;height:20px;border-radius:50%;background:#3B6D11;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#DFFFAA;}
+    .vp-user__name{font-family:'Open Sans',sans-serif;font-size:20px;font-weight:600;color:#FFFFFF;white-space:nowrap;}
+    .vp-logout-hdr{display:flex;align-items:center;justify-content:center;width:40px;height:20px;background:#F4FAEA;border:none;border-radius:4px;font-family:'Inter',sans-serif;font-size:16px;color:#1A2E0F;cursor:pointer;position:relative;overflow:hidden;transition:background .2s;}
+    .vp-logout-hdr:hover{background:#e2f0d6;}
+
+    /* Ripple */
+    .ripple{position:absolute;border-radius:50%;background:rgba(59,109,17,.22);transform:scale(0);animation:ripple-anim .55s linear;pointer-events:none;}
+    @keyframes ripple-anim{to{transform:scale(4);opacity:0;}}
+
+    /* Modal */
+    .vp-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:999;align-items:center;justify-content:center;}
+    .vp-modal-overlay.active{display:flex;}
+    .vp-modal{background:#1A2E0F;border:1px solid #3B6D11;border-radius:12px;padding:28px 32px 24px;width:340px;max-width:90vw;display:flex;flex-direction:column;gap:20px;}
+    .vp-modal__title{font-family:'Arial',sans-serif;font-size:16px;font-weight:700;color:#FFFFFF;text-align:center;}
+    .vp-modal__actions{display:flex;gap:12px;}
+    .vp-modal__btn{flex:1;height:40px;border:none;border-radius:8px;font-family:'Inter',sans-serif;font-size:16px;color:#DFFFAA;background:#3B6D11;cursor:pointer;position:relative;overflow:hidden;transition:filter .2s;}
+    .vp-modal__btn:hover{filter:brightness(1.15);}
+
+    /* ══ MAIN ══ */
+    .vp-main{padding:28px 24px 56px;max-width:1100px;margin:0 auto;}
+
+    .vp-page-title{
+      font-size:24px;font-weight:700;color:#000000;margin-bottom:8px;
+    }
+
+    .vp-last-update{
+      display:flex;align-items:center;gap:6px;
+      font-size:14px;color:#000000;margin-bottom:22px;
+    }
+    .vp-last-update svg{color:#000;}
+
+    /* Contenedor principal */
+    .vp-legal-box{
+      background:#FFFFFF;
+      border:1px solid rgba(89,144,196,.30);
+      border-radius:10px;
+      padding:28px 32px;
+    }
+
+    .vp-section{margin-bottom:24px;}
+    .vp-section:last-child{margin-bottom:0;}
+
+    .vp-section-title{
+      font-family:'Inter',sans-serif;
+      font-size:20px;font-weight:700;color:#3B6D11;
+      margin-bottom:10px;
+    }
+
+    .vp-section-content{
+      font-family:'Inter',sans-serif;
+      font-size:16px;color:#000000;line-height:1.6;
+      margin-bottom:8px;text-align:justify;
+    }
+    .vp-section-content:last-child{margin-bottom:0;}
+
+    /* Responsive */
+    @media(max-width:640px){
+      .vp-user__name,.vp-brand__sub{display:none;}
+      .vp-main{padding:18px 14px 48px;}
+      .vp-legal-box{padding:20px 22px;}
+      .vp-page-title{font-size:20px;}
+      .vp-section-title{font-size:18px;}
+      .vp-section-content{font-size:14px;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="vp-header">
+  <div class="vp-brand">
+    <span class="vp-brand__name">VozPark</span>
+    <span class="vp-brand__sub">Parques urbanos – El Salvador</span>
+  </div>
+  <div class="vp-hdr-div"></div>
+  <div class="vp-spacer"></div>
+  <div class="vp-user">
+    <div class="vp-user__avatar">MG</div>
+    <span class="vp-user__name">María González</span>
+  </div>
+  <button class="vp-logout-hdr" id="btn-logout">Salir</button>
+</header>
+
+<!-- Logout modal -->
+<div class="vp-modal-overlay" id="logout-modal">
+  <div class="vp-modal">
+    <p class="vp-modal__title">¿Estás seguro de cerrar sesión?</p>
+    <div class="vp-modal__actions">
+      <button class="vp-modal__btn" id="btn-cancel">Cancelar</button>
+      <button class="vp-modal__btn" id="btn-confirm">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main class="vp-main">
+  <h1 class="vp-page-title">Términos y condiciones</h1>
+
+  <div class="vp-last-update">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+    </svg>
+    <span>Última actualización: Junio de 2026</span>
+  </div>
+
+  <div class="vp-legal-box">
+      <div class="vp-section">
+        <h2 class="vp-section-title">Aceptación de los términos</h2>
+        <p class="vp-section-content">Al acceder, registrarse o utilizar la plataforma VozPark, el usuario declara haber leído, comprendido y aceptado en su totalidad los presentes Términos y Condiciones de Uso. Si no está de acuerdo con alguna de las disposiciones aquí establecidas, deberá abstenerse de utilizar la plataforma.</p>
+        <p class="vp-section-content">El uso continuado de VozPark tras cualquier modificación de estos términos constituirá la aceptación de dichas modificaciones. La versión vigente estará siempre disponible dentro de la plataforma.</p>
+      </div>
+
+      <div class="vp-section">
+        <h2 class="vp-section-title">Descripción del servicio</h2>
+        <p class="vp-section-content">VozPark es una plataforma digital de gestión de parques urbanos administrada por la Alcaldía Municipal de San Salvador Centro. Su propósito es mejorar la calidad y el mantenimiento de los espacios recreativos públicos del municipio mediante la participación ciudadana y la gestión eficiente de incidencias. Las funcionalidades disponibles incluyen:</p>
+        <p class="vp-section-content">Registro y seguimiento de incidencias en parques urbanos: el ciudadano puede reportar problemas o desperfectos encontrados en un parque, adjuntar fotografías, consultar el estado de su reporte y seguir su evolución hasta la resolución.</p>
+        <p class="vp-section-content">Historial de reportes: acceso al registro completo de incidencias presentadas por el usuario, con el detalle del estado de cada una.</p>
+        <p class="vp-section-content">Comentarios entre ciudadano y personal municipal: canal de comunicación dentro de la plataforma para intercambiar información sobre el seguimiento de una incidencia específica.</p>
+        <p class="vp-section-content">Notificaciones dentro de la aplicación: el usuario recibe avisos sobre cambios en el estado de sus reportes y novedades relevantes relacionadas con su cuenta. Las notificaciones se envían exclusivamente dentro de la plataforma y no a medios externos.</p>
+        <p class="vp-section-content">Participación ciudadana: el usuario puede responder encuestas sobre los parques, participar en votaciones comunitarias y presentar propuestas de mejora para los espacios públicos. Los resultados de estas actividades serán visibles dentro de la plataforma.</p>
+        <p class="vp-section-content">Chatbot ciudadano: asistente conversacional disponible en la plataforma para orientar al usuario sobre el uso de VozPark, explicar el proceso de registro de incidencias y responder preguntas frecuentes. El chatbot no realiza reportes en nombre del usuario ni accede a información personal más allá de la necesaria para responder consultas generales.</p>
+        <p class="vp-section-content">Información de accesibilidad de parques: visualización en el mapa de la plataforma de las rutas de accesibilidad, condiciones de acceso, rampas, baños adaptados y demás elementos de accesibilidad presentes en cada parque municipal. Esta información es de carácter informativo y estático; no constituye un servicio de navegación ni generación de indicaciones de ruta en tiempo real.</p>
+        <p class="vp-section-content">Geolocalización de incidencias: el usuario puede indicar en el mapa el lugar exacto donde se encuentra la incidencia reportada dentro del parque.</p>
+        <p class="vp-section-content">La Alcaldía de San Salvador Centro se reserva el derecho de ampliar, modificar o discontinuar cualquier funcionalidad de la plataforma, notificando a los usuarios cuando sea posible y procurando minimizar el impacto en el servicio.</p>
+      </div>
+
+      <div class="vp-section">
+        <h2 class="vp-section-title">Requisitos de acceso y registro</h2>
+        <p class="vp-section-content">Para utilizar las funcionalidades completas de VozPark el usuario deberá crear una cuenta proporcionando: nombre completo, correo electrónico y zona de residencia.</p>
+        <p class="vp-section-content">Al registrarse, el usuario declara y garantiza que:</p>
+        <p class="vp-section-content">Es mayor de 18 años de edad. VozPark está dirigida exclusivamente a personas mayores de edad. Si eres menor de 18 años, no debes registrarte ni utilizar esta plataforma.</p>
+        <p class="vp-section-content">La información proporcionada durante el registro es veraz, exacta y actualizada.</p>
+        <p class="vp-section-content">Es el titular legítimo de la cuenta de correo electrónico utilizada para el registro.</p>
+        <p class="vp-section-content">No creará cuentas falsas ni suplantará la identidad de otra persona o entidad.</p>
+        <p class="vp-section-content">Mantendrá la confidencialidad de sus credenciales de acceso y notificará de inmediato a la Alcaldía ante cualquier uso no autorizado de su cuenta.</p>
+        <p class="vp-section-content">La Alcaldía de San Salvador Centro se reserva el derecho de suspender o cancelar cualquier cuenta que incumpla estos requisitos, sin perjuicio de las acciones legales correspondientes.</p>
+      </div>
+
+      <div class="vp-section">
+        <h2 class="vp-section-title">Uso aceptable de la plataforma</h2>
+        <p class="vp-section-content">El usuario se compromete a utilizar VozPark de manera responsable, honesta y conforme a la legislación vigente en El Salvador. Queda expresamente prohibido:</p>
+        <p class="vp-section-content">Registrar incidencias, reportes, comentarios o propuestas con información falsa, engañosa o malintencionada.</p>
+        <p class="vp-section-content">Utilizar la plataforma para difundir contenido ofensivo, discriminatorio, violento, difamatorio o contrario a la moral y las buenas costumbres.</p>
+        <p class="vp-section-content">Abusar del sistema de votaciones o encuestas mediante la creación de múltiples cuentas o cualquier mecanismo que distorsione los resultados.</p>
+        <p class="vp-section-content">Intentar acceder sin autorización a áreas restringidas del sistema, a cuentas de otros usuarios o a los paneles de administración municipal.</p>
+        <p class="vp-section-content">Realizar acciones que comprometan la seguridad, integridad o disponibilidad de la plataforma, incluyendo ataques de denegación de servicio o intentos de inyección de código.</p>
+        <p class="vp-section-content">Utilizar herramientas automatizadas, bots o scripts para interactuar con la plataforma sin autorización expresa.</p>
+        <p class="vp-section-content">Reproducir, distribuir o explotar comercialmente el contenido de la plataforma sin autorización de la Alcaldía de San Salvador Centro.</p>
+        <p class="vp-section-content">El incumplimiento de estas disposiciones podrá resultar en la suspensión o cancelación definitiva de la cuenta del usuario, sin perjuicio de las acciones legales que correspondan.</p>
+      </div>
+
+      <div class="vp-section">
+        <h2 class="vp-section-title">Participación ciudadana: encuestas, votaciones y propuestas</h2>
+        <p class="vp-section-content">Las funcionalidades de participación ciudadana disponibles en VozPark tienen como único propósito recopilar opiniones y sugerencias de la ciudadanía para mejorar los parques urbanos del municipio. Al participar en estas actividades, el usuario acepta que:</p>
+        <p class="vp-section-content">Su participación quedará registrada y asociada a su perfil de usuario. No existe modalidad de participación anónima en la plataforma.</p>
+        <p class="vp-section-content">Los resultados agregados de encuestas y votaciones podrán ser publicados dentro de la plataforma y utilizados por la Alcaldía para la toma de decisiones de gestión municipal.</p>
+        <p class="vp-section-content">Las propuestas de mejora enviadas pasan a ser de conocimiento de la Alcaldía, quien podrá evaluarlas, implementarlas o descartarlas conforme a sus criterios de gestión, sin que ello genere derecho de compensación o reconocimiento alguno al usuario.</p>
+        <p class="vp-section-content">La Alcaldía se reserva el derecho de moderar o eliminar propuestas, comentarios o participaciones que contravengan estos términos o la normativa vigente.</p>
+      </div>
+
+      <div class="vp-section">
+        <h2 class="vp-section-title">Chatbot ciudadano</h2>
+        <p class="vp-section-content">VozPark integra un asistente conversacional (chatbot) basado en tecnología de inteligencia artificial provista por OpenAI. Este chatbot tiene como función exclusiva orientar al usuario sobre el uso de la plataforma, explicar los pasos para registrar una incidencia y responder preguntas frecuentes sobre el servicio.</p>
+        <p class="vp-section-content">El usuario reconoce y acepta que:</p>
+        <p class="vp-section-content">El chatbot no realiza reportes de incidencias en nombre del usuario. Toda acción dentro de la plataforma debe ser ejecutada directamente por el usuario.</p>
+        <p class="vp-section-content">Las conversaciones con el chatbot son procesadas por los servidores de OpenAI conforme a su propia política de privacidad y términos de uso. Se recomienda al usuario no compartir información personal sensible en las conversaciones con el chatbot.</p>
+        <p class="vp-section-content">Las respuestas del chatbot son generadas por un sistema de inteligencia artificial y pueden contener imprecisiones. Ante dudas, el usuario puede contactar directamente a la Alcaldía.</p>
+        <p class="vp-section-content">La Alcaldía de San Salvador Centro no se responsabiliza por el contenido de las respuestas generadas por el chatbot más allá de las instrucciones y parámetros definidos para su funcionamiento dentro de VozPark.</p>
+      </div>
+
+      <div class="vp-section">
+        <h2 class="vp-section-title">Información de accesibilidad y geolocalización</h2>
+        <p class="vp-section-content">La información de rutas y condiciones de accesibilidad disponible en VozPark (rampas, baños adaptados, rutas accesibles dentro del parque, entre otros) es de carácter informativo y se basa en los datos registrados por el personal municipal. La Alcaldía de San Salvador Centro no garantiza que dicha información esté permanentemente actualizada ni que refleje en tiempo real las condiciones físicas del parque.</p>
+        <p class="vp-section-content">La geolocalización utilizada en la plataforma corresponde exclusivamente a la ubicación indicada por el usuario para identificar el lugar de una incidencia dentro del parque. VozPark no rastrea ni almacena la ubicación en tiempo real del dispositivo del usuario.</p>
+      </div>
+
+      <div class="vp-section">
+        <h2 class="vp-section-title">Contenido generado por el usuario</h2>
+        <p class="vp-section-content">Los reportes, comentarios, fotografías, propuestas y demás contenidos que el usuario publique en VozPark son de su exclusiva responsabilidad. Al publicar contenido, el usuario otorga a la Alcaldía de San Salvador Centro una licencia no exclusiva, gratuita y por el tiempo necesario para utilizar dicho contenido con fines de gestión municipal, mejora de los servicios públicos y análisis estadístico.</p>
+        <p class="vp-section-content">La Alcaldía se reserva el derecho de moderar, editar o eliminar cualquier contenido que contravenga estos términos o la normativa vigente, sin que ello genere responsabilidad alguna hacia el usuario.</p>
+      </div>
+
+      <div class="vp-section">
+        <h2 class="vp-section-title">Disponibilidad del servicio</h2>
+        <p class="vp-section-content">La Alcaldía de San Salvador Centro procurará mantener VozPark disponible de manera continua; sin embargo, no garantiza la disponibilidad ininterrumpida del servicio. Podrán producirse interrupciones por razones de mantenimiento, actualizaciones técnicas, fallas en proveedores externos (incluyendo servicios cloud, APIs de geolocalización o procesamiento de IA) o causas de fuerza mayor. La Alcaldía no será responsable por daños o perjuicios derivados de la falta de disponibilidad temporal de la plataforma.</p>
+      </div>
+
+      <div class="vp-section">
+        <h2 class="vp-section-title">Propiedad intelectual</h2>
+        <p class="vp-section-content">Todos los elementos de la plataforma VozPark, incluyendo su diseño, código fuente, logotipos, textos, gráficos, mapas y funcionalidades, son propiedad de la Alcaldía Municipal de San Salvador Centro o de sus proveedores tecnológicos, y están protegidos por las leyes de propiedad intelectual aplicables en El Salvador. El usuario no adquiere ningún derecho de propiedad intelectual sobre la plataforma por el simple uso de la misma.</p>
+      </div>
+
+      <div class="vp-section">
+        <h2 class="vp-section-title">Limitación de responsabilidad</h2>
+        <p class="vp-section-content">La Alcaldía de San Salvador Centro no será responsable por:</p>
+        <p class="vp-section-content">Daños derivados del uso indebido de la plataforma por parte del usuario.</p>
+        <p class="vp-section-content">Inexactitudes en la información de accesibilidad de los parques.</p>
+        <p class="vp-section-content">Respuestas incorrectas o imprecisas generadas por el chatbot.</p>
+        <p class="vp-section-content">Interrupciones del servicio causadas por fallas en proveedores tecnológicos externos.</p>
+        <p class="vp-section-content">Pérdida de datos ocasionada por causas de fuerza mayor o ataques externos fuera del control razonable de la Alcaldía.</p>
+        <p class="vp-section-content">Decisiones municipales adoptadas o no adoptadas en base a las propuestas o reportes ciudadanos enviados a través de la plataforma.</p>
+      </div>
+
+      <div class="vp-section">
+        <h2 class="vp-section-title">Modificaciones a los términos</h2>
+        <p class="vp-section-content">La Alcaldía de San Salvador Centro podrá modificar los presentes Términos y Condiciones en cualquier momento. Las modificaciones entrarán en vigor desde su publicación en la plataforma. Se recomienda al usuario revisar periódicamente este documento.</p>
+      </div>
+
+      <div class="vp-section">
+        <h2 class="vp-section-title">Legislación aplicable y jurisdicción</h2>
+        <p class="vp-section-content">Los presentes Términos y Condiciones se rigen por las leyes de la República de El Salvador. Para cualquier controversia derivada del uso de la plataforma, las partes se someten a la jurisdicción de los tribunales competentes de San Salvador, El Salvador.</p>
+      </div>
+
+      <div class="vp-section">
+        <h2 class="vp-section-title">Contacto</h2>
+        <p class="vp-section-content">Para consultas relacionadas con estos Términos y Condiciones, el usuario puede contactar a la Alcaldía de San Salvador Centro a través del correo electrónico: info@sansalvador.gob.sv</p>
+      </div>
+  </div>
+</main>
+
+<script>
+  window.VP_SECTION = 'terminos';
+
+  function ripple(btn,e){
+    const rect=btn.getBoundingClientRect(),size=Math.max(rect.width,rect.height);
+    const r=document.createElement('span');r.className='ripple';
+    r.style.cssText=`width:${size}px;height:${size}px;left:${e.clientX-rect.left-size/2}px;top:${e.clientY-rect.top-size/2}px`;
+    btn.appendChild(r);r.addEventListener('animationend',()=>r.remove());
+  }
+  document.getElementById('btn-logout').addEventListener('click',e=>{
+    ripple(document.getElementById('btn-logout'),e);
+    document.getElementById('logout-modal').classList.add('active');
+  });
+  document.getElementById('btn-cancel').addEventListener('click',()=>document.getElementById('logout-modal').classList.remove('active'));
+  document.getElementById('btn-confirm').addEventListener('click',()=>{window.location.href='../home_invitado.php';});
+  document.getElementById('logout-modal').addEventListener('click',e=>{if(e.target===document.getElementById('logout-modal'))document.getElementById('logout-modal').classList.remove('active');});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')document.getElementById('logout-modal').classList.remove('active');});
+  document.querySelectorAll('.vp-modal__btn,.vp-logout-hdr').forEach(b=>b.addEventListener('click',e=>ripple(b,e)));
+</script>
+</body>
+</html>
