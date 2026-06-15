@@ -18,7 +18,7 @@ $from = 'd4660140@gmail.com'; // Correo de gmail
 $fromName = 'VozPark';
 $gmailPassword = 'rakr gvgw njxc gfjx'; // Contraseña de aplicación de Gmail
 
-$appUrl = rtrim((string)($_ENV['APP_URL'] ?? 'http://192.168.84.126:8080/voz_park/backend'), '/');
+$appUrl = rtrim((string)($_ENV['APP_URL'] ?? 'http://192.168.1.63:8080/voz_park/backend'), '/');
 $verificationToken = jwtEncode([
     'correo' => strtolower(trim($to)),
     'purpose' => 'verify_email'

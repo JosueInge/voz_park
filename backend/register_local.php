@@ -30,11 +30,10 @@ if (!is_array($input)) {
 
 $nombre = trim((string)($input['nombre'] ?? ''));
 $correo = strtolower(trim((string)($input['correo'] ?? $input['email'] ?? '')));
-$telefono = trim((string)($input['telefono'] ?? ''));
 $zona = trim((string)($input['zona'] ?? $input['location'] ?? ''));
 $password = (string)($input['password'] ?? '');
 
-if ($nombre === '' || $correo === '' || $telefono === '' || $zona === '' || $password === '') {
+if ($nombre === '' || $correo === '' ||  $zona === '' || $password === '') {
     jsonResponse([
         'success' => false,
         'message' => 'Faltan datos obligatorios del registro'
@@ -61,9 +60,9 @@ try {
 
     $insert = $pdo->prepare(
         "INSERT INTO usuarios
-         (nombre, correo, password, telefono, zona, foto_perfil, rol, auth_provider, email_verificado, ultimo_login)
+         (nombre, correo, password, zona, foto_perfil, rol, auth_provider, email_verificado, ultimo_login)
          VALUES
-         (:nombre, :correo, :password, :telefono, :zona, NULL, 'poblador', 'local', FALSE, NULL)
+         (:nombre, :correo, :password, :zona, NULL, 'poblador', 'local', FALSE, NULL)
          RETURNING id"
     );
 
@@ -71,7 +70,6 @@ try {
         ':nombre' => $nombre,
         ':correo' => $correo,
         ':password' => $passwordHash,
-        ':telefono' => $telefono,
         ':zona' => $zona
     ]);
 
@@ -82,7 +80,6 @@ try {
             'id' => $userId,
             'nombre' => $nombre,
             'correo' => $correo,
-            'telefono' => $telefono,
             'zona' => $zona,
             'auth_provider' => 'local'
         ]
