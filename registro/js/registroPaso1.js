@@ -2,7 +2,6 @@
 // Validaciones
 const nameInput = document.getElementById('name');
 const emailInput = document.getElementById('email');
-const phoneInput = document.getElementById('phone');
 const locationInput = document.getElementById('location');
 const btnContinuar = document.querySelector('.btn-continuar');
 
@@ -48,7 +47,7 @@ function limpiarError(input) {
 }
 
 function limpiarTodosLosErrores() {
-    [nameInput, emailInput, phoneInput, locationInput].forEach((input) => limpiarError(input));
+    [nameInput, emailInput, locationInput].forEach((input) => limpiarError(input));
 }
 
 btnContinuar.addEventListener('click', function(event) {
@@ -79,11 +78,6 @@ btnContinuar.addEventListener('click', function(event) {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
     }
 
-    // Teléfono (8 dígitos)
-    function validarTelefono(telefono) {
-        return /^\d{8}$/.test(telefono.trim());
-    }
-
     limpiarTodosLosErrores();
 
     // Validaciones y mensajes por campo SOLO al hacer clic
@@ -99,14 +93,6 @@ btnContinuar.addEventListener('click', function(event) {
         mostrarError(emailInput, 'Formato de correo incorrecto.');
         return;
     }
-    if (!phoneInput.value.trim()) {
-        mostrarError(phoneInput, 'El número de teléfono es obligatorio.');
-        return;
-    }
-    if (!validarTelefono(phoneInput.value)) {
-        mostrarError(phoneInput, 'Formato de teléfono incorrecto.');
-        return;
-    }
     if (!locationInput.value.trim()) {
         mostrarError(locationInput, 'La zona de residencia es obligatoria.');
         return;
@@ -114,7 +100,6 @@ btnContinuar.addEventListener('click', function(event) {
     // Guardar datos en localStorage
     localStorage.setItem('vozpark_nombre', nameInput.value.trim());
     localStorage.setItem('vozpark_email', emailInput.value.trim());
-    localStorage.setItem('vozpark_phone', phoneInput.value.trim());
     localStorage.setItem('vozpark_location', locationInput.value.trim());
     // Esperar un momento para mostrar el efecto ripple antes de redirigir
     setTimeout(function() {

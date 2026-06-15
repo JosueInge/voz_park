@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VozBot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #FAF8F2; min-height: 100vh; }
+
+    /* HEADER */
+    .vp-header { display:flex; align-items:center; width:100%; height:60px; background:#1A2E0F; padding:0 20px; position:sticky; top:0; z-index:100; }
+    .vp-brand { display:flex; flex-direction:column; padding-right:16px; flex-shrink:0; }
+    .vp-brand__name { font-size:20px; font-weight:700; color:#DFFFAA; line-height:1.2; }
+    .vp-brand__sub  { font-size:16px; color:#97C459; line-height:1.2; }
+    .vp-hdr-div { width:1px; height:40px; background:#F4FAEA; opacity:.55; flex-shrink:0; margin-right:16px; }
+    .vp-spacer { flex:1; }
+    .vp-bell { position:relative; display:flex; align-items:center; margin-right:14px; cursor:pointer; }
+    .vp-bell svg { width:14px; height:18px; color:#97C459; }
+    .vp-bell__dot { position:absolute; top:0; right:-1px; width:5px; height:5px; border-radius:50%; background:#E85D5D; }
+    .vp-user { display:flex; align-items:center; gap:8px; margin-right:14px; }
+    .vp-user__avatar { width:20px; height:20px; border-radius:50%; background:#3B6D11; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:700; color:#DFFFAA; }
+    .vp-user__name { font-family:'Open Sans',sans-serif; font-size:20px; font-weight:600; color:#FFFFFF; white-space:nowrap; }
+    .vp-logout-hdr { display:flex; align-items:center; justify-content:center; width:40px; height:20px; background:#F4FAEA; border:none; border-radius:4px; font-family:'Inter',sans-serif; font-size:16px; color:#1A2E0F; cursor:pointer; position:relative; overflow:hidden; transition:background .2s; }
+
+    /* Ripple */
+    .ripple { position:absolute; border-radius:50%; background:rgba(255, 255, 255, 0.22); transform:scale(0); animation:ripple-anim .55s linear; pointer-events:none; }
+    @keyframes ripple-anim { to { transform:scale(4); opacity:0; } }
+
+    /* Modal */
+    .vp-modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:999; align-items:center; justify-content:center; }
+    .vp-modal-overlay.active { display:flex; }
+    .vp-modal { background:#1A2E0F; border:1px solid #3B6D11; border-radius:12px; padding:28px 32px 24px; width:340px; max-width:90vw; display:flex; flex-direction:column; gap:20px; }
+    .vp-modal__title { font-family:'Arial',sans-serif; font-size:16px; font-weight:700; color:#FFFFFF; text-align:center; }
+    .vp-modal__actions { display:flex; gap:12px; }
+    .vp-modal__btn { flex:1; height:40px; border:none; border-radius:8px; font-family:'Inter',sans-serif; font-size:16px; color:#DFFFAA; background:#3B6D11; cursor:pointer; position:relative; overflow:hidden; transition:filter .2s; }
+    .vp-modal__btn:hover { filter:brightness(1.15); }
+
+    /* MAIN */
+    .vp-main { padding:28px 24px 60px; max-width:1100px; margin:0 auto; }
+
+    /* ── MAP SECTION ── */
+    .vp-map-topbar { display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:14px; }
+    .vp-map-title  { font-size:24px; font-weight:700; color:#0F172A; }
+    .vp-map-sub    { font-size:14px; color:#0F172A; margin-top:2px; }
+    .vp-map-filters { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:4px; }
+    .vp-map-filter {
+      display:inline-flex; align-items:center; gap:6px; padding:4px 12px;
+      background:#DBEAFE; border:1px solid rgba(34,144,191,.75); border-radius:4px;
+      font-family:'Inter',sans-serif; font-size:14px; color:#1E40AF;
+      cursor:pointer; position:relative; overflow:hidden; transition:background .2s; user-select:none;
+    }
+    .vp-map-filter:hover  { background:#BFDBFE; }
+    .vp-map-filter.active { background:#1E40AF; color:#FFFFFF; border-color:#1E40AF; }
+    .vp-map-filter__dot { width:10px; height:10px; border-radius:50%; }
+
+    .vp-map-layout { display:grid; grid-template-columns:1fr 300px; gap:16px; align-items:stretch; margin-bottom:32px; }
+    .vp-map-container { position:relative; border-radius:8px; overflow:hidden; min-height:420px; background:#E2E8F0; }
+    #gmap { width:100%; height:100%; min-height:420px; }
+
+    .vp-map-legend {
+      position:absolute; bottom:16px; left:50%; transform:translateX(-50%);
+      background:rgba(255,255,255,.88); border-radius:4px; padding:6px 14px;
+      display:flex; gap:14px; align-items:center; pointer-events:none;
+      backdrop-filter:blur(4px); white-space:nowrap;
+    }
+    .vp-legend-item { display:flex; align-items:center; gap:5px; font-size:12px; color:#000000; }
+    .vp-legend-dot  { width:10px; height:10px; border-radius:50%; }
+
+    /* Right panel */
+    .vp-map-panel { background:#FFFFFF; border:1px solid rgba(151,196,89,.35); border-radius:8px; display:flex; flex-direction:column; overflow:hidden; }
+    .vp-panel-head { padding:12px 14px; border-bottom:1px solid #F1F5F9; font-size:14px; font-weight:600; color:#1A2E0F; }
+    .vp-panel-list { flex:1; overflow-y:auto; padding:10px; display:flex; flex-direction:column; gap:8px; }
+    .vp-panel-empty { text-align:center; font-size:14px; color:#0F172A; padding:24px 0; }
+    .vp-park-item { border-radius:6px; border:1px solid #F1F5F9; border-left:4px solid #97C459; padding:9px 11px; background:#FAFFF5; }
+    .vp-park-item__name { font-size:14px; font-weight:700; color:#1A2E0F; margin-bottom:3px; }
+    .vp-park-item__meta { font-size:12px; color:#557097; }
+    .vp-btn-all { display:flex; align-items:center; justify-content:center; height:38px; background:#3B6D11; border:none; border-radius:0 0 8px 8px; font-family:'Inter',sans-serif; font-size:14px; color:#DFFFAA; cursor:pointer; position:relative; overflow:hidden; transition:background .2s; text-decoration:none; flex-shrink:0; }
+    .vp-btn-all:hover { background:#4a8a16; }
+
+    /* ── PENDING TABLE ── */
+    .vp-pending-wrap { background:#FFFFFF; border:1px solid rgba(118,133,183,.80); border-radius:10px; width:100%; max-width:750px; padding:16px 18px; margin-bottom:10px; }
+    .vp-pending-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+    .vp-pending-header h2 { font-size:16px; font-weight:700; color:#000000; }
+    .vp-btn-ver-todos { display:inline-flex; align-items:center; justify-content:center; width:110px; height:30px; background:#1E40AF; border:none; border-radius:4px; font-family:'Inter',sans-serif; font-size:14px; color:#FFFFFF; cursor:pointer; position:relative; overflow:hidden; transition:background .2s, box-shadow .2s; text-decoration:none; }
+    .vp-btn-ver-todos:hover { background:#1D3BA0; box-shadow:0 4px 10px rgba(30,64,175,.25); }
+
+    .vp-ptable { width:100%; border-collapse:collapse; }
+    .vp-ptable thead tr { background:#F8FAFC; }
+    .vp-ptable thead th { font-size:14px; font-weight:600; color:#000000; padding:9px 12px; text-align:left; border-right:1px solid #97C459; white-space:nowrap; }
+    .vp-ptable thead th:last-child { border-right:none; }
+    .vp-ptable tbody tr { border-top:1px solid #F1F5F9; transition:background .15s; }
+    .vp-ptable tbody tr:hover { background:#F8FAFC; }
+    .vp-ptable tbody td { font-size:14px; color:#000000; padding:8px 12px; border-right:1px solid rgba(151,196,89,.20); vertical-align:middle; }
+    .vp-ptable tbody td:last-child { border-right:none; }
+
+    .vp-inc-cell { display:flex; align-items:center; gap:6px; }
+    .vp-inc-cell svg { width:16px; height:16px; color:#3B6D11; flex-shrink:0; }
+
+    .vp-badge { display:inline-block; padding:2px 9px; border-radius:4px; font-size:14px; white-space:nowrap; }
+    .badge-alta    { background:rgba(196,89,89,.30);   color:#B45050; }
+    .badge-media   { background:rgba(196,175,89,.30);  color:#AC7152; }
+    .badge-baja    { background:rgba(202,204,201,.50);  color:#484646; }
+    .badge-sin     { background:rgba(89,144,196,.30);  color:#0C447C; }
+    .badge-asig    { background:rgba(130,196,89,.30);  color:#3B6D11; }
+
+    .vp-btn-action { display:inline-flex; align-items:center; justify-content:center; border:none; border-radius:4px; font-family:'Inter',sans-serif; font-size:14px; cursor:pointer; position:relative; overflow:hidden; transition:background .2s, box-shadow .2s; text-decoration:none; }
+    .vp-btn-asignar { width:70px; height:28px; background:#1E40AF; color:#FFFFFF; }
+    .vp-btn-asignar:hover { background:#1D3BA0; box-shadow:0 3px 8px rgba(30,64,175,.25); }
+    .vp-btn-ver { width:80px; height:28px; background:#5990C4; color:#1E40AF; }
+    .vp-btn-ver:hover { background:#4a80b4; }
+
+    .vp-export-wrap { display:flex; justify-content:flex-end; margin-bottom:8px; }
+    .vp-btn-export { display:inline-flex; align-items:center; justify-content:center; gap:6px; width:130px; height:30px; background:#DBEAFE; border:1px solid rgba(34,144,191,.70); border-radius:4px; font-family:'Inter',sans-serif; font-size:14px; color:#1E40AF; cursor:pointer; position:relative; overflow:hidden; transition:background .2s, box-shadow .2s; }
+    .vp-btn-export:hover { background:#BFDBFE; }
+    .vp-btn-export svg { width:14px; height:14px; }
+
+    /* Responsive */
+    @media (max-width:860px) { .vp-map-layout { grid-template-columns:1fr; } }
+    @media (max-width:640px) {
+      .vp-user__name, .vp-brand__sub { display:none; }
+      .vp-pending-wrap { max-width:100%; }
+      .vp-ptable thead th:nth-child(4),
+      .vp-ptable tbody td:nth-child(4) { display:none; }
+    }
+
+    /* diseño de la interfaz del chat del chatbot */
+
+    :root {
+        --text-dark: #1A2E0F;
+        --text-muted: rgba(72,70,70,.70);
+        --bot-msg-bg: rgba(13,148,136,.20);
+        --bot-msg-border: #0D9488;
+        --user-msg-bg: #3B6D11;
+        --user-msg-border: rgba(151,196,89,.50);
+        --btn-send-bg: #3B6D11;
+        --btn-border: rgba(151,196,89,.30);
+        --avatar-bg: #3B6D11;
+    }
+
+    .chat-container {
+        margin-top: 20px;
+        width: 100%;
+        max-width: 850px;
+        min-height: 500px;
+        background-color: #FFFFFF;
+        border-radius: 10px;
+        border: 1px solid var(--btn-border);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .chat-header {
+        padding: 20px 24px 0;
+    }
+
+    .chat-header h1 {
+        font-family: 'Inter', sans-serif;
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--text-dark);
+    }
+
+    .chat-header p {
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+        color: #000000;
+        margin-top: 4px;
+    }
+
+    .chat-window {
+        padding: 16px 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .message-group {
+        display: flex;
+        gap: 12px;
+        width: 100%;
+    }
+
+    .message-group.user {
+        justify-content: flex-end;
+    }
+
+    .avatar {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+        background-color: var(--avatar-bg);
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #DFFFAA;
+        font-size: 18px;
+        flex-shrink: 0;
+    }
+
+    .message-content-wrapper {
+        display: flex;
+        flex-direction: column;
+        max-width: 80%;
+    }
+
+    .user-name {
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .message-box {
+        padding: 12px 16px;
+        border-radius: 10px;
+        font-family: 'Inter', sans-serif;
+        font-size: 12px;
+        line-height: 1.5;
+        color: #000000;
+    }
+
+    .bot .message-box {
+        background-color: var(--bot-msg-bg);
+        border: 1px solid var(--bot-msg-border);
+        border-top-left-radius: 2px;
+    }
+
+    .main-welcome ul {
+        margin: 8px 0;
+        padding-left: 14px;
+    }
+
+    .main-welcome li {
+        margin-bottom: 4px;
+    }
+
+    .question {
+        margin-top: 12px;
+        font-weight: 500;
+    }
+
+    .user .message-box {
+        background-color: var(--user-msg-bg);
+        border: 1px solid var(--user-msg-border);
+        color: #F4FAEA;
+        border-radius: 8px;
+        border-top-right-radius: 2px;
+    }
+
+    .timestamp {
+        font-family: 'Inter', sans-serif;
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-top: 4px;
+    }
+
+    .bot .timestamp {
+        align-self: flex-start;
+        margin-left: 2px;
+    }
+
+    .user .timestamp {
+        align-self: flex-end;
+        margin-right: 2px;
+    }
+
+    .suggestions-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding-left: 48px;
+        margin-bottom: 12px;
+    }
+
+    .chip {
+        background-color: var(--bot-msg-bg);
+        border: 1px solid var(--bot-msg-border);
+        color: #000000;
+        padding: 8px 16px;
+        border-radius: 10px;
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background-color .2s, box-shadow .2s;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .chip:hover {
+        background-color: rgba(13,148,136,.30);
+        box-shadow: 0 2px 6px rgba(0,0,0,.1);
+        transform: translateY(0px) scale(1.018);
+    }
+
+    .chat-footer {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        border-top: 1px solid #edf2e8;
+        padding: 16px 24px;
+    }
+
+    .input-wrapper {
+        flex: 1;
+    }
+
+    .input-wrapper input {
+        width: 100%;
+        height: 25px;
+        padding: 0 12px;
+        border-radius: 10px;
+        border: 1px solid #97C459;
+        background-color: #fff;
+        font-family: 'Inter', sans-serif;
+        font-size: 12px;
+        color: #000000;
+        outline: none;
+    }
+
+    .input-wrapper input::placeholder {
+        color: #8fa389;
+    }
+
+    .input-wrapper input:focus {
+        border-color: var(--btn-send-bg);
+    }
+
+    .btn-send {
+        width: 100px;
+        height: 30px;
+        background-color: var(--btn-send-bg);
+        color: #FFFFFF;
+        border: 1px solid var(--btn-border);
+        border-radius: 5px;
+        font-family: 'Inter', sans-serif;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color .2s, box-shadow .2s;
+        position: relative;
+        overflow: hidden;
+        flex-shrink: 0;
+    }
+
+    .btn-send:hover {
+        background-color: #2d5a0f;
+        box-shadow: 0 2px 6px rgba(0,0,0,.15);
+        transform: translateY(0px) scale(1.018);
+    }
+
+    @media (max-width: 640px) {
+        .chat-container {
+            min-height: 100vh;
+            border-radius: 0;
+            border-left: none;
+            border-right: none;
+        }
+        .chat-header { padding: 16px 16px 0; }
+        .chat-window { padding: 12px 16px; }
+        .chat-footer { padding: 12px 16px; }
+        .suggestions-container { padding-left: 0; }
+        .message-content-wrapper { max-width: 100%; }
+    }
+
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+<header class="vp-header">
+  <div class="vp-brand"> 
+    <span class="vp-brand__name">VozPark</span>
+    <span class="vp-brand__sub">Parques urbanos – El Salvador</span>
+  </div>
+  <div class="vp-hdr-div"></div>
+  <div class="vp-spacer"></div>
+  <div class="vp-bell">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+    <span class="vp-bell__dot"></span>
+  </div>
+  <div class="vp-user">
+    <div class="vp-user__avatar">MG</div>
+    <span class="vp-user__name">María González</span>
+  </div>
+  <button class="vp-logout-hdr" id="btn-logout">Salir</button>
+</header>
+
+<!-- LOGOUT MODAL -->
+<div class="vp-modal-overlay" id="logout-modal">
+  <div class="vp-modal">
+    <p class="vp-modal__title">¿Estás seguro de cerrar sesión?</p>
+    <div class="vp-modal__actions">
+      <button class="vp-modal__btn" id="btn-cancel">Cancelar</button>
+      <button class="vp-modal__btn" id="btn-confirm">Confirmar</button>
+    </div>
+  </div>
+</div>
+  <main class="vp-main">
+    <h1>VozBot</h1>
+    <p>Asistente inteligente de VozPark</p>
+    <div class="chat-container">
+        <header class="chat-header">
+        </header>
+        <div class="chat-window">
+            
+            <div class="message-group bot">
+                <div class="avatar">
+                    <i class="fas fa-leaf"></i>
+                </div>
+                <div class="message-content-wrapper">
+                    <span class="user-name">VozBot · IA</span>
+                    <div class="message-box main-welcome">
+                        <p>¡Hola, María! 👋 Soy VozBot, tu asistente inteligente de VozPark.</p>
+                        <p>Puedo ayudarte con:</p>
+                        <ul>
+                            <li>Estado de tus reportes</li>
+                            <li>Información sobre parques</li>
+                            <li>En donde configurar tu perfil</li>
+                            <li>Cómo reportar una incidencia</li>
+                        </ul>
+                        <p class="question">¿En qué te puedo ayudar hoy?</p>
+                    </div>
+                    <span class="timestamp">9:41 AM</span>
+                </div>
+            </div>
+
+            <div class="suggestions-container">
+                <button class="chip" data-question="¿Cuántos reportes tengo?">¿Cuántos reportes tengo?</button>
+                <button class="chip" data-question="¿Donde puedo configurar mi perfil?">¿Donde puedo configurar mi perfil?</button>
+                <button class="chip" data-question="¿Cómo reporto una incidencia?">¿Cómo reporto una incidencia?</button>
+                <button class="chip" data-question="¿Qué tipo de incidencias hay?">¿Qué tipo de incidencias hay?</button>
+            </div>
+
+        </div>
+
+        <footer class="chat-footer">
+            <div class="input-wrapper">
+                <input type="text" id="chat-input" placeholder="Escribe tu mensaje..." aria-label="Escribe tu mensaje">
+            </div>
+            <button class="btn-send" id="btn-send">Enviar</button>
+        </footer>
+    </div>
+  </main>
+<script>
+/* ── Ripple ── */
+function ripple(btn, e) {
+  const rect = btn.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  const r = document.createElement('span');
+  r.className = 'ripple';
+  r.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX-rect.left-size/2}px;top:${e.clientY-rect.top-size/2}px`;
+  btn.appendChild(r);
+  r.addEventListener('animationend', () => r.remove());
+}
+
+/* ── Chat logic ── */
+const chatInput = document.getElementById('chat-input');
+const btnSend = document.getElementById('btn-send');
+const chatWindow = document.querySelector('.chat-window');
+
+const RESPONSES = {
+  '¿cuántos reportes tengo?':
+    'Podés ver todos tus reportes en la sección <b>Mis Reportes</b>. ' +
+    'Allí encontrarás el listado completo con el estado de cada uno. ' +
+    'Accedé desde el menú lateral a <a href="mis_reportes.html" style="color:#0D9488;text-decoration:underline">Mis reportes</a>.',
+  '¿donde puedo configurar mi perfil?':
+    'Andá a <b>Configuración</b> en el menú lateral. Allí podrás actualizar ' +
+    'tu foto, cambiar tu contraseña y modificar tus datos personales. ' +
+    'Accedé desde <a href="configuracion_perfil.html" style="color:#0D9488;text-decoration:underline">Configuración</a>.',
+  '¿cómo reporto una incidencia?':
+    'Para reportar una incidencia, ingresá a <b>Nuevo reporte</b>. ' +
+    'Completá el formulario con los detalles del problema, seleccioná el tipo ' +
+    'de incidencia y adjuntá una foto si es necesario. ' +
+    'Accedé desde <a href="reportar_incidencia.html" style="color:#0D9488;text-decoration:underline">Nuevo reporte</a>.',
+  '¿qué tipo de incidencias hay?':
+    'Los tipos disponibles son: <b>Iluminación</b>, <b>Basura acumulada</b>, ' +
+    '<b>Fuga de agua</b>, <b>Árbol caído</b>, <b>Vandalismo</b>, entre otros. ' +
+    'Podés verlos todos al crear un <a href="reportar_incidencia.html" style="color:#0D9488;text-decoration:underline">nuevo reporte</a>.',
+};
+
+const OUT_OF_CONTEXT = 'Lo siento, solo puedo ayudarte con temas relacionados a VozPark.';
+
+function getResponse(question) {
+  return RESPONSES[question.toLowerCase().trim()] || OUT_OF_CONTEXT;
+}
+
+function sendMessage(text) {
+  if (!text.trim()) return;
+  const userDiv = document.createElement('div');
+  userDiv.className = 'message-group user';
+  userDiv.innerHTML = `<div class="message-content-wrapper"><div class="message-box user-msg">${text}</div><span class="timestamp">${new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</span></div>`;
+  chatWindow.appendChild(userDiv);
+  chatInput.value = '';
+  chatWindow.scrollTop = chatWindow.scrollHeight;
+}
+
+function addBotResponse(text) {
+  const botDiv = document.createElement('div');
+  botDiv.className = 'message-group bot';
+  botDiv.innerHTML = `<div class="avatar"><i class="fas fa-leaf"></i></div><div class="message-content-wrapper"><span class="user-name">VozBot · IA</span><div class="message-box text-response">${text}</div><span class="timestamp">${new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</span></div>`;
+  chatWindow.appendChild(botDiv);
+  chatWindow.scrollTop = chatWindow.scrollHeight;
+}
+
+function handleQuestion(question) {
+  sendMessage(question);
+  setTimeout(() => addBotResponse(getResponse(question)), 500);
+}
+
+btnSend.addEventListener('click', e => {
+  ripple(btnSend, e);
+  const text = chatInput.value.trim();
+  if (!text) return;
+  handleQuestion(text);
+});
+
+chatInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    btnSend.click();
+  }
+});
+
+document.querySelectorAll('.chip').forEach(chip => {
+  chip.addEventListener('click', e => {
+    ripple(chip, e);
+    handleQuestion(chip.dataset.question);
+  });
+});
+
+document.querySelector('.bot .timestamp').textContent = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+</script>
+<script src="sidebar_ciudadano.js"></script>
+</body>
+</html>

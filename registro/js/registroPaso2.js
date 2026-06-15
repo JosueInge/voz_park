@@ -139,4 +139,17 @@ document.addEventListener('DOMContentLoaded', function() {
 		// Si todo está bien, redirige
 		window.location.href = 'registroPaso3.php';
 	});
+
+	// Toggle visibilidad de contraseñas
+	document.querySelectorAll('.iconoOjo').forEach(function(img) {
+		img.addEventListener('click', function () {
+			const input = this.closest('.contenedorContraseña').querySelector('input');
+			if (input) {
+				const isPassword = input.type === 'password';
+				input.type = isPassword ? 'text' : 'password';
+				this.src = isPassword ? 'imagenes/ojoAbierto.webp' : 'imagenes/ojoCerrado.webp';
+				this.alt = isPassword ? 'Ocultar contraseña' : 'Mostrar contraseña';
+			}
+		});
+	});
 });

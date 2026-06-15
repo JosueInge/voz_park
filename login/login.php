@@ -86,7 +86,7 @@ $googleClientId = $_ENV['GOOGLE_CLIENT_ID'] ?? '';
                     </div>
 
                     <div class="contenedorOlvidasteContraseña">
-                      <a href="#" class="olvidasteContraseña">¿Olvidaste tu contraseña?</a>
+                      <a href="recuperarContraseña.php" class="olvidasteContraseña">¿Olvidaste tu contraseña?</a>
                     </div>
 
                     <button type="submit" class="btnIniciarSesion">Iniciar sesión</button>

@@ -30,12 +30,18 @@
 
                 <div class="grupoInput">
                     <label for="password">Contraseña *</label>
-                    <input type="password" id="password" placeholder="Escribe tu contraseña">
+                    <div class="contenedorContraseña">
+                        <input type="password" id="password" placeholder="Escribe tu contraseña">
+                        <img id="togglePassword" class="iconoOjo" src="imagenes/ojoCerrado.webp" alt="Mostrar contraseña" tabindex="0">
+                    </div>
                 </div>
 
                 <div class="grupoInput">
                     <label for="confirmarPassword">Confirmar contraseña *</label>
-                    <input type="password" id="confirmarPassword" placeholder="Escriba nuevamente tu contraseña">
+                    <div class="contenedorContraseña">
+                        <input type="password" id="confirmarPassword" placeholder="Escriba nuevamente tu contraseña">
+                        <img id="toggleConfirmar" class="iconoOjo" src="imagenes/ojoCerrado.webp" alt="Mostrar contraseña" tabindex="0">
+                    </div>
                 </div>
 
                 <div class="grupoInput">
