@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', function() {
 	const nombre = localStorage.getItem('vozpark_nombre') || 'Nombre';
 	const email = localStorage.getItem('vozpark_email') || 'Correo';
 	const location = localStorage.getItem('vozpark_location') || 'Lugar de residencia';
-	const phone = localStorage.getItem('vozpark_phone') || '';
 	const password = localStorage.getItem('vozpark_password') || '';
 
 	const liNombre = document.getElementById('dato-nombre');
@@ -75,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					return;
 				}
 
-				if (!phone || !password) {
+				if (!password) {
 					if (mensajeTerminos) {
 						mensajeTerminos.textContent = 'Faltan datos del registro. Vuelve al paso anterior.';
 						if (mensajeTerminosTimer) {
@@ -107,7 +106,6 @@ document.addEventListener('DOMContentLoaded', function() {
 					body: JSON.stringify({
 						nombre: nombre,
 						correo: email,
-						telefono: phone,
 						zona: location,
 						password: password
 					})

@@ -14,7 +14,12 @@
         <section class="panelFormulario">
           <div class="contenidoFormulario">
             <div class="encabezadoFormulario">
-                <a href="../login/login.php" class="linkVolver">Ya tengo cuenta</a>
+                <div class="volverGrupo">
+                    <a href="../home_invitado.php" class="linkVolverAtras">
+                        <img src="imagenes/izquierda.png" alt="Volver al inicio" class="iconoVolverAtras">
+                    </a>
+                    <a href="../login/login.php" class="linkVolver">Ya tengo cuenta</a>
+                </div>
                 <h1>Crear cuenta en VozPark</h1>
             </div>
 
@@ -35,11 +40,6 @@
                 <div class="grupoInput">
                     <label for="email">Correo electrónico *</label>
                     <input type="email" id="email" placeholder="tu@correo.com">
-                </div>
-
-                <div class="grupoInput">
-                    <label for="phone">Número de teléfono *</label>
-                    <input type="tel" id="phone" placeholder="+503 0000-0000">
                 </div>
 
                 <div class="grupoInput">

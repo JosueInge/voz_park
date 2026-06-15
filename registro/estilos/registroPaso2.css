@@ -290,6 +290,28 @@ body {
     }
 }
 
+.contenedorContraseña {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.contenedorContraseña input {
+    padding-right: 42px;
+}
+
+.iconoOjo {
+    position: absolute;
+    right: -25px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 23px;
+    height: 20px;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
 /* RESPONSIVO */
 @media (max-width: 900px) {
     .contenedor {
@@ -315,11 +337,21 @@ body {
 
     .pasos,
     .grupoInput input,
+    .contenedorContraseña,
+    .contenedorContraseña input,
     .inputInforContraseña,
     .btn-continue,
     .btn-atras {
         width: 100%;
         max-width: 100%;
+    }
+
+    .contenedorContraseña input {
+        padding-right: 42px;
+    }
+
+    .iconoOjo {
+        right: 10px;
     }
 
     .inputInforContraseña {
@@ -345,9 +377,16 @@ body {
     }
 
     .grupoInput input,
+    .contenedorContraseña input,
     .btn-continue,
     .btn-atras {
         height: 38px;
         font-size: 15px;
+    }
+
+    .iconoOjo {
+        width: 20px;
+        height: 18px;
+        right: 11px;
     }
 }

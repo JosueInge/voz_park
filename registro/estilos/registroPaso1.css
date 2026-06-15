@@ -31,13 +31,51 @@ body {
     margin-right: 80px;
 }
 
+.volverGrupo {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    margin-bottom: 25px;
+}
+
+.linkVolverAtras {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.linkVolverAtras:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.iconoVolverAtras {
+    width: 25px;
+    height: 30px;
+    display: block;
+}
+
 .linkVolver {
     text-decoration: none;
-    color: #000000;
-    font-size: 14px;
-    margin-bottom: 25px;
-    display: inline-block;
+    color: #FFFFFF;
+    background-color: #3B6D11;
+    font-size: 16px;
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 16px;
+    border-radius: 4px;
     font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    transition: background 0.3s, box-shadow 0.3s, transform 0.3s;
+}
+
+.linkVolver:hover {
+    background-color: #4d8a11;
+    box-shadow: 0 4px 16px #3B6D1133;
+    transform: translateY(0px) scale(1.018);
 }
 
 .encabezadoFormulario h1 {

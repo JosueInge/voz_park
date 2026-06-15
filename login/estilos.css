@@ -99,20 +99,29 @@ body {
     max-width: 400px;
 }
 
-/*Enlace volver*/
+/*Boton volver*/
 .linkVolver {
     text-decoration: none;
     color: #000000;
     font-size: 16px;
-    display: flex;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 4px;
     margin-bottom: 10px;
     font-family: 'Inter', sans-serif;
+    transition: background 0.3s, box-shadow 0.3s, transform 0.3s;
+}
+
+.linkVolver:hover {
+    box-shadow: 0 4px 16px #3B6D1133;
+    transform: translateY(0px) scale(1.018);
 }
 
 .iconoVolver {
     width: 18px;
     height: 18px;
-    margin-right: 8px;
 }
 
 h2 {
